@@ -20,5 +20,13 @@ public class IndexController {
         return "index";
     }
 
+    @RequestMapping(value = "/user/login_view",method = RequestMethod.GET)
+    public String login_view(){
+        return "login";
+    }
 
+    @RequestMapping(value = "/user/index",method = RequestMethod.GET)
+    public String index2(){
+        return "index";
+    }
 }

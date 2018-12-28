@@ -34,5 +34,12 @@ public class FastJsonConfiguration extends WebMvcConfigurerAdapter
         fastConverter.setFastJsonConfig(fastJsonConfig);
         //将fastjson添加到视图消息转换器列表内
         converters.add(fastConverter);
+
+/*        WriteNullListAsEmpty  ：List字段如果为null,输出为[],而非null
+        WriteNullStringAsEmpty ： 字符类型字段如果为null,输出为"",而非null
+        DisableCircularReferenceDetect ：消除对同一对象循环引用的问题，默认为false（如果不配置有可能会进入死循环）
+        WriteNullBooleanAsFalse：Boolean字段如果为null,输出为false,而非null
+        WriteMapNullValue：是否输出值为null的字段,默认为false。*/
+
     }
 }

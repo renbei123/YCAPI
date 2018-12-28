@@ -5,7 +5,7 @@ package com.guanghe.onion.controller;
  */
 import com.guanghe.onion.dao.UserJPA;
 
-import com.guanghe.onion.entity.user;
+import com.guanghe.onion.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,20 +23,20 @@ public class UserController {
     private UserJPA userJPA;
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public List<user> list(){
+    public List<UserEntity> list(){
         return userJPA.findAll();
     }
 
 
     @RequestMapping(value = "/save",method = RequestMethod.GET)
-    public user save(user user){
+    public UserEntity save(UserEntity user){
         return userJPA.save(user);
     }
 
     @RequestMapping(value = "/add")
     public String add()
     {
-        user userEntity = new user();
+        UserEntity userEntity = new UserEntity();
         userEntity.setName("测试");
         userEntity.setAddress("测试地址");
         userEntity.setAge(21);
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
-    public List<user> delete(Long id)
+    public List<UserEntity> delete(Long id)
     {
         userJPA.deleteById(id);
         return userJPA.findAll();

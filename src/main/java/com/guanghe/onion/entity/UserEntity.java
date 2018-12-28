@@ -15,7 +15,7 @@ import lombok.ToString;
 
 //Entity中不映射成列的字段得加@Transient 注解，不加注解也会映射成列
 
-public class user implements Serializable
+public class UserEntity implements Serializable
 {
 
     @Id
@@ -31,5 +31,8 @@ public class user implements Serializable
 
     @Column(name = "t_address")
     private String address;
+
+    @Column(name = "t_pwd")
+    private String pwd;
 
 }
