@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class LogInterceptor implements HandlerInterceptor {
+public class SessionInterceptor implements HandlerInterceptor {
     /**
      * logger instance
      */
-    static Logger logger = LoggerFactory.getLogger(LogInterceptor.class);
+    static Logger logger = LoggerFactory.getLogger(SessionInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{

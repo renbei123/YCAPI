@@ -1,8 +1,11 @@
+/*
 package com.guanghe.onion.config;
 
+*/
 /**
  * Created by renjie on 2018/12/5.
- */
+ *//*
+
 import org.h2.server.web.WebServlet;
 
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -17,4 +20,4 @@ public class h2WebConfiguration {
         registrationBean.addUrlMappings("/console/*");
         return registrationBean;
     }
-}
+}*/
