@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 public class IndexController {
-    @RequestMapping("/")
+    @RequestMapping("index")
     public String index() throws TemplateInputException {
         return "index";
     }

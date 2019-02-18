@@ -3,6 +3,8 @@ package com.guanghe.onion.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.guanghe.onion.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,7 +17,7 @@ import lombok.ToString;
 
 //Entity中不映射成列的字段得加@Transient 注解，不加注解也会映射成列
 
-public class UserEntity implements Serializable
+public class UserEntity extends BaseEntity
 {
 
     @Id
