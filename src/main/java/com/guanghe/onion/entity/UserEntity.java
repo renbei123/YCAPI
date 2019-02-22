@@ -14,9 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Table(name = "t_user")
-
 //Entity中不映射成列的字段得加@Transient 注解，不加注解也会映射成列
-
 public class UserEntity extends BaseEntity
 {
 

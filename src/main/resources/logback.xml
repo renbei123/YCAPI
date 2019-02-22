@@ -27,7 +27,7 @@
         </triggeringPolicy>
     </appender>
 
-    <!-- 日志输出级别 -->
+    <!-- 日志输出级别   日志文件的输出-->
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <!-- <appender-ref ref="FILE" />-->

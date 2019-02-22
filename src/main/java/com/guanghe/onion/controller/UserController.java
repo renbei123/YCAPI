@@ -7,6 +7,8 @@ import com.guanghe.onion.dao.UserJPA;
 
 import com.guanghe.onion.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -18,12 +20,14 @@ import org.thymeleaf.exceptions.TemplateInputException;
 import java.util.List;
 
 @RestController
+@CacheConfig(cacheNames = "user")
 public class UserController {
 
 
     @Autowired
     private UserJPA userJPA;
 
+    @Cacheable
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public List<UserEntity> list(){
         return userJPA.findAll();
@@ -49,7 +53,7 @@ public class UserController {
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
     public List<UserEntity> delete(Long id)
     {
-        userJPA.deleteById(id);
+        userJPA.delete(id);
         return userJPA.findAll();
     }
 

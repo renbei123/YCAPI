@@ -1,3 +1,4 @@
+/*
 package com.guanghe.onion.config;
 
 import com.guanghe.onion.interceptor.SessionInterceptor;
@@ -6,9 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 
+*/
 /**
      * 拦截器
  * 其实以前都是继承WebMvcConfigurerAdapter类 不过springBoot2.0以上 WebMvcConfigurerAdapter 方法过时，有两种替代方案：
@@ -17,14 +20,17 @@ public class WebConfiguration implements WebMvcConfigurer {
  * 但是继承WebMvcConfigurationSupport会让Spring-boot对mvc的自动配置失效。根据项目情况选择。现在大多数项目是前后端分离，
  * 并没有对静态资源有自动配置的需求所以继承WebMvcConfigurationSupport也未尝不可。
  * ---------------------
- * */
+ * *//*
+
     @Autowired
     private SessionInterceptor interceptor;
 
-   /**
+   */
+/**
      * 重写添加拦截器方法并添加配置拦截器
      * @param registry
-     */
+     *//*
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //registry.addInterceptor(interceptor).addPathPatterns("/**");
@@ -32,11 +38,14 @@ public class WebConfiguration implements WebMvcConfigurer {
     }
 
 
-    /**
+    */
+/**
      * 修改自定义消息转换器
      * @param converters 消息转换器列表
-     */
-   /* @Override
+     *//*
+
+   */
+/* @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         //调用父类的配置
         WebMvcConfigurer.super.configureMessageConverters(converters);
@@ -60,5 +69,6 @@ public class WebConfiguration implements WebMvcConfigurer {
         WriteNullBooleanAsFalse：Boolean字段如果为null,输出为false,而非null
         WriteMapNullValue：是否输出值为null的字段,默认为false。
 
-    }*/
-}
+    }*//*
+
+}*/
