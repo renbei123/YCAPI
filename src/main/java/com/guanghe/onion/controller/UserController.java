@@ -28,6 +28,7 @@ public class UserController {
     private UserJPA userJPA;
 
     @Cacheable
+    //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public List<UserEntity> list(){
         return userJPA.findAll();
@@ -73,6 +74,7 @@ public class UserController {
      * @param page 传入页码，从1开始
      * @return
      */
+
     @RequestMapping(value = "/curpage")
     public List<UserEntity> curPage(int page)
     {
