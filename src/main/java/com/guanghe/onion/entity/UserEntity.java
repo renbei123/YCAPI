@@ -3,7 +3,9 @@ package com.guanghe.onion.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.guanghe.onion.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,4 +37,6 @@ public class UserEntity extends BaseEntity
     @Column(name = "t_pwd")
     private String pwd;
 
+    //@JSONField(format="yyyy-MM-dd HH:mm")
+    //private Date createTime;
 }

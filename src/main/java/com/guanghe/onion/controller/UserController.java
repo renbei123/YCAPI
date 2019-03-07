@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,5 +93,16 @@ public class UserController {
         //执行分页查询
         return userJPA.findAll(pageRequest).getContent();
     }
+
+
+    @RequestMapping(value = "/curpage2")
+        public void testPageQuery() throws Exception {
+        int page=1,size=10;
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(page, size, sort);
+        userJPA.findAll(pageable);
+       // userRepository.findByUserName("testName", pageable);
+    }
+
 }
 

@@ -4,9 +4,11 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,12 +27,19 @@ public class FastJsonConfiguration extends WebMvcConfigurerAdapter
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         //创建配置类
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        List<MediaType> mediaTypes = new ArrayList();
+        //中文编码
+        MediaType mediaType = MediaType.APPLICATION_JSON_UTF8;
+        mediaTypes.add(mediaType);
         //修改配置返回内容的过滤
         fastJsonConfig.setSerializerFeatures(
                 SerializerFeature.DisableCircularReferenceDetect,
                 SerializerFeature.WriteMapNullValue,
-                SerializerFeature.WriteNullStringAsEmpty
+                SerializerFeature.WriteNullStringAsEmpty,
+                SerializerFeature.PrettyFormat
         );
+
+        fastConverter.setSupportedMediaTypes(mediaTypes);
         fastConverter.setFastJsonConfig(fastJsonConfig);
         //将fastjson添加到视图消息转换器列表内
         converters.add(fastConverter);

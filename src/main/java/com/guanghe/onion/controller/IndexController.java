@@ -20,6 +20,11 @@ public class IndexController {
         return "index";
     }
 
+//    @RequestMapping("/")
+//    public String index3() {
+//        return "redirect:/index";
+//    }
+
     @RequestMapping(value = "user/login_view",method = RequestMethod.GET)
     public String login_view(){
         return "login";
