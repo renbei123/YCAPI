@@ -13,6 +13,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Random;
 
-@RestController
+@Controller
 @CacheConfig(cacheNames = "Api")
 @RequestMapping(value = "/api")
 public class ApiController {
@@ -32,8 +34,10 @@ public class ApiController {
     @Cacheable
     //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public List<Api> list(){
-        return apiJPA.findAll();
+    public String list(Model model){
+        List list=apiJPA.findAll();
+        model.addAttribute("apilist",list);
+        return "api_list";
     }
 
 
