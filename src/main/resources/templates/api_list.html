@@ -348,13 +348,13 @@
 
                 <!--  tbody 真实的接口数据 -->
                 <tbody>
-                <tr  th:each=" api:${apilist}">
-                  <th th:text="${api.id}">1</th>
-                  <td th:text="${api.name}">renjie</td>
-                  <td th:text="${api.method}">get</td>
-                  <td th:text="${api.path}">/hello</td>
-                  <td th:text="${api.label}">teacher</td>
-                  <td th:text="${api.remarks}">说明</td>
+                <tr  th:each=" myapi:${apilist}">
+                  <th th:text="${myapi.id}">1</th>
+                  <td th:text="${myapi.name}">renjie</td>
+                  <td th:text="${myapi.method}">get</td>
+                  <td th:text="${myapi.path}">/hello</td>
+                  <td th:text="${myapi.label}">teacher</td>
+                  <td th:text="${myapi.remarks}">说明</td>
                 </tr>
                 </tbody>
 
@@ -615,7 +615,7 @@
     })
   });
   $(document).ready(function () {
-    $('.main-sidebar').load('LeftSideBar.html');
+    $('.main-sidebar').load('../LeftSideBar.html');
   });
 </script>
 </body>

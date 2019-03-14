@@ -31,22 +31,22 @@ public class ApiController {
     @Autowired
     private ApiJPA apiJPA;
 
-    @Cacheable
+    //@Cacheable
     //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public String list(Model model){
-        List list=apiJPA.findAll();
+        List<Api> list=apiJPA.findAll();
         model.addAttribute("apilist",list);
         return "api_list";
     }
 
 
-    @RequestMapping(value = "/save",method = RequestMethod.GET)
+    @RequestMapping(value = "/apisave",method = RequestMethod.GET)
     public Api save(Api api){
         return apiJPA.save(api);
     }
 
-    @RequestMapping(value = "/add")
+    @RequestMapping(value = "/apiadd")
     public String add()
     {
         Api Api = new Api();
@@ -59,7 +59,7 @@ public class ApiController {
         return "信息添加成功";
     }
 
-    @RequestMapping(value = "/delete",method = RequestMethod.GET)
+    @RequestMapping(value = "/apidelete",method = RequestMethod.GET)
     public List<Api> delete(Long id)
     {
         apiJPA.delete(id);
@@ -73,7 +73,7 @@ public class ApiController {
      * @return
      */
 
-    @RequestMapping(value = "/curpage")
+    @RequestMapping(value = "/apicurpage")
     public List<Api> curPage(int page)
     {
         Api user = new Api();
@@ -92,7 +92,7 @@ public class ApiController {
     }
 
 
-    @RequestMapping(value = "/curpage2")
+    @RequestMapping(value = "/apicurpage2")
         public void testPageQuery() throws Exception {
         int page=1,size=10;
         Sort sort = new Sort(Sort.Direction.DESC, "id");
