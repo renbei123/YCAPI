@@ -24,19 +24,21 @@ public class JsonUtil {
         }
     }
 
+
+    // 解析json大对象，取出里面的所有Request，根据 url去重
     public static void toApiList( List<JSONObject> Jsonlist,List<Api> list){
         for (JSONObject o:Jsonlist) {
 
                 JSONObject request = o.getJSONObject("request");
                 String name = o.getString("name");
-                logger.info("name---->{}",name);
+//                logger.info("name---->{}",name);
                 JSONArray event = o.getJSONArray("event");
 
 
                 Api api = new Api();
 
                 String path = request.getJSONObject("url").getString("raw");
-                String host = request.getJSONObject("url").getString("host");
+//                String host = request.getJSONObject("url").getString("host");
 
                 if (path.indexOf("{{host}}") != -1) {
                     path = path.replace("{{host}}", "");
@@ -59,8 +61,8 @@ public class JsonUtil {
                 api.setHeaders(request.getString("header"));
                 api.setLabel("system");
                 String body=request.getJSONObject("body").getString("raw");
-                if (body.length()>500)
-                logger.info("body---->:{},{}", body,body.length());
+//                if (body.length()>500)
+//                logger.info("body---->:{},{}", body,body.length());
                 api.setBody(body);
 
                 if (event!=null) {

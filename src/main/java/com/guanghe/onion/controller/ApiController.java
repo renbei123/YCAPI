@@ -24,7 +24,6 @@ import java.util.Random;
 
 @Controller
 @CacheConfig(cacheNames = "Api")
-@RequestMapping(value = "/api")
 public class ApiController {
 
 
@@ -33,7 +32,7 @@ public class ApiController {
 
     //@Cacheable
     //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    @RequestMapping(value = "/apilist",method = RequestMethod.GET)
     public String list(Model model){
         List<Api> list=apiJPA.findAll();
         model.addAttribute("apilist",list);
@@ -44,6 +43,19 @@ public class ApiController {
     @RequestMapping(value = "/apisave",method = RequestMethod.GET)
     public Api save(Api api){
         return apiJPA.save(api);
+    }
+
+    @RequestMapping(value = "/apieidt")
+    public String edit(Model model,Long id)
+    {
+        Api Api = new Api();
+
+        Api.setName("测试"+new Random().toString());
+        Api.setHeaders("tou");
+        Api.setMethod("post");
+        Api.setPath("/ss/"+new Random().toString());
+        apiJPA.save(Api);
+        return "信息添加成功";
     }
 
     @RequestMapping(value = "/apiadd")

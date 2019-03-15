@@ -105,9 +105,7 @@ public class UploadController {
         List<Api>  apiList=new ArrayList<>();
         JsonUtil.parseJsonToArray(fileObject,jsonlist);
         JsonUtil.toApiList(jsonlist,apiList);
-        for (Api api:apiList){
 
-        }
         Iterable<Api> iterable=apiList;
         apiJPA.save(iterable);
         return "上传成功";

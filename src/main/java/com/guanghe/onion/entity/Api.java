@@ -45,6 +45,9 @@ public class Api extends BaseEntity
     @Column(name = "label")
     private String label;
 
+//    @Column(name = "status")
+//    private Integer status;   1：使用中  2：废弃
+
 /*    // response body
     @Column(name = "re_body")
     private String re_body;
