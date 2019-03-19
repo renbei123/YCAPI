@@ -40,42 +40,31 @@ public class ApiController {
     }
 
 
-    @RequestMapping(value = "/apisave",method = RequestMethod.GET)
-    public Api save(Api api){
-        return apiJPA.save(api);
+    @RequestMapping(value = "/apisave",method = RequestMethod.POST)
+    public String save(Api api){
+         apiJPA.save(api);
+         return "redirect:/apilist";
     }
 
     @RequestMapping(value = "/apieidt")
     public String edit(Model model,Long id)
     {
-        Api Api = new Api();
-
-        Api.setName("测试"+new Random().toString());
-        Api.setHeaders("tou");
-        Api.setMethod("post");
-        Api.setPath("/ss/"+new Random().toString());
-        apiJPA.save(Api);
-        return "信息添加成功";
+        Api api=apiJPA.findOne(id);
+        model.addAttribute("api",api);
+        return "api_edit";
     }
 
     @RequestMapping(value = "/apiadd")
     public String add()
     {
-        Api Api = new Api();
-
-        Api.setName("测试"+new Random().toString());
-        Api.setHeaders("tou");
-        Api.setMethod("post");
-        Api.setPath("/ss/"+new Random().toString());
-        apiJPA.save(Api);
-        return "信息添加成功";
+        return "api_add";
     }
 
     @RequestMapping(value = "/apidelete",method = RequestMethod.GET)
-    public List<Api> delete(Long id)
+    public String delete(Long id)
     {
         apiJPA.delete(id);
-        return apiJPA.findAll();
+        return "redirect:/apilist";
     }
 
 

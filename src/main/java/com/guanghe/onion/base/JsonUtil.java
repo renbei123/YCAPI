@@ -32,7 +32,7 @@ public class JsonUtil {
                 JSONObject request = o.getJSONObject("request");
                 String name = o.getString("name");
 //                logger.info("name---->{}",name);
-                JSONArray event = o.getJSONArray("event");
+                JSONArray event = o.getJSONArray("event");  // postman的脚本
 
 
                 Api api = new Api();
