@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <div th:replace="common/common_head :: common_resource"></div>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <div th:replace="common/main_header :: main_header"></div>
+
+  <div th:replace="common/main_sidebar :: main_sidebar"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        接口列表数据
+        <small>洋葱接口</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Tables</a></li>
+        <li class="active">Data tables</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!--表格内容数据 -->
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">洋葱接口</h3>
+            </div>
+            <!-- /.box-header   -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>id</th>
+                  <th>name</th>
+                  <th>method</th>
+                  <th>path</th>
+                  <th>label</th>
+                  <th>remarks</th>
+                  <th>Edit</th>
+
+                </tr>
+                </thead>
+
+                <!--  tbody 真实的接口数据 -->
+                <tbody>
+                <tr  th:each=" myapi:${testlist}">
+                  <th th:text="${myapi[0]}"></th>
+                  <th th:text="${myapi[1]}"></th>
+                  <th th:text="${myapi[2]}"></th>
+                  <th th:text="${myapi[3]}"></th>
+                  <th th:text="${myapi[4]}"></th>
+                  <th th:text="${myapi[5]}"></th>
+                  <th th:text="${myapi[6]}"></th>
+                </tr>
+                </tbody>
+
+                <!--  tbody 真实的接口数据  end-->
+                <tfoot>
+                <tr>
+                  <th>id</th>
+                  <th>name</th>
+                  <th>method</th>
+                  <th>path</th>
+                  <th>label</th>
+                  <th>remarks</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <div th:replace="common/common_footer :: common_footer"></div>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="../static/bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="../static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="../static/bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="../static/dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../static/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  });
+
+</script>
+</body>
+</html>
