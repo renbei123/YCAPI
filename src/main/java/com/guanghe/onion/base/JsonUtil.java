@@ -25,7 +25,7 @@ public class JsonUtil {
     }
 
 
-    // 解析json大对象，取出里面的所有Request，根据 url去重
+    // 解析json大对象，取出里面的所有Request
     public static void toApiList( List<JSONObject> Jsonlist,List<Api> list){
         for (JSONObject o:Jsonlist) {
 
@@ -77,7 +77,9 @@ public class JsonUtil {
 
                         }
                     }
-                    api.setAssert_Code(code);
+                  int assertcode= code.trim().length()==0?0:Integer.valueOf(code);
+                    api.setAssert_Code(assertcode);
+
                 }
                 list.add(api);
 

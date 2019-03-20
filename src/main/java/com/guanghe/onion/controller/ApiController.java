@@ -5,6 +5,7 @@ package com.guanghe.onion.controller;
  */
 
 import com.guanghe.onion.dao.ApiJPA;
+import com.guanghe.onion.dao.MySqlJPA;
 import com.guanghe.onion.entity.Api;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +40,17 @@ public class ApiController {
         model.addAttribute("apilist",list);
         return "api_list";
     }
+
+
+
+
+    @RequestMapping(value = "/apiselect",method = RequestMethod.GET)
+    public String apiselect(Model model){
+        List<Api> list=apiJPA.findAll();
+        model.addAttribute("apilist",list);
+        return "api_select";
+    }
+
 
 
     @RequestMapping(value = "/apisave",method = RequestMethod.POST)
