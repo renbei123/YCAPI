@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -51,6 +52,13 @@ public class ApiController {
         return "api_select";
     }
 
+    @RequestMapping(value = "/apiselect2",method = RequestMethod.POST)
+    public String apiselect2(Model model,@RequestParam(value="api_id", required=false) String apiId){
+        System.out.println("apiId*******************:"+apiId);
+        model.addAttribute("api_id",apiId);
+
+        return "api_select2";
+    }
 
 
     @RequestMapping(value = "/apisave",method = RequestMethod.POST)

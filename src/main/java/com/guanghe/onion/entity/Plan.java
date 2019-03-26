@@ -15,7 +15,7 @@ import java.sql.Date;
 @Getter
 @Setter
 @ToString
-@Table(name = "MonitorPlan")
+@Table(name = "Plan")
 //Entity中不映射成列的字段得加@Transient 注解，不加注解也会映射成列
 public class Plan
 {
@@ -36,11 +36,11 @@ public class Plan
     private Integer planTime;
 
 
-    @Column(name = "remarks")
-    private String remarks;
+    @Column(name = "comment")
+    private String comment;
 
-    @Column(name = "label")
-    private String label;
+    @Column(name = "dingding")
+    private String dingding;
 
     @Column(name = "creater")
     private String creater;
