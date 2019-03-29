@@ -90,9 +90,7 @@ public class UploadController {
         return "上传成功";
     }
     /**
-     * 上传文件方法
-     * @param file 前台上传的文件对象
-     * @return
+     * 解析上传的文件
      */
     @RequestMapping(value = "/uploadAndResolve",method = RequestMethod.POST)
     @ResponseBody

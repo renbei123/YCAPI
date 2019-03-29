@@ -18,7 +18,7 @@
     <section class="content-header">
       <h1>
         接口列表数据
-        <small>洋葱接口</small>
+        <small>监控接口</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -48,6 +48,8 @@
                   <th>path</th>
                   <th>label</th>
                   <th>remarks</th>
+                  <th>state</th>
+
                   <th>Edit</th>
 
                 </tr>
@@ -62,6 +64,7 @@
                   <td th:text="${myapi.path}">/hello</td>
                   <td th:text="${myapi.label}">teacher</td>
                   <td th:text="${myapi.remarks}">说明</td>
+                  <td th:text="${myapi.status==true?'使用中':'废弃'}">state</td>
                   <td><a th:href="@{/apieidt(id=${myapi.id})}">edit</a> &nbsp;&nbsp;
                   <a th:href="@{/apidelete(id=${myapi.id})}">delete</a></td>
 

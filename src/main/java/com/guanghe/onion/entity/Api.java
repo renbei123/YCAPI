@@ -16,9 +16,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@Table(name = "api")
+@Table(name = "Api")
 //Entity中不映射成列的字段得加@Transient 注解，不加注解也会映射成列
-public class Api extends BaseEntity
+public class Api
 {
 
     @Id
@@ -47,18 +47,9 @@ public class Api extends BaseEntity
     @Column(name = "label")
     private String label;
 
-//    @Column(name = "status")
-//    private Integer status;   1：使用中  2：废弃
+    @Column(name = "status")
+    private Boolean status=true;   // true: 使用中   false：废弃
 
-/*    // response body
-    @Column(name = "re_body")
-    private String re_body;
-
-    @Column(name = "rs_Cookies")
-    private String rs_Cookies;
-
-    @Column(name = "rs_headers")
-    private String rs_headers;*/
 
     // assert
     @Column(name = "assert_Code",nullable = true)
@@ -69,4 +60,9 @@ public class Api extends BaseEntity
 
     @Column(name = "assert_jsonCheck",nullable = true)
     private String assert_jsonCheck;
+
+    @Transient
+    private String[] assert_hasStringArray;
+    @Transient
+    private String[] assert_jsonCheckArray;
 }

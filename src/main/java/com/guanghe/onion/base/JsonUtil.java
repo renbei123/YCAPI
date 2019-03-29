@@ -12,6 +12,8 @@ import java.util.List;
 
 public class JsonUtil {
     private final static Logger logger = LoggerFactory.getLogger(JsonUtil.class);
+
+
     public  static void parseJsonToArray(JSONObject o, List<JSONObject> list){
         if (o.containsKey("item")){
             JSONArray items=o.getJSONArray("item");
@@ -55,6 +57,7 @@ public class JsonUtil {
                     path = path.replace("https://", "");
                     path = path.substring(path.indexOf("/"));
                 }
+
                 api.setPath(path);
                 api.setMethod(request.getString("method"));
                 api.setName(name);

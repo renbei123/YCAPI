@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface PlanJPA extends JpaRepository<Plan, Long> {
 
-    @Query(value = "SELECT id, plan_name,plan_time,dingding,creater,comment from plan "
+    @Query(value = "SELECT id, plan_name,plan_time,dingding,creater,comment,status from plan "
             ,  nativeQuery = true)
     List<Object[]> planlist();
+
+
 }

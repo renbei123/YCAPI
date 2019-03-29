@@ -25,6 +25,9 @@ public class Plan
     @GeneratedValue
     private Long id;
 
+    @Column(name = "host")
+    private String host;
+
     @Column(name = "planName")
     private String planName;
 
@@ -46,6 +49,8 @@ public class Plan
     private String creater;
 
 
-
+    @Column(name = "status")
+    private Boolean status=true;   // true: 开始运行监控   false：结束监控
+   
 
 }

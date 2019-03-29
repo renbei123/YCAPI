@@ -71,6 +71,9 @@ public class ApiController {
     public String edit(Model model,Long id)
     {
         Api api=apiJPA.findOne(id);
+
+        if (api.getAssert_hasString()!=null)  api.setAssert_hasStringArray(api.getAssert_hasString().split(","));
+        if(api.getAssert_jsonCheck()!=null)   api.setAssert_jsonCheckArray(api.getAssert_jsonCheck().split(","));
         model.addAttribute("api",api);
         return "api_edit";
     }
@@ -89,29 +92,29 @@ public class ApiController {
     }
 
 
-    /**
-     * 分页查询测试
-     * @param page 传入页码，从1开始
-     * @return
-     */
+//    /**
+//     * 分页查询测试
+//     * @param page 传入页码，从1开始
+//     * @return
+//     */
 
-    @RequestMapping(value = "/apicurpage")
-    public List<Api> curPage(int page)
-    {
-        Api user = new Api();
-        user.setSize(2);
-        user.setSord("desc");
-        user.setPage(page);
-
-        //获取排序对象
-        Sort.Direction sort_direction = Sort.Direction.ASC.toString().equalsIgnoreCase(user.getSord()) ? Sort.Direction.ASC : Sort.Direction.DESC;
-        //设置排序对象参数
-        Sort sort = new Sort(sort_direction, user.getSidx());
-        //创建分页对象
-        PageRequest pageRequest = new PageRequest(user.getPage() - 1,user.getSize(),sort);
-        //执行分页查询
-        return apiJPA.findAll(pageRequest).getContent();
-    }
+//    @RequestMapping(value = "/apicurpage")
+//    public List<Api> curPage(int page)
+//    {
+//        Api user = new Api();
+//        user.setSize(2);
+//        user.setSord("desc");
+//        user.setPage(page);
+//
+//        //获取排序对象
+//        Sort.Direction sort_direction = Sort.Direction.ASC.toString().equalsIgnoreCase(user.getSord()) ? Sort.Direction.ASC : Sort.Direction.DESC;
+//        //设置排序对象参数
+//        Sort sort = new Sort(sort_direction, user.getSidx());
+//        //创建分页对象
+//        PageRequest pageRequest = new PageRequest(user.getPage() - 1,user.getSize(),sort);
+//        //执行分页查询
+//        return apiJPA.findAll(pageRequest).getContent();
+//    }
 
 
     @RequestMapping(value = "/apicurpage2")
