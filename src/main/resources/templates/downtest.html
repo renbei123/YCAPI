@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <title></title>
+    <script src="//libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+<body>
+<input type="button" class="downloadAll" value="批量下载" />
+
+<script>
+    var filesForDownload = [];
+    filesForDownload[filesForDownload.length] = {
+        path: "1.zip", //要下载的文件路径
+        name: "file1.txt" //下载后要显示的名称
+    };
+    filesForDownload[filesForDownload.length] = {
+        path: "2.zip",
+        name: "file2.txt"
+    };
+    filesForDownload[filesForDownload.length] = {
+        path: "3.zip",
+        name: "file3.txt"
+    };
+
+    function download(obj) {
+        var temporaryDownloadLink = document.createElement("a");
+        temporaryDownloadLink.style.display = 'none';
+        document.body.appendChild(temporaryDownloadLink);
+        temporaryDownloadLink.setAttribute('href', obj.path);
+        temporaryDownloadLink.setAttribute('download', obj.name);
+        temporaryDownloadLink.click();
+        document.body.removeChild(temporaryDownloadLink);
+    }
+
+    $('input.downloadAll').click(function(e) {
+        e.preventDefault();
+        for (var x in filesForDownload) {
+            download(filesForDownload[x]);
+
+        }
+
+
+    });
+</script>
+</body>
+
+</html>
