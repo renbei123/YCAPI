@@ -20,7 +20,7 @@ public class MonitorLog extends BaseEntity
 {
 
     @Id
-    @Column(name = "id",unique = true,nullable = false)
+    @Column(name = "id",unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private long id;
 
@@ -38,15 +38,15 @@ public class MonitorLog extends BaseEntity
 
 
     @Column(name = "StatusCode")
-    private byte StatusCode;
+    private int StatusCode;
 
     @Column(name = "responseSize")
     private int responseSize;
 
 
-    @Column(name = "execTime",columnDefinition = "COMMENT '执行时间'")
+    @Column(name = "execTime")
     //接口从请求到返回经过的时间
-    private Date execTime;
+    private long execTime;
 
 
 

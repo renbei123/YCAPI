@@ -58,7 +58,7 @@
                 <!--  tbody 真实的接口数据 -->
                 <tbody>
                 <tr  th:each=" myapi:${apilist}">
-                  <th th:text="${myapi.id}">1</th>
+                  <td th:text="${myapi.id}">1</td>
                   <td href="details.html" th:text="${myapi.name}">renjie</td>
                   <td th:text="${myapi.method}">get</td>
                   <td th:text="${myapi.path}">/hello</td>

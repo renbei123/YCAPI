@@ -44,7 +44,7 @@ public class ErrorLog extends BaseEntity
 
     @Column(name = "execTime")
     //执行时间
-    private Date execTime;
+    private String execTime;
 
     @Column(name = "req_header", length = 1000)
     private String req_header;

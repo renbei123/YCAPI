@@ -15,7 +15,7 @@ import java.sql.Date;
 @ToString
 @Table(name = "SystemVar")
 //系统环境变量，全局变量
-public class SystemVar extends BaseEntity
+public class SystemVar
 {
 
     @Id
@@ -23,12 +23,10 @@ public class SystemVar extends BaseEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    // 是否请求全部成功
+    @Column(name = "name",unique = true)
     private String name;
 
     @Column(name = "value",length = 1000)
-    //执行时间
     private String value;
 
 
