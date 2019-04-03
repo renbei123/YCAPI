@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.exceptions.TemplateInputException;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,10 +48,10 @@ public class IndexController {
         model.addAttribute("apisum", apisum);
 
         String errorsOf30days=staticsjpa.errorsOf30days(startDate).get(0).toString();
-//        String longExecTimeOf30days=staticsjpa.longExecTimeOf30days(startDate,5000).get(0).toString();
+        String longExecTimeOf30days=staticsjpa.longExecTimeOf30days(startDate, Long.valueOf(5000)).get(0).toString();
         String sum_500Of30days=staticsjpa.sum_500Of30days(startDate).get(0).toString();
         model.addAttribute("errorsOf30days", errorsOf30days);
-//        model.addAttribute("longExecTimeOf30days", longExecTimeOf30days);
+        model.addAttribute("longExecTimeOf30days", longExecTimeOf30days);
         model.addAttribute("sum_500Of30days", sum_500Of30days);
         return "index";
     }

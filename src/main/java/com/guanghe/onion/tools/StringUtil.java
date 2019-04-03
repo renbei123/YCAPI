@@ -90,19 +90,5 @@ public  class  StringUtil{
     }
 
 
-    // 匹配{{host}}类型的变量
-   public static Matcher myconvert(String str){
-
-       String patten="\\{{2}[\\S&&[^\\{{2}}{2}]]+}}";
-//        String patten="\\{{2}[A-Za-z0-9_-]+}}";
-       Pattern pattern = Pattern.compile(patten);
-       // 忽略大小写的写法
-       // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
-       Matcher m = pattern.matcher(str);
-//       while(m.find()) {
-////           System.out.println(m.group());
-//       }
-       return m;
-   }
 
 }

@@ -32,7 +32,7 @@ public class MonitorLog extends BaseEntity
     private long apiId;
 
 
-    @Column(name = "result")
+    @Column(name = "isok")
     //  0:error  1：ok  是否正缺执行
     private boolean result;
 
@@ -44,10 +44,14 @@ public class MonitorLog extends BaseEntity
     private int responseSize;
 
 
-    @Column(name = "execTime")
-    //接口从请求到返回经过的时间
-    private long execTime;
+    @Column(name = "startTime")
+    //执行开始时间
+    private String startTime;
 
+
+    @Column(name = "elapsedTime")
+    //执行接口的经历时间
+    private long elapsedTime;
 
 
 }

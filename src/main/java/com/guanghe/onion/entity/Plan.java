@@ -35,7 +35,7 @@ public class Plan
     private String apiIds;
 
     @Column(name = "planTime", nullable = false)
-    //单位是分钟,每多少分钟执行一次
+    //每5分钟为单位的频率间隔数n，， 间隔时间是 n*5 分钟
     private Integer planTime;
 
 

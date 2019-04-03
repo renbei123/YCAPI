@@ -60,14 +60,14 @@
     </section>
 
     <!-- Main content -->
-    <section class="content">
+    <section class="content" >
       <!-- Small boxes (Stat box) -->
       <div class="row">
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>150</h3>
+              <h3 th:text="${apisum}">0</h3>
 
               <p>接口总数</p>
             </div>
@@ -97,9 +97,9 @@
           <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
-              <h3>${longExecTimeOf30days}</h3>
+              <h3 th:text="${longExecTimeOf30days}">0</h3>
 
-              <p>大于5秒响应时长的日志</p>
+              <p>响应时长大于5秒</p>
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
@@ -112,7 +112,7 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>${errorsOf30days}</h3>
+              <h3 th:text="${errorsOf30days}">0</h3>
 
               <p>最近一个月错误统计</p>
             </div>
@@ -127,7 +127,7 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>${sum_500Of30days}</h3>
+              <h3 th:text="${sum_500Of30days}">0</h3>
 
               <p>最近一个月500错误统计</p>
             </div>

@@ -10,6 +10,7 @@ import com.guanghe.onion.dao.MonitorLogJPA;
 import com.guanghe.onion.dao.PlanJPA;
 import com.guanghe.onion.entity.ErrorLog;
 
+import com.guanghe.onion.entity.MonitorLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.PageRequest;
@@ -35,10 +36,17 @@ public class LogController {
     //@Cacheable
     //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
     @RequestMapping(value = "/loglist",method = RequestMethod.GET)
-    public String errlist(Model model){
-        List<ErrorLog> list=errorlogjpa.findAll();
+    public String loglist(Model model){
+        List<MonitorLog> list=monitorlogjpa.findAll();
         model.addAttribute("loglist",list);
         return "log_list";
+    }
+
+    @RequestMapping(value = "/errorlist",method = RequestMethod.GET)
+    public String errlist(Model model){
+        List<ErrorLog> list=errorlogjpa.findAll();
+        model.addAttribute("list",list);
+        return "errorlog_list";
     }
 
 

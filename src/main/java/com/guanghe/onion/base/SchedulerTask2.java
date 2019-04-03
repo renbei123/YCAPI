@@ -53,106 +53,77 @@ public class SchedulerTask2 {
     public static Map sysVars=null;
 
     private final static Logger logger = LoggerFactory.getLogger("*****");
+
+    public static Map<Long,Integer> plantime=null;
+
+
     //    @Async
     @Scheduled(initialDelay=1000*4, fixedDelay = 1000*60*5)
     public void runMonitor() {
+
         getSystemVar();
+
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-        System.out.println("轮询开始：" + df.format(new Date()));// new Date()为获取当前系统时间
+        System.out.println("轮询开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
 
         List<Plan> planList = planJPA.findAll();
-        Matcher matcher1,matcher2;
-            for (Plan plan:planList){
 
-               String host=plan.getHost().trim().length()==0?sysVars.get("host").toString().trim():plan.getHost().trim();
+        if (plantime==null){
+            plantime=new HashMap();
+            for (Plan plan:planList){
+                plantime.put(plan.getId(),plan.getPlanTime());
+            }
+        }
+        /*开始计划集合*/
+            for (Plan plan:planList){
+                logger.info("plan.getHost():"+plan.getHost());
+
+               String host=plan.getHost()==null?sysVars.get("host").toString().trim():plan.getHost().trim();
+               int curnumber=plantime.get(plan.getId()).intValue()-1;
+               if(curnumber>0){
+                   plantime.put(plan.getId(),curnumber);
+                   continue;
+                }
+
+               plantime.put(plan.getId(),plan.getPlanTime());
 
                List<Object[]> apiList=planApisOrderJPA.getexePlanApis(plan.getId());
+               /*开始某个plan里的所有api*/
                for(Object[] api:apiList){
                    String apid=api[1].toString();
                    String apiname=api[2].toString();
                    String method=api[3].toString();
                    String path=api[4].toString();
                    path = (path.startsWith("http://") || path.startsWith("https://")) ? path : (host + path);
-                   matcher1 = StringUtil.myconvert(path);
-
                    logger.info(apiname+" : "+path);
-                   while (matcher1.find()) {
-                       String name=matcher1.group();
-                       String temp=name.substring(2,name.length()-2);
-                       String value=sysVars.containsKey(temp)?sysVars.get(temp).toString():null;
-                       path=(value==null?path:path.replace(name,value));
-                   }
+
+                   path=replaceSysVar(path);
 
                    String body=api[5]==null?"":api[5].toString();
+                   body=replaceSysVar(body);
 
-                   matcher2 = StringUtil.myconvert(body);
-                   while (matcher2.find()) {
-                       String name=matcher2.group();
-                       String temp=name.substring(2,name.length()-2);
-                       String value=sysVars.containsKey(temp)?sysVars.get(temp).toString():null;
-                       body=(value==null?body:body.replace(name,value));
-                   }
                    String assert_code=api[6].toString();
                    String assert_has_string=api[7]==null?"":api[7].toString();
                    String assert_json_check=api[8]==null?"":api[8].toString();
                    String heads=api[9]==null?"":api[9].toString();
 
-                   matcher1 = StringUtil.myconvert(heads);
-                   while (matcher1.find()) {
-                       String name=matcher1.group();
-                       String temp=name.substring(2,name.length()-2);
-                       logger.info("name:"+temp);
-                       String value=sysVars.containsKey(temp)?sysVars.get(temp).toString():null;
-                       logger.info("value:"+value);
-                       heads=(value==null?heads:heads.replace(name,value));
-
-                   }
-
+                   heads=replaceSysVar(heads);
                    Map headers= (Map)StringUtil.StringToMap(heads);
-                   Response result=null;
-                   Map cookies=null;
-                   Date execTime=new Date();
-                   long starTime=System.currentTimeMillis();//获取开始时间
-                   if(method.equals("GET")){
-                       result=given()
-                               .headers(headers)
-                               .get(path);;
-                   }
 
-                   if(method.equals("POST")){
-                       result=given()
-                               .headers(headers)
-                               .body(body)
-                               .post(path);;
-                   }
-                   if(method.equals("PUT")){
-                       result=given()
-                               .headers(headers)
-                               .body(body)
-                               .put(path);;
-                   } if(method.equals("PATCH")){
-                       result=given()
-                               .headers(headers)
-                               .body(body)
-                               .patch(path);;
-                   }if(method.equals("DELETE")){
-                       result=given()
-                               .headers(headers)
-                               .body(body)
-                               .delete(path);;
-                   }if(method.equals("OPTIONS")){
-                       result=given()
-                               .headers(headers)
-                               .body(body)
-                               .options(path);;
-                   }
+
+                   Map cookies=null;
+
+                   long starTime=System.currentTimeMillis();//获取开始时间数
+
+                   Response result=send(path,method,headers,body);
 
                    long endTime = System.currentTimeMillis();    //获取结束时间
                    System.out.println("运行时间：" + (endTime - starTime) + "ms");    //输出程序运行时间
                    MonitorLog monitorlog=new MonitorLog();
                    monitorlog.setApiId(Long.parseLong(apid));
                    monitorlog.setPlanId(plan.getId());
-                   monitorlog.setExecTime(endTime - starTime);
+                   monitorlog.setStartTime(df.format(new Date()));
+                   monitorlog.setElapsedTime(endTime - starTime);
                    int res_body_size=result.getBody().asString().length();
                    monitorlog.setResponseSize(res_body_size);
                    monitorlog.setStatusCode(result.statusCode());
@@ -162,7 +133,7 @@ public class SchedulerTask2 {
                    String[] s= assert_has_string.split(",");
                    if (result.getStatusCode()!=Integer.parseInt(assert_code)) {
 
-                       assertlog.append("预期返回码是:"+assert_code+"，实际返回:"+result.getStatusCode());
+                       assertlog.append("预期返回码是:"+assert_code+"，实际返回:"+result.getStatusCode()+"\r\n");
                    }
                    for (String assertStr:s){
                        if(result.getBody().asString().indexOf(assertStr)==-1){
@@ -183,7 +154,7 @@ public class SchedulerTask2 {
                        errorlog=new ErrorLog();
                        errorlog.setApiId(Long.parseLong(apid));
                        errorlog.setApiName(apiname);
-                       errorlog.setExecTime(df.format(starTime));
+                       errorlog.setStartTime(df.format(starTime));
                        errorlog.setMethod(method);
                        errorlog.setPlanId(plan.getId());
                        errorlog.setAssert_result(assertlog.toString());
@@ -191,9 +162,9 @@ public class SchedulerTask2 {
                        errorlog.setReq_header(headers.toString());
                        errorlog.setRes_code(result.getStatusCode());
                        errorlog.setRes_header(result.getHeaders().toString());
-                       errorlog.setRes_size(String.valueOf(res_body_size));
+                       errorlog.setRes_size(res_body_size);
                        errorlog.setUrl(path);
-                       errorlog.setRes_body(result.getBody().toString());
+                       errorlog.setRes_body(result.getBody().asString());
                        errorlogjpa.save(errorlog);
 
                    } else
@@ -204,6 +175,44 @@ public class SchedulerTask2 {
            }
     }
 
+
+    public Response send(String path,String method, Map headers,String body){
+
+        if(method.equals("GET")){
+            return  given()
+                    .headers(headers)
+                    .get(path);
+        }
+
+        if(method.equals("POST")){
+            return given()
+                    .headers(headers)
+                    .body(body)
+                    .post(path);
+        }
+        if(method.equals("PUT")){
+            return given()
+                    .headers(headers)
+                    .body(body)
+                    .put(path);
+        } if(method.equals("PATCH")){
+            return  given()
+                    .headers(headers)
+                    .body(body)
+                    .patch(path);
+        }if(method.equals("DELETE")){
+            return  given()
+                    .headers(headers)
+                    .body(body)
+                    .delete(path);
+        }if(method.equals("OPTIONS")){
+            return  given()
+                    .headers(headers)
+                    .body(body)
+                    .options(path);
+        }
+        return null;
+    }
 
     public Response  GET(String url, Map para, Map heads, Map cookies){
         return  given()
@@ -241,6 +250,21 @@ public class SchedulerTask2 {
     }
 
 
+    public String  replaceSysVar(String content){
+        // 匹配{{host}}类型的变量
+        String patten="\\{{2}[\\S&&[^\\{{2}}{2}]]+}}";
+        Pattern pattern = Pattern.compile(patten);
+        // 忽略大小写的写法
+        // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+        Matcher m = pattern.matcher(content);
+        while (m.find()) {
+            String name=m.group();
+            String temp=name.substring(2,name.length()-2);
+            String value=sysVars.containsKey(temp)?sysVars.get(temp).toString():null;
+            content=(value==null?content:content.replace(name,value));
+        }
+        return content;
+    }
 
 }
 
@@ -259,18 +283,3 @@ public class SchedulerTask2 {
 //            　　　　　　@Scheduled(fixedDelay = 6000)：上一次执行完毕时间点之后6秒再执行。
 //            　　　　　　@Scheduled(initialDelay=1000, fixedRate=6000)：第一次延迟1秒后执行，之后按fixedRate的规则每6秒执行一次。
 
-//
-//    @Async
-//    @Scheduled(fixedDelay = 6000)  //间隔1秒
-//    public void first() throws InterruptedException {
-//        System.out.println("第一个定时任务开始 : " +  dateFormat.format(new Date()) + "\r\n线程 : " + Thread.currentThread().getName());
-//        System.out.println();
-//        Thread.sleep(1000 * 10);
-//    }
-//
-//    @Async
-//    @Scheduled(fixedDelay = 6000)
-//    public void second() {
-//        System.out.println("第二个定时任务开始 : " +  dateFormat.format(new Date()) + "\r\n线程 : " + Thread.currentThread().getName());
-//        System.out.println();
-//    }

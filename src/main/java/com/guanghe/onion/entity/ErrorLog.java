@@ -42,11 +42,15 @@ public class ErrorLog extends BaseEntity
     private String url;
 
 
-    @Column(name = "execTime")
-    //执行时间
-    private String execTime;
+    @Column(name = "startTime")
+    //执行开始时间
+    private String startTime;
 
-    @Column(name = "req_header", length = 1000)
+    @Column(name = "elapsedTime")
+    //执行接口的经历时间
+    private long elapsedTime;
+
+    @Column(name = "req_header", length = 2000, columnDefinition ="" )
     private String req_header;
 
     @Column(name = "req_body", length =10000)
@@ -60,7 +64,7 @@ public class ErrorLog extends BaseEntity
     private Integer res_code;
 
     @Column(name = "res_size")
-    private String res_size;
+    private Integer res_size;
 
     @Column(name = "res_header")
     private String res_header;
