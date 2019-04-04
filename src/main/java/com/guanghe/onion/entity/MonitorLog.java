@@ -34,7 +34,7 @@ public class MonitorLog extends BaseEntity
 
     @Column(name = "isok")
     //  0:error  1：ok  是否正缺执行
-    private boolean result;
+    private boolean isok;
 
 
     @Column(name = "StatusCode")

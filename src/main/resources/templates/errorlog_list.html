@@ -10,7 +10,107 @@
 
     <div th:replace="common/main_header :: main_header"></div>
 
-    <div th:replace="common/main_sidebar :: main_sidebar"></div>
+    <div th:fragment="main_sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="../../static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        <p> hello， 任杰 </p>
+                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                    </div>
+                </div>
+                <!-- search form
+                <form action="#" method="get" class="sidebar-form">
+                  <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                    <span class="input-group-btn">
+                          <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                          </button>
+                        </span>
+                  </div>
+                </form>        -->
+                <!-- /.search form -->
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu tree" data-widget="tree">
+                    <li class="header">接口监控导航栏</li>
+
+                    <!-- 统计 -->
+                    <li>
+                        <a href="../index.html">
+                            <i class="fa fa-dashboard"></i> <span>统计</span>
+                        </a>
+                    </li>
+
+                    <!-- 接口列表 -->
+                    <li>
+                        <a href="/apilist">
+                            <i class="fa fa-th"></i> <span>接口列表</span>
+                        </a>
+                    </li>
+
+                    <!-- 监控计划 -->
+
+                    <!--<li class="treeview">-->
+                    <li>
+                        <a href="/planlist">
+                            <i class="fa fa-calendar"></i>
+                            <span>监控计划</span>
+                            <!--<span class="pull-right-container">-->
+                            <!--<i class="fa fa-angle-left pull-right"></i>-->
+                            <!--</span>-->
+                        </a>
+                        <!--<ul class="treeview-menu" style="display: none;">-->
+                        <!--<li><a href="../pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>-->
+                        <!--<li><a href="../pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>-->
+                        <!--<li><a href="../pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>-->
+                        <!--<li><a href="../pages/charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>-->
+                        <!--</ul>-->
+                    </li>
+
+
+                    <li>
+                        <a href="/SystemVar">
+                            <i class="fa fa-laptop"></i>
+                            <span>系统变量</span>
+                        </a>
+                    </li>
+
+
+                    <li class="treeview active">
+                        <a href="#">
+                            <i class="fa fa-table"></i> <span>日志查看</span>
+                            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                        </a>
+                        <ul class="treeview-menu" >
+                            <li ><a href="/loglist"><i class="fa fa-circle-o"></i>日志列表</a></li>
+                            <li class="active"><a href="/errorlist"><i class="fa fa-circle-o"></i> 错误日志</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="../Upload.html"><i class="fa fa-book"></i> <span>导入文件数据</span></a></li>
+
+
+
+
+                    <!--第二部分 -->
+                    <li class="header">Ui Automator</li>
+                    <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
+                    <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
+                    <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+
+        </aside>
+
+    </div>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -39,50 +139,44 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>id</th>
-                                    <th>接口</th>
-                                    <th>计划</th>
+                                    <th>接口名称</th>
+                                    <th>路径</th>
+                                    <th>方法</th>
+                                    <th>断言</th>
                                     <th>响应时长</th>
-                                    <th>响应大小</th>
-                                    <th>状态码</th>
+                                    <th>返回码</th>
+                                    <th>返回大小</th>
                                     <th>开始时间</th>
-                                    <th>返回body</th>
-                                    <th>返回header</th>
 
 
                                 </tr>
                                 </thead>
 
-                                <!--  tbody 真实的接口数据 -->
+                                <!--  tbody 真实的接口数据 SELECT api_name, url, method, assert_result , elapsed_time,res_code,res_size, start_time from error_log-->
                                 <tbody>
-                                <tr  th:each=" log:${list}" >
-                                    <th th:text="${log.getId()}" >1</th>
-                                    <td href="details.html" th:text="${log.getApiName()}" >name</td>
-                                    <td th:text="${log.getPlanId()}">get</td>
-                                    <td th:text="${log.getElapsedTime()+'ms'}"></td>
-                                    <td th:text="${log.getRes_size()+'b'}"></td>
-                                    <td th:text="${log.getRes_size()}"></td>
-                                    <td th:text="${log.getStartTime()}"></td>
-                                    <td th:text="${log.getRes_body()}"></td>
-                                    <td th:text="${log.getRes_header()}"></td>
-
-
-
+                                <tr  th:each=" log:${list}" th:onclick="'edit('+${log[8]}+')'">
+                                    <th th:text="${log[0]}" ></th>
+                                    <td th:text="${log[1]}"></td>
+                                    <td th:text="${log[2]}"></td>
+                                    <td th:text="${log[3]}"></td>
+                                    <td th:text="${log[4]}"></td>
+                                    <td th:text="${log[5]}"></td>
+                                    <td th:text="${log[6]}"></td>
+                                    <td th:text="${log[7]}"></td>
                                 </tr>
                                 </tbody>
 
                                 <!--  tbody 真实的接口数据  end-->
                                 <tfoot>
                                 <tr>
-                                    <th>id</th>
-                                    <th>接口</th>
-                                    <th>计划</th>
+                                    <th>接口名称</th>
+                                    <th>路径</th>
+                                    <th>方法</th>
+                                    <th>断言</th>
                                     <th>响应时长</th>
-                                    <th>响应大小</th>
-                                    <th>状态码</th>
+                                    <th>返回码</th>
+                                    <th>返回大小</th>
                                     <th>开始时间</th>
-                                    <th>返回body</th>
-                                    <th>返回header</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -128,15 +222,11 @@
 
         });
 
-
     });
 
-    $('#newplan').click(function () {
-        location.href="/apiselect";
-    });
+    function  edit(errorlog_id){
 
-    function  editplan(id){
-        alert(id);
+        location.href="/errorlogDetail?id="+errorlog_id;
     }
 </script>
 </body>

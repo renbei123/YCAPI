@@ -37,18 +37,24 @@ public class LogController {
     //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
     @RequestMapping(value = "/loglist",method = RequestMethod.GET)
     public String loglist(Model model){
-        List<MonitorLog> list=monitorlogjpa.findAll();
+        List<Object[]> list=monitorlogjpa.detailLoglist();
         model.addAttribute("loglist",list);
         return "log_list";
     }
 
     @RequestMapping(value = "/errorlist",method = RequestMethod.GET)
     public String errlist(Model model){
-        List<ErrorLog> list=errorlogjpa.findAll();
+        List<Object[]> list=errorlogjpa.errorLoglist();
         model.addAttribute("list",list);
         return "errorlog_list";
     }
 
+    @RequestMapping(value = "/errorlogDetail",method = RequestMethod.GET)
+    public String errorlogDetail(Model model, Long id){
+        ErrorLog errordetail=errorlogjpa.findOne(id);
+        model.addAttribute("errordetail",errordetail);
+        return "errorlogDetail";
+    }
 
 
 

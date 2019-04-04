@@ -21,7 +21,7 @@ public class ErrorLog extends BaseEntity
 
     @Id
     @Column(name = "id",unique = true,nullable = false)
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE )
     private Long id;
 
 
@@ -57,7 +57,7 @@ public class ErrorLog extends BaseEntity
     private String req_body;
 
 
-    @Column(name = "res_body", length =20000)
+    @Column(name = "res_body", length =30000)
     private String res_body;
 
     @Column(name = "res_code")
@@ -66,9 +66,9 @@ public class ErrorLog extends BaseEntity
     @Column(name = "res_size")
     private Integer res_size;
 
-    @Column(name = "res_header")
+    @Column(name = "res_header",length = 2000)
     private String res_header;
 
-    @Column(name = "assert_result")
+    @Column(name = "assert_result",length = 1000)
     private String assert_result;
 }

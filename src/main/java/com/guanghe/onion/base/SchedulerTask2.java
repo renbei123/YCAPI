@@ -33,9 +33,6 @@ public class SchedulerTask2 {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss a E");
 
-
-
-
     @Autowired
     private PlanJPA planJPA;
     @Autowired
@@ -58,7 +55,7 @@ public class SchedulerTask2 {
 
 
     //    @Async
-    @Scheduled(initialDelay=1000*4, fixedDelay = 1000*60*5)
+    @Scheduled(initialDelay=1000*4, fixedDelay = 1000*60*10)
     public void runMonitor() {
 
         getSystemVar();
@@ -76,9 +73,10 @@ public class SchedulerTask2 {
         }
         /*开始计划集合*/
             for (Plan plan:planList){
+                 if (!plan.getStatus())  continue;
                 logger.info("plan.getHost():"+plan.getHost());
 
-               String host=plan.getHost()==null?sysVars.get("host").toString().trim():plan.getHost().trim();
+               String host=(plan.getHost()==null||plan.getHost().trim().equals("")?sysVars.get("host").toString().trim():plan.getHost().trim());
                int curnumber=plantime.get(plan.getId()).intValue()-1;
                if(curnumber>0){
                    plantime.put(plan.getId(),curnumber);
@@ -95,9 +93,9 @@ public class SchedulerTask2 {
                    String method=api[3].toString();
                    String path=api[4].toString();
                    path = (path.startsWith("http://") || path.startsWith("https://")) ? path : (host + path);
-                   logger.info(apiname+" : "+path);
 
                    path=replaceSysVar(path);
+                   logger.info(apiname+" : "+path);
 
                    String body=api[5]==null?"":api[5].toString();
                    body=replaceSysVar(body);
@@ -118,12 +116,13 @@ public class SchedulerTask2 {
                    Response result=send(path,method,headers,body);
 
                    long endTime = System.currentTimeMillis();    //获取结束时间
-                   System.out.println("运行时间：" + (endTime - starTime) + "ms");    //输出程序运行时间
+                   long elapsetime=endTime - starTime;
+                   System.out.println("运行时间：" + elapsetime + "ms");    //输出程序运行时间
                    MonitorLog monitorlog=new MonitorLog();
                    monitorlog.setApiId(Long.parseLong(apid));
                    monitorlog.setPlanId(plan.getId());
                    monitorlog.setStartTime(df.format(new Date()));
-                   monitorlog.setElapsedTime(endTime - starTime);
+                   monitorlog.setElapsedTime(elapsetime);
                    int res_body_size=result.getBody().asString().length();
                    monitorlog.setResponseSize(res_body_size);
                    monitorlog.setStatusCode(result.statusCode());
@@ -136,7 +135,7 @@ public class SchedulerTask2 {
                        assertlog.append("预期返回码是:"+assert_code+"，实际返回:"+result.getStatusCode()+"\r\n");
                    }
                    for (String assertStr:s){
-                       if(result.getBody().asString().indexOf(assertStr)==-1){
+                       if(result.getBody().asString().indexOf(assertStr.trim())==-1){
 
                            assertlog.append("返回的结果找不到字符串:"+assertStr);
                        }
@@ -148,13 +147,13 @@ public class SchedulerTask2 {
 //                       }
 //                   }
 //
-
                    if (assertlog.toString().length()>0){
-                       monitorlog.setResult(false);
+                       monitorlog.setIsok(false);
                        errorlog=new ErrorLog();
                        errorlog.setApiId(Long.parseLong(apid));
                        errorlog.setApiName(apiname);
                        errorlog.setStartTime(df.format(starTime));
+                       errorlog.setElapsedTime(elapsetime);
                        errorlog.setMethod(method);
                        errorlog.setPlanId(plan.getId());
                        errorlog.setAssert_result(assertlog.toString());
@@ -165,10 +164,14 @@ public class SchedulerTask2 {
                        errorlog.setRes_size(res_body_size);
                        errorlog.setUrl(path);
                        errorlog.setRes_body(result.getBody().asString());
+                       logger.info("errorlog:"+errorlog.getApiName()+"\r\n "+errorlog.getReq_body().length()+":"+errorlog.getRes_body().length()+"\r\n "+errorlog.getReq_header().length()+"\r\n "
+                        +errorlog.getRes_header().length()+"\r\n "+errorlog.getAssert_result().length());
+                       //logger.info("errorlog:"+errorlog.toString());
                        errorlogjpa.save(errorlog);
 
-                   } else
-                       monitorlog.setResult(true);
+                   } else {
+                       monitorlog.setIsok(true);
+                   }
                        monitorlogjpa.save(monitorlog);
 
                }

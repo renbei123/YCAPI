@@ -4,6 +4,7 @@ package com.guanghe.onion.controller;
  * Created by renjie on 2018/12/5.
  */
 
+import com.guanghe.onion.base.SchedulerTask2;
 import com.guanghe.onion.dao.ApiJPA;
 import com.guanghe.onion.dao.PlanApisOrderJPA;
 import com.guanghe.onion.dao.PlanJPA;
@@ -89,6 +90,7 @@ public class PlanController {
             planApisOrderJPA.save(planapisorder);
         }
         planJPA.save(plan);
+        SchedulerTask2.plantime.put(plan.getId(),plan.getPlanTime());  //重置轮询任务里的计划执行时间段
         return "redirect:/planlist";
     }
 

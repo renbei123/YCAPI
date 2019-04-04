@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface MonitorLogJPA extends JpaRepository<MonitorLog, Long> {
 
-    @Query(value = "SELECT a.name,log.elapsed_time,log.exec_time,log.response_size,log.isok, log.status_code from monitor_log as log, api as a"
+    @Query(value = "SELECT a.id,a.name,log.status_code , log.elapsed_time,log.response_size,log.isok, log.start_time " +
+            " from monitor_log as log, api as a where a.id=log.api_id"
             ,  nativeQuery = true)
     List<Object[]> detailLoglist();
 
