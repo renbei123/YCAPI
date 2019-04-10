@@ -64,18 +64,16 @@ public class UploadController {
 
             //获取跟目录
             File path = new File(ResourceUtils.getURL("classpath:").getPath());
-            System.out.println("path1:"+path.getAbsolutePath());
+
             //当前运行系统目录
             if(!path.exists()) {
                 path = new File("");
-                System.out.println("path2:"+path.getAbsolutePath());
             }
 
 
             File upload = new File(path.getAbsolutePath(),"upload");
             if(!upload.exists()) upload.mkdirs();
             String uploadDir =upload.getAbsolutePath()+"/";
-            System.out.println("uploadDir:"+uploadDir);
 
             //调用上传方法
             executeUpload(uploadDir,file);

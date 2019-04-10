@@ -38,6 +38,7 @@ public class ApiController {
     @RequestMapping(value = "/apilist",method = RequestMethod.GET)
     public String list(Model model){
         List<Api> list=apiJPA.findAll();
+
         model.addAttribute("apilist",list);
         return "api_list";
     }

@@ -20,7 +20,7 @@ public interface PlanApisOrderJPA extends JpaRepository<PlanApisOrder, Long> {
     @Query(value = "SELECT api_id  from plan_apis_order  where plan_id=:planId ",  nativeQuery = true)
     List<BigInteger> findApiIdByPlanId(@Param("planId") Long planId);
 
-//@Transactional
+     @Transactional
     void deleteByPlanId( Long planId);
 
     PlanApisOrder findByApiOrdersAndPlanId(Integer order, Long PlanId);

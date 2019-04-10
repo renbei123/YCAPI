@@ -83,9 +83,9 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-              <p>最近三个月新增接口数</p>
+             <!--<h3>53<sup style="font-size: 20px">%</sup></h3>-->
+              <h3 th:text="${discardApiNums}">0</h3>
+              <p>废弃接口数</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>

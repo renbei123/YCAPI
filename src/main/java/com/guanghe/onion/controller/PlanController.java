@@ -125,6 +125,7 @@ public class PlanController {
     {
         planJPA.delete(id);
         planApisOrderJPA.deleteByPlanId(id);
+        SchedulerTask2.plantime.remove(id);
         return "redirect:/planlist";
     }
 

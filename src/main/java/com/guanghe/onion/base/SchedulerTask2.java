@@ -55,7 +55,7 @@ public class SchedulerTask2 {
 
 
     //    @Async
-    @Scheduled(initialDelay=1000*4, fixedDelay = 1000*60*10)
+    @Scheduled(initialDelay=1000*60*20, fixedDelay = 1000*60*30)
     public void runMonitor() {
 
         getSystemVar();
@@ -73,7 +73,7 @@ public class SchedulerTask2 {
         }
         /*开始计划集合*/
             for (Plan plan:planList){
-                 if (!plan.getStatus())  continue;
+                 if (!plan.getStatus()||plan.getId()==null)  continue;
                 logger.info("plan.getHost():"+plan.getHost());
 
                String host=(plan.getHost()==null||plan.getHost().trim().equals("")?sysVars.get("host").toString().trim():plan.getHost().trim());
@@ -88,11 +88,13 @@ public class SchedulerTask2 {
                List<Object[]> apiList=planApisOrderJPA.getexePlanApis(plan.getId());
                /*开始某个plan里的所有api*/
                for(Object[] api:apiList){
+                   if((boolean)api[11]==false)  continue;   //接口废弃
                    String apid=api[1].toString();
                    String apiname=api[2].toString();
                    String method=api[3].toString();
                    String path=api[4].toString();
-                   path = (path.startsWith("http://") || path.startsWith("https://")) ? path : (host + path);
+                   path = (path.startsWith("http://")||path.startsWith("https://")||path.startsWith("{{"))?
+                    path : (host + path);
 
                    path=replaceSysVar(path);
                    logger.info(apiname+" : "+path);
@@ -100,7 +102,7 @@ public class SchedulerTask2 {
                    String body=api[5]==null?"":api[5].toString();
                    body=replaceSysVar(body);
 
-                   String assert_code=api[6].toString();
+                   String assert_code=api[6]==null?"0":api[6].toString();
                    String assert_has_string=api[7]==null?"":api[7].toString();
                    String assert_json_check=api[8]==null?"":api[8].toString();
                    String heads=api[9]==null?"":api[9].toString();
@@ -129,11 +131,13 @@ public class SchedulerTask2 {
                    StringBuffer assertlog=new StringBuffer(0);
                    ErrorLog errorlog=null;
 
-                   String[] s= assert_has_string.split(",");
-                   if (result.getStatusCode()!=Integer.parseInt(assert_code)) {
+
+                   if (Integer.parseInt(assert_code)!=0&&result.getStatusCode()!=Integer.parseInt(assert_code)) {
 
                        assertlog.append("预期返回码是:"+assert_code+"，实际返回:"+result.getStatusCode()+"\r\n");
                    }
+
+                   String[] s= assert_has_string.split(",");
                    for (String assertStr:s){
                        if(result.getBody().asString().indexOf(assertStr.trim())==-1){
 
@@ -255,7 +259,7 @@ public class SchedulerTask2 {
 
     public String  replaceSysVar(String content){
         // 匹配{{host}}类型的变量
-        String patten="\\{{2}[\\S&&[^\\{{2}}{2}]]+}}";
+        String patten="\\{{2}[\\S&&[^\\{{}}]]+}}";
         Pattern pattern = Pattern.compile(patten);
         // 忽略大小写的写法
         // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);

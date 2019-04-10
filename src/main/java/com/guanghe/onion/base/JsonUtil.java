@@ -44,21 +44,21 @@ public class JsonUtil {
             String path = request.getJSONObject("url").getString("raw");
 //                String host = request.getJSONObject("url").getString("host");
 
-            if (path.indexOf("{{host}}") != -1) {
-                path = path.replace("{{host}}", "");
-            }
-            if (path.indexOf("{{host2}}") != -1) {
-                path = path.replace("{{host2}}", "");
-            }
-            int a;
-            if ((path.indexOf("http://")) != -1) {
-                path = path.replace("http://", "");
-                path = path.substring(path.indexOf("/"));
-            }
-            if ((path.indexOf("https://")) != -1) {
-                path = path.replace("https://", "");
-                path = path.substring(path.indexOf("/"));
-            }
+//            if (path.indexOf("{{host}}") != -1) {
+//                path = path.replace("{{host}}", "");
+//            }
+//            if (path.indexOf("{{host2}}") != -1) {
+//                path = path.replace("{{host2}}", "");
+//            }
+//            int a;
+//            if ((path.indexOf("http://")) != -1) {
+//                path = path.replace("http://", "");
+//                path = path.substring(path.indexOf("/"));
+//            }
+//            if ((path.indexOf("https://")) != -1) {
+//                path = path.replace("https://", "");
+//                path = path.substring(path.indexOf("/"));
+//            }
 
             api.setPath(path);
             api.setMethod(request.getString("method"));

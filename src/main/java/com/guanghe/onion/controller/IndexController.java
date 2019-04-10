@@ -47,12 +47,14 @@ public class IndexController {
         long apisum = apiJPA.count();
         model.addAttribute("apisum", apisum);
 
-        String errorsOf30days=staticsjpa.errorsOf30days(startDate).get(0).toString();
-        String longExecTimeOf30days=staticsjpa.longExecTimeOf30days(startDate, Long.valueOf(5000)).get(0).toString();
-        String sum_500Of30days=staticsjpa.sum_500Of30days(startDate).get(0).toString();
+        int errorsOf30days=staticsjpa.errorsOf30days(startDate);
+        int longExecTimeOf30days=staticsjpa.longExecTimeOf30days(startDate, Long.valueOf(5000));
+        int sum_500Of30days=staticsjpa.sum_500Of30days(startDate);
+        int discardApiNums=staticsjpa.discardApiNums();
         model.addAttribute("errorsOf30days", errorsOf30days);
         model.addAttribute("longExecTimeOf30days", longExecTimeOf30days);
         model.addAttribute("sum_500Of30days", sum_500Of30days);
+        model.addAttribute("discardApiNums", discardApiNums);
         return "index";
     }
 

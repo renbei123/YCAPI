@@ -175,7 +175,10 @@
                                     <td th:text="${log[2]}">get</td>
                                     <td th:text="${log[3]}">/hello</td>
                                     <td th:text="${log[4]}">teacher</td>
-                                    <td th:text="${log[5]==true?'成功':'失败'}"></td>
+                                    <td th:switch="${log[5]}">
+                                        <font th:case="true" size="3" color="green" >成功</font>
+                                        <font th:case="false" size="3" color="red" >失败</font>
+                                    </td>
                                     <td th:text="${log[6]}"></td>
 
                                 </tr>
@@ -230,7 +233,7 @@
 <script>
     $(function () {
         $('#example1').DataTable({
-
+            "order": [[ 6, "desc" ]]
         });
     });
 
