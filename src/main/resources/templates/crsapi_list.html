@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <div th:replace="common/common_head :: common_resource"></div>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <div th:replace="common/main_header :: main_header"></div>
+
+  <div th:replace="common/main_sidebar :: main_sidebar"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        接口列表数据
+        <small>监控接口</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Tables</a></li>
+        <li class="active">Data tables</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!--表格内容数据 -->
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <form action="/crsapiadd" >
+              <table width="100%">
+                <tr>
+                  <td width="10%"><button type="button" class="btn btn-primary btn-sm btn-flat" id="newapi">新建接口</button></td>
+                  <td width="10%" th:if="${!state}"><button type="button" class="btn btn-primary btn-sm btn-flat" name="state" onclick="start(1)">开始轮询</button></td>
+                  <td width="10%" th:if="${state}"><button type="button" class="btn btn-primary btn-sm btn-flat"  name="state" onclick="start(0)">停止轮询</button></td>
+                  <td width="40%" align="center">host1(缓存):<input type="text" name="host1" class=""></td>
+                  <td width="40%" align="center">host2(数据库):<input type="text" name="host2" class=""></td>
+                  <td width="10%"><button type="button" class="btn btn-primary btn-sm btn-flat" name="compare">检查</button></td>
+                </tr>
+              </table>
+              </form>
+            </div>
+            <!-- /.box-header   -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>id</th>
+                  <th>name</th>
+                  <th>method</th>
+                  <th>path</th>
+                  <th>remarks</th>
+                  <th>state</th>
+                  <th>Edit</th>
+
+                </tr>
+                </thead>
+
+                <!--  tbody 真实的接口数据 -->
+                <tbody>
+                <tr  th:each=" myapi:${apilist}">
+                  <td th:text="${myapi.id}">1</td>
+                  <td href="details.html" th:text="${myapi.name}">renjie</td>
+                  <td th:text="${myapi.method}">get</td>
+                  <td th:text="${myapi.path}">/hello</td>
+                  <td th:text="${myapi.remarks}">说明</td>
+                  <td th:text="${myapi.status==true?'使用中':'废弃'}">state</td>
+                  <td><a th:href="@{/crsapieidt(id=${myapi.id})}">edit</a> &nbsp;&nbsp;
+                  <a th:href="@{/crsapidelete(id=${myapi.id})}">delete</a></td>
+
+
+                </tr>
+                </tbody>
+
+                <!--  tbody 真实的接口数据  end-->
+                <tfoot>
+                <tr>
+                  <th>id</th>
+                  <th>name</th>
+                  <th>method</th>
+                  <th>path</th>
+                  <th>remarks</th>
+                  <th>state</th>
+                  <th>Edit</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <div th:replace="common/common_footer :: common_footer"></div>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="../static/bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="../static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="../static/bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="../static/dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../static/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#example1').DataTable({
+      'paging'      : true,
+      'lengthChange': true,
+      'searching'   : true,
+      // "scrollX": true,
+      // "scrollY": true,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : true
+    });
+  });
+  $('#compare').click(function () {
+    location.href="/crsapiadd";
+  });
+
+  function start(i){
+    if (i==0)
+    location.href="/crscompare?state=false";
+    if (i==1)
+      location.href="/crscompare?state=true";
+  }
+
+
+</script>
+</body>
+</html>

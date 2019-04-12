@@ -32,9 +32,8 @@ public class JdbcController {
     public JdbcTemplate jdbcTemplate;
 
     @RequestMapping(value = "/jdbc", method = RequestMethod.GET)
-
     public List<Map<String, Object>> queryUsers() {
-        List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from book ");
+        List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from chapter ");
         return list;
     }
 

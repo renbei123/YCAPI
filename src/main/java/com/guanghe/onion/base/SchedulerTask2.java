@@ -55,7 +55,7 @@ public class SchedulerTask2 {
 
 
     //    @Async
-    @Scheduled(initialDelay=1000*60*20, fixedDelay = 1000*60*30)
+    @Scheduled(initialDelay=1000*60*30, fixedDelay = 1000*60*30)
     public void runMonitor() {
 
         getSystemVar();
@@ -93,21 +93,20 @@ public class SchedulerTask2 {
                    String apiname=api[2].toString();
                    String method=api[3].toString();
                    String path=api[4].toString();
-                   path = (path.startsWith("http://")||path.startsWith("https://")||path.startsWith("{{"))?
-                    path : (host + path);
+                   path = (path.startsWith("http://")||path.startsWith("https://")||path.startsWith("{{"))? path : (host + path);
 
-                   path=replaceSysVar(path);
+                   path=(path.indexOf("{{")!=-1)?replaceSysVar(path):path;
                    logger.info(apiname+" : "+path);
 
                    String body=api[5]==null?"":api[5].toString();
-                   body=replaceSysVar(body);
+                   body=(body.indexOf("{{")!=-1)?replaceSysVar(body):body;
 
                    String assert_code=api[6]==null?"0":api[6].toString();
                    String assert_has_string=api[7]==null?"":api[7].toString();
                    String assert_json_check=api[8]==null?"":api[8].toString();
                    String heads=api[9]==null?"":api[9].toString();
 
-                   heads=replaceSysVar(heads);
+                   heads=(heads.indexOf("{{")!=-1)?replaceSysVar(heads):heads;
                    Map headers= (Map)StringUtil.StringToMap(heads);
 
 

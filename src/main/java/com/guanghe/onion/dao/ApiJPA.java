@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.io.Serializable;
 import java.util.List;
 
-public interface ApiJPA extends JpaRepository<Api, Long>, JpaSpecificationExecutor<Api>, Serializable {
+public interface ApiJPA extends BaseJPA<Api> {
 
     @Query(value = "SELECT id, name, path,method,headers,body,remarks from api "
             ,  nativeQuery = true)

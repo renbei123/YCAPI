@@ -21,7 +21,7 @@ public class ErrorLog extends BaseEntity
 
     @Id
     @Column(name = "id",unique = true,nullable = false)
-    @GeneratedValue(strategy = GenerationType.TABLE )
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long id;
 
 
