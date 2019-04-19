@@ -35,15 +35,13 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <form action="/crsapiadd" >
+              <form action="/CRScompare" >
               <table width="100%">
                 <tr>
                   <td width="10%"><button type="button" class="btn btn-primary btn-sm btn-flat" id="newapi">新建接口</button></td>
-                  <td width="10%" th:if="${!state}"><button type="button" class="btn btn-primary btn-sm btn-flat" name="state" onclick="start(1)">开始轮询</button></td>
-                  <td width="10%" th:if="${state}"><button type="button" class="btn btn-primary btn-sm btn-flat"  name="state" onclick="start(0)">停止轮询</button></td>
                   <td width="40%" align="center">host1(缓存):<input type="text" name="host1" class=""></td>
-                  <td width="40%" align="center">host2(数据库):<input type="text" name="host2" class=""></td>
-                  <td width="10%"><button type="button" class="btn btn-primary btn-sm btn-flat" name="compare">检查</button></td>
+                  <td width="37%" align="center">host2(数据库):<input type="text" name="host2" class=""></td>
+                  <td width="10%"><input type="submit" class="btn btn-primary btn-sm btn-flat" value="对比检查当前列表"></input></td>
                 </tr>
               </table>
               </form>
@@ -114,20 +112,20 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
-<script src="../static/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../../static/bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
-<script src="../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- DataTables -->
-<script src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="../static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="../../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../../static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- SlimScroll -->
-<script src="../static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="../../static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
-<script src="../static/bower_components/fastclick/lib/fastclick.js"></script>
+<script src="../../static/bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
-<script src="../static/dist/js/adminlte.min.js"></script>
+<script src="../../static/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="../static/dist/js/demo.js"></script>
+<script src="../../static/dist/js/demo.js"></script>
 <!-- page script -->
 <script>
   $(function () {
@@ -142,16 +140,10 @@
       'autoWidth'   : true
     });
   });
-  $('#compare').click(function () {
+  $('#newapi').click(function () {
     location.href="/crsapiadd";
   });
 
-  function start(i){
-    if (i==0)
-    location.href="/crscompare?state=false";
-    if (i==1)
-      location.href="/crscompare?state=true";
-  }
 
 
 </script>

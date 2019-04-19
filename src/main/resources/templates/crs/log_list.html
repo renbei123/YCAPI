@@ -39,45 +39,37 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>接口名称</th>
-                                    <th>路径</th>
-                                    <th>方法</th>
-                                    <th>返回码</th>
-                                    <th>断言</th>
-                                    <th>响应时长ms</th>
-
-                                    <th>返回大小Bytes</th>
-                                    <th>开始时间</th>
-
+                                    <th>name</th>
+                                    <th>path</th>
+                                    <th>method</th>
+                                    <th>缓存host</th>
+                                    <th>数据库host</th>
+                                    <th>对比结果</th>
 
                                 </tr>
                                 </thead>
 
                                 <!--  tbody 真实的接口数据 SELECT api_name, url, method, assert_result , elapsed_time,res_code,res_size, start_time from error_log-->
                                 <tbody>
-                                <tr  th:each=" log:${list}" th:onclick="'edit('+${log[8]}+')'">
-                                    <th th:text="${log[0]}" ></th>
-                                    <td th:text="${log[1]}"></td>
+                                <tr  th:each=" log:${loglist}" th:onclick="'edit('+${log[0]}+')'">
+                                    <th th:text="${log[1]}" ></th>
                                     <td th:text="${log[2]}"></td>
-                                    <td th:text="${log[5]}"></td>
                                     <td th:text="${log[3]}"></td>
                                     <td th:text="${log[4]}"></td>
+                                    <td th:text="${log[5]}"></td>
                                     <td th:text="${log[6]}"></td>
-                                    <td th:text="${log[7]}"></td>
                                 </tr>
                                 </tbody>
 
                                 <!--  tbody 真实的接口数据  end-->
                                 <tfoot>
                                 <tr>
-                                    <th>接口名称</th>
-                                    <th>路径</th>
-                                    <th>方法</th>
-                                    <th>返回码</th>
-                                    <th>断言</th>
-                                    <th>响应时长</th>
-                                    <th>返回大小</th>
-                                    <th>开始时间</th>
+                                    <th>name</th>
+                                    <th>path</th>
+                                    <th>method</th>
+                                    <th>缓存host</th>
+                                    <th>数据库host</th>
+                                    <th>对比结果</th>
                                 </tr>
                                 </tfoot>
                             </table>

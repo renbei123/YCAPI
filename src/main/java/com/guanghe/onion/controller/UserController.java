@@ -21,14 +21,14 @@ import org.thymeleaf.exceptions.TemplateInputException;
 import java.util.List;
 
 @RestController
-@CacheConfig(cacheNames = "user")
+//@CacheConfig(cacheNames = "user")
 public class UserController {
 
 
     @Autowired
     private UserJPA userJPA;
 
-    @Cacheable
+//    @Cacheable
     //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public List<UserEntity> list(){

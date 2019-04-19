@@ -30,6 +30,12 @@ public class UploadController {
     private final static Logger logger = LoggerFactory.getLogger(UploadController.class);
     @Autowired
     private ApiJPA apiJPA;
+
+    @RequestMapping("/Uploadpage")
+    public String index2() {
+        return "Upload";
+    }
+
     /**
      * 提取上传方法为公共方法
      * @param uploadDir 上传文件目录

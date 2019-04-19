@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminLTE 2 | General Form Elements</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="../../static/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../static/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../../static/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../static/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="../../static/dist/css/skins/_all-skins.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="common/main_header :: main_header"></div>
+
+    <div th:replace="common/main_sidebar :: main_sidebar"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                错误日志列表
+                <small></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="#">List</a></li>
+                <li class="active">Error Log Data</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!--表格内容数据 -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <!-- /.box-header   -->
+                        <div class="box-body">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>name</th>
+                                    <th>path</th>
+                                    <th>method</th>
+                                    <th>缓存host</th>
+                                    <th>数据库host</th>
+                                    <th>对比结果</th>
+
+                                </tr>
+                                </thead>
+                                <tbody id="mytbody">
+
+                                </tbody>
+                                <tr class="" id="333">
+                                </tr>
+                                <tfoot>
+                                <tr>
+                                    <th>name</th>
+                                    <th>path</th>
+                                    <th>method</th>
+                                    <th>缓存host</th>
+                                    <th>数据库host</th>
+                                    <th>对比结果</th>
+                                </tr>
+                                </tfoot>
+                                <form>
+                                    <input type="hidden" id="host1" th:value="${host1}">
+                                    <input type="hidden" id="host2" th:value="${host2}">
+                                </form>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <div th:replace="common/common_footer :: common_footer"></div>
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="../static/bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="../static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="../static/bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="../static/dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../static/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+
+       // var table= $('#example1').DataTable({
+       //             "processing": true,
+       //             "autoWidth": false,
+       //             "paging":false,
+       //             // "scrollX": true,
+       //             // "scrollY": true,
+       //             // "serverSide": true,
+       //             "ajax": {
+       //                 url: "/testcrs",//请求的url
+       //                 type: "GET",
+       //                 // dataSrc:""， //直接解析数组
+       //                 // data: {//请求的参数
+       //                 //     lareName: $('#lareName').val(),
+       //                 //     keyWord: $('#keyWord').val(),
+       //                 //     issUnitName: $('#issUnitName').val(),
+       //                 //     repStat: $('#repStat').val(),
+       //                 //     veriStat: $('#veriStat').val(),
+       //                 //     startDate: $('#startDate').val(),
+       //                 //     endDate: $('#endDate').val()
+       //                 // }
+       //             },
+       //             // "columns": [
+       //             //     {"data": "guid"},
+       //             //     {"data": "guid"},
+       //             //     {"data": "guid"},
+       //             //     {"data": "guid"},
+       //             //     {"data": "guid"},
+       //             //     {"data": "guid"}
+       //             // ]
+       //             language:{
+       //
+       //                 zeroRecords:'抱歉,没有检索到数据',
+       //
+       //                 search:'搜索',  // 将英文search改为中文
+       //
+       //                 searchPlaceholder:'请输入',//搜索框提示功能
+       //
+       //                 lengthMenu:'每页显示_MENU_条记录',
+       //
+       //                 info:'显示第 _START_ 到第 _END_ 条记录，共 _TOTAL_ 条',
+       //
+       //                 paginate:{'next':'下页','previous':'下页','first':'第一页','last':'最后一页'},
+       //
+       //                 infoEmpty:'没有数据',
+       //
+       //                 infoFiltered:"(从_MAX_条数据检索)",
+       //
+       //             }  //中文显示
+       //         });
+
+       var table= $('#example1').DataTable();
+       var i;
+       $(document).ready(function () {
+           var host1=$("#host1").val();
+           var host2=$("#host2").val();
+           if (host1==null||host2==null) alert("host=null");
+           var url1= "/CRScompare2?host1="+host1+"&host2="+host2;
+
+           $.ajax({
+               type: "GET",
+               url: url1
+               // contentType: "application/json; charset=utf-8",
+               // data: JSON.stringify(json),
+               // dataType: "json"
+           });
+
+       });
+
+       function test() {
+
+           var host1=$("#host1").val();
+           var host2=$("#host2").val();
+           if (host1==null||host2==null) alert("host=null");
+           var url1= "/CRScompare2?host1="+host1+"&host2="+host2;
+
+           $.ajax({
+               type: "GET",
+               url: url1
+               // contentType: "application/json; charset=utf-8",
+               // data: JSON.stringify(json),
+               // dataType: "json"
+           });
+       }
+
+
+       function addRow(obj) {
+           table.row.add(obj.toArray()).draw();
+           // table.row(1).remove().draw();
+           // alert(table.cell(1,1).data());
+       }
+
+
+       function stop() {
+           clearInterval(i);
+       }
+
+       function getOneresult() {
+           console.info("getOneresult");
+           $.get("/getOneresult", null, function (data, status) {
+
+               if (data != null) {
+                   console.info(data);
+                   var obj = JSON.parse(data);
+                   addRow(obj);
+               }
+           });
+       }
+       i = setInterval("getOneresult", 5000);
+
+</script>
+</body>
+</html>

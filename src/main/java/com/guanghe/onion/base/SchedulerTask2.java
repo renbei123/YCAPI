@@ -53,6 +53,15 @@ public class SchedulerTask2 {
 
     public static Map<Long,Integer> plantime=null;
 
+    public   void getSystemVar() {
+        if (sysVars == null) {
+            sysVars=new HashMap();
+            List<SystemVar> list = systemvarjpa.findAll();
+            for (SystemVar var : list) {
+                sysVars.put(var.getName(), var.getValue());
+            }
+        }
+    }
 
     //    @Async
     @Scheduled(initialDelay=1000*60*30, fixedDelay = 1000*60*30)
@@ -184,34 +193,34 @@ public class SchedulerTask2 {
 
     public Response send(String path,String method, Map headers,String body){
 
-        if(method.equals("GET")){
+        if(method.equalsIgnoreCase("GET")){
             return  given()
                     .headers(headers)
                     .get(path);
         }
 
-        if(method.equals("POST")){
+        if(method.equalsIgnoreCase("POST")){
             return given()
                     .headers(headers)
                     .body(body)
                     .post(path);
         }
-        if(method.equals("PUT")){
+        if(method.equalsIgnoreCase("PUT")){
             return given()
                     .headers(headers)
                     .body(body)
                     .put(path);
-        } if(method.equals("PATCH")){
+        } if(method.equalsIgnoreCase("PATCH")){
             return  given()
                     .headers(headers)
                     .body(body)
                     .patch(path);
-        }if(method.equals("DELETE")){
+        }if(method.equalsIgnoreCase("DELETE")){
             return  given()
                     .headers(headers)
                     .body(body)
                     .delete(path);
-        }if(method.equals("OPTIONS")){
+        }if(method.equalsIgnoreCase("OPTIONS")){
             return  given()
                     .headers(headers)
                     .body(body)
@@ -245,15 +254,6 @@ public class SchedulerTask2 {
                 .post(url);
     }
 
-    public void getSystemVar() {
-        if (sysVars == null) {
-            sysVars=new HashMap();
-            List<SystemVar> list = systemvarjpa.findAll();
-            for (SystemVar var : list) {
-                sysVars.put(var.getName(), var.getValue());
-            }
-        }
-    }
 
 
     public String  replaceSysVar(String content){

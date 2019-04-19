@@ -39,6 +39,8 @@ public class LogController {
     public String loglist(Model model){
         List<Object[]> list=monitorlogjpa.detailLoglist();
         model.addAttribute("loglist",list);
+        model.addAttribute("logclass","treeview active");
+        model.addAttribute("logclass2","active");
         return "log_list";
     }
 
@@ -46,6 +48,8 @@ public class LogController {
     public String errlist(Model model){
         List<Object[]> list=errorlogjpa.errorLoglist();
         model.addAttribute("list",list);
+        model.addAttribute("logclass","treeview active");
+        model.addAttribute("errorlogclass","active");
         return "errorlog_list";
     }
 

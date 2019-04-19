@@ -198,7 +198,7 @@
                                 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
                                 <input type="reset" value="Reset" class="btn btn-info" />
                                 &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
-                                <input type="button" value="发送" class="btn  btn-success" id="debugSend"/>
+                                <!--<input type="button" value="发送" class="btn  btn-success" id="debugSend" onclick=""/>-->
                                 &nbsp; &nbsp; &nbsp;
                                 <button type="submit" class="btn btn-info pull-right">保存</button>
                             </div>
@@ -210,29 +210,29 @@
                 </div>
                 <!-- /.box -->
                 <!-- general form elements disabled -->
-                <div class="box box-info" style="">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Response</h3>
-                        <div class="box-tools pull-right">
-                            <button id="colaped2" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
-                        </div>
-                    </div>
-                    <!-- /.box-header -->
-                    <!--<ul class="nav nav-tabs">-->
-                        <!--<li class="active"><a href="#fa-icons" data-toggle="tab">Font Awesome</a></li>-->
-                        <!--<li><a href="#glyphicons" data-toggle="tab">Glyphicons</a></li>-->
-                    <!--</ul>-->
-                    <div class="tab-content">
-                    <div class="box-body"  id="fa-icons">
-                           <pre style="font-weight: 600;" id="response">
+                <!--<div class="box box-info" style="">-->
+                    <!--<div class="box-header with-border">-->
+                        <!--<h3 class="box-title">Response</h3>-->
+                        <!--<div class="box-tools pull-right">-->
+                            <!--<button id="colaped2" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>-->
+                            <!--<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash; /.box-header &ndash;&gt;-->
+                    <!--&lt;!&ndash;<ul class="nav nav-tabs">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<li class="active"><a href="#fa-icons" data-toggle="tab">Font Awesome</a></li>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<li><a href="#glyphicons" data-toggle="tab">Glyphicons</a></li>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+                    <!--<div class="tab-content">-->
+                    <!--<div class="box-body"  id="fa-icons">-->
+                           <!--<pre style="font-weight: 600;" id="response">-->
 
-                           </pre>
-                    </div>
+                           <!--</pre>-->
+                    <!--</div>-->
 
-                    </div>
-                    <!-- /.box-body -->
-                </div>
+                    <!--</div>-->
+                    <!--&lt;!&ndash; /.box-body &ndash;&gt;-->
+                <!--</div>-->
                 <!-- /.box -->
             </div>
             <!--/.col (right) -->
@@ -302,22 +302,12 @@
 
     }
 
-    // $(function(){
-    //     $("#debugSend").click(function() {
-    //         axios.get('https://api-test.yangcong345.com/course-tree/subjects')
-    //             .then(function (response) {
-    //                 console.log(response.data);
-    //                 console.log(response.status);
-    //                 console.log(response.statusText);
-    //                 console.log(response.headers);
-    //                 console.log('config:'+response.config);
-    //             });
-    //     });
-        //按钮单击时执行
-        $("#debugSend").click(function(){
+
+        按钮单击时执行
+        $("#debugSend").click(function(url){
             //var url=;
             htmlobj= $.ajax({
-                url:'https://api-test.yangcong345.com/course-tree/subjects',
+                url:url,
                 cache:false,
                 timeout:10000,
                 // headers: {
