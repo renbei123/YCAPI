@@ -315,6 +315,70 @@
         }
     }
 
+    //按钮单击时执行
+    $("#debugSend").click(function(){
+        var path=$("#path").val();
+        var url123=$.trim("http://10.8.8.14:3000"+path);
+        var headers="{Content-Type:\"application/json\"}";//$.trim($("#headers").val());
+        var datas=$.trim($("#body").val());
+        var method=$("#method").val();
+        $.ajax({
+            url:url123,
+            cache:false,
+            timeout:10000,
+            contentType: "application/json",
+            data:datas,
+            type:method,
+            dataType:"json",
+            beforeSend: LoadFunction, //加载执行方法
+            error: erryFunction,  //错误执行方法
+            success: succFunction //成功执行方法
+            // complete: completeFunction
+
+        });
+
+    });
+
+    function LoadFunction() {
+        $("#response").html('加载中...');
+    }
+
+    function succFunction(results,status,xhr) {
+        // console.log(xhr.getAllResponseHeaders());
+        // var wpoInfo = {
+        //     // 服务器端时间
+        //     "Date" : xhr.getResponseHeader('Date'),
+        //     // 如果开启了gzip，会返回这个东西
+        //     "contentEncoding" : xhr.getResponseHeader('Content-Encoding'),
+        //     // keep-alive ？ close？
+        //     "connection" : xhr.getResponseHeader('Connection'),
+        //     // 响应长度
+        //     "contentLength" : xhr.getResponseHeader('Content-Length'),
+        //     // 服务器类型，apache？lighttpd？
+        //     "Server" : xhr.getResponseHeader('Server'),
+        //     "vary" : xhr.getResponseHeader('Vary'),
+        //     "transferEncoding" : xhr.getResponseHeader('Transfer-Encoding'),
+        //     // text/html ? text/xml?
+        //     "Content-Type" : xhr.getResponseHeader('Content-Type'),
+        //     "cacheControl" : xhr.getResponseHeader('Cache-Control'),
+        //     // 生命周期？
+        //     "exprires" : xhr.getResponseHeader('Exprires'),
+        //     "lastModified" : xhr.getResponseHeader('Last-Modified')
+        // };
+        // $("#response").text(JSON.stringify(wpoInfo));
+        $("#response").text(JSON.stringify(results));
+
+
+        // console.info(response);
+    };
+
+    function erryFunction() {
+        alert("error");
+    }
+
+    function completeFunction(xhr,data) {
+
+    }
 
 </script>
 </html>

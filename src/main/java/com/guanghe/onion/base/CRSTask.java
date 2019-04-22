@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,8 +42,9 @@ public class  CRSTask {
 
     public static Map<Long,Integer> plantime=null;
 
-    public static ArrayDeque<CrsMonitorLog> compareresult = new ArrayDeque();
+//    public static ArrayDeque<List>  compareresult = new ArrayDeque();
 
+    public  ConcurrentLinkedQueue queue =new ConcurrentLinkedQueue();
 
     @Scheduled(initialDelay=1000*60*30, fixedDelay = 1000*60*30)
     public void runCrsCompare() {
@@ -109,7 +112,7 @@ public class  CRSTask {
                 Response databaseResult = send(databasehost+path, method, headers, body);
                 String databaseResult_txt=databaseResult.body().prettyPrint();
 
-                if(api.getExceptString().length()>0) {
+                if(api.getExceptString()!=null&&api.getExceptString().length()>0) {
                     String[] excepts = api.getExceptString().split(",");
                     for (String ex : excepts) {
                         cacheResult_txt=replaceExcept(cacheResult_txt, ex);
@@ -122,29 +125,42 @@ public class  CRSTask {
             if(cacheResult_txt.equals(databaseResult_txt)){
                 logger.info("对比结果正确：ok");
                 if (!iflog){
-                    CrsMonitorLog oklog=new CrsMonitorLog();
-                    oklog.setApi_id(api.getId());
-                    oklog.setHost1(cachehost);
-                    oklog.setHost2(databasehost);
-                    oklog.setChannel(0);
-                    oklog.setStatus(true);
-                    oklog.setDiffer("对比结果正确：ok.返回状态码:cache_host="+cacheResult.getStatusCode() + "; database_host="+databaseResult.getStatusCode()+"\n");
-                    compareresult.offer(oklog);
+                    List list=new ArrayList();
+                    list.add(api.getName());
+                    list.add(api.getMethod());
+                    list.add(path);
+                    list.add(cachehost);
+                    list.add(databasehost);
+                    list.add("对比结果正确：ok. 返回状态码:cache_host="+cacheResult.getStatusCode() + "; database_host="+databaseResult.getStatusCode()+"\n");
+
+                        queue.offer(list);
+                        logger.info("queue size:"+queue.size());
+
                 }
             } else {
                 logger.info("对比结果有误：error!");
                 String result = CheckText.check(cacheResult_txt, databaseResult_txt);
-                CrsMonitorLog error = new CrsMonitorLog();
-                error.setApi_id(api.getId());
-                error.setHost1(cachehost);
-                error.setHost2(databasehost);
-                error.setChannel(1);
-                error.setStatus(false);
-                error.setDiffer("对比结果有误：error! 返回状态码:cache_host=" + cacheResult.getStatusCode()
-                        + "database_host=" + databaseResult.getStatusCode() + "\n 异常内容:" + result);
+
                 if (!iflog){
-                    compareresult.offer(error);
+                    List list=new ArrayList();
+                    list.add(api.getName());
+                    list.add(api.getMethod());
+                    list.add(path);
+                    list.add(cachehost);
+                    list.add(databasehost);
+                    list.add("<font color='red'>对比结果有误：error! </font> \n 返回状态码:cache_host=" + cacheResult.getStatusCode() + "database_host=" + databaseResult.getStatusCode() + "\n 异常内容:" + result);
+
+                        queue.offer(list);
+                        logger.info("queue size:"+queue.size());
+
                 }else {
+                    CrsMonitorLog error = new CrsMonitorLog();
+                    error.setApi_id(api.getId());
+                    error.setHost1(cachehost);
+                    error.setHost2(databasehost);
+                    error.setStatus(false);
+                    error.setDiffer("<font color='red'>对比结果有误：error! </font> \n 返回状态码:cache_host=" + cacheResult.getStatusCode()
+                            + "database_host=" + databaseResult.getStatusCode() + "\n 异常内容:" + result);
                     jpa.save(error);
                 }
             }

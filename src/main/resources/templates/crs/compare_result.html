@@ -41,7 +41,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                错误日志列表
+                比较结果
                 <small></small>
             </h1>
             <ol class="breadcrumb">
@@ -72,11 +72,6 @@
 
                                 </tr>
                                 </thead>
-                                <tbody id="mytbody">
-
-                                </tbody>
-                                <tr class="" id="333">
-                                </tr>
                                 <tfoot>
                                 <tr>
                                     <th>name</th>
@@ -180,17 +175,18 @@
        //             }  //中文显示
        //         });
 
-       var table= $('#example1').DataTable();
+       var table= $('#example1').DataTable({
+           'lengthChange': true});
        var i;
        $(document).ready(function () {
            var host1=$("#host1").val();
            var host2=$("#host2").val();
            if (host1==null||host2==null) alert("host=null");
-           var url1= "/CRScompare2?host1="+host1+"&host2="+host2;
+           var compareController= "/CRScompare?host1="+host1+"&host2="+host2;
 
            $.ajax({
                type: "GET",
-               url: url1
+               url: compareController
                // contentType: "application/json; charset=utf-8",
                // data: JSON.stringify(json),
                // dataType: "json"
@@ -198,46 +194,30 @@
 
        });
 
-       function test() {
-
-           var host1=$("#host1").val();
-           var host2=$("#host2").val();
-           if (host1==null||host2==null) alert("host=null");
-           var url1= "/CRScompare2?host1="+host1+"&host2="+host2;
-
-           $.ajax({
-               type: "GET",
-               url: url1
-               // contentType: "application/json; charset=utf-8",
-               // data: JSON.stringify(json),
-               // dataType: "json"
-           });
-       }
-
 
        function addRow(obj) {
-           table.row.add(obj.toArray()).draw();
+           table.row.add(obj).draw();
            // table.row(1).remove().draw();
            // alert(table.cell(1,1).data());
        }
+
+       function getOneresult() {
+
+           $.get("/getOneresult", null, function (data, status) {
+               console.info("getOneresult:",data);
+               if (data != null&&data.length>0) {
+                   // console.info("data:",data,";/");
+                    addRow(data);
+               }
+           });
+       }
+
+       i = setInterval("getOneresult()", 3000);
 
 
        function stop() {
            clearInterval(i);
        }
-
-       function getOneresult() {
-           console.info("getOneresult");
-           $.get("/getOneresult", null, function (data, status) {
-
-               if (data != null) {
-                   console.info(data);
-                   var obj = JSON.parse(data);
-                   addRow(obj);
-               }
-           });
-       }
-       i = setInterval("getOneresult", 5000);
 
 </script>
 </body>

@@ -64,7 +64,7 @@ public class SchedulerTask2 {
     }
 
     //    @Async
-    @Scheduled(initialDelay=1000*60*30, fixedDelay = 1000*60*30)
+    @Scheduled(initialDelay=1000*60*120, fixedDelay = 1000*60*120)
     public void runMonitor() {
 
         getSystemVar();

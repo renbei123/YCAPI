@@ -35,9 +35,6 @@ public class CrsMonitorLog
     private String differ;
 
 
-    @Column(name = "channel")
-    private int channel; //  0：compare log  1：monitor log
-
 
     @Column(name = "status")
     private Boolean status;   // true: ok   false：wrong

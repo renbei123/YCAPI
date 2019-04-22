@@ -13,6 +13,8 @@ import com.guanghe.onion.dao.CrsMonitorLogJPA;
 import com.guanghe.onion.entity.CrsApi;
 import com.guanghe.onion.entity.CrsMonitor;
 import com.guanghe.onion.entity.CrsMonitorLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -40,6 +43,7 @@ public class CrsController {
     @Autowired
     private CrsMonitorLogJPA logjpa;
 
+    private final static Logger logger = LoggerFactory.getLogger("CrsController");
     //@Cacheable
     //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
     @RequestMapping(value = "/crsapilist",method = RequestMethod.GET)
@@ -57,13 +61,13 @@ public class CrsController {
 
         return "redirect:/crsapilist";
     }
-    @RequestMapping(value = "/crsmonitor",method = RequestMethod.GET)
-    public String crsmonitor(Model model){
+    @RequestMapping(value = "/monitorList",method = RequestMethod.GET)
+    public String monitorList(Model model){
         List list=crsmonitorjpa.findAll();
         model.addAttribute("list",list);
         model.addAttribute("class1","treeview active");
         model.addAttribute("crsmonitorclass2","active");
-        return "crs/moniotrList";
+        return "crs/monitorList";
     }
 
     @RequestMapping(value = "/crsmonitorEdit",method = RequestMethod.GET)
@@ -73,25 +77,27 @@ public class CrsController {
         return "crs/crsmonitor_edit";
     }
 
-    @RequestMapping(value = "/CRScompare",method = RequestMethod.GET)
-    public String CRScompare(Model model,  @RequestParam(value="host1")String  host1, @RequestParam(value="host2")String  host2){
-//        task.compare(host1.trim(),host2.trim(),null,false);
+    @RequestMapping(value = "/toComparePage",method = RequestMethod.GET)
+    public String toComparePage(Model model,  @RequestParam(value="host1")String  host1, @RequestParam(value="host2")String  host2){
         model.addAttribute("host1",host1);
         model.addAttribute("host2",host2);
         return "crs/compare_result";
     }
 
-    @RequestMapping(value = "/CRScompare2",method = RequestMethod.GET)
-    public void compare(Model model,  @RequestParam(value="host1")String  host1, @RequestParam(value="host2")String  host2){
+    @RequestMapping(value = "/CRScompare",method = RequestMethod.GET)
+    @ResponseBody
+    public void CRScompare(Model model,  @RequestParam(value="host1")String  host1, @RequestParam(value="host2")String  host2){
         task.compare(host1.trim(),host2.trim(),null,false);
     }
 
-    @RequestMapping(value = "/getOneresult",method = RequestMethod.GET)
+    @RequestMapping(value = "/getOneresult", method = RequestMethod.GET)
     @ResponseBody
-    public CrsMonitorLog getOneresult(){
-        if(!CRSTask.compareresult.isEmpty())
-        return   (CrsMonitorLog)  CRSTask.compareresult.poll();
-        else
+    public List getOneresult() throws InterruptedException {
+
+        if (!task.queue.isEmpty()) {
+            logger.info("queue size:"+task.queue.size());
+            return (List) task.queue.poll();
+        } else
             return null;
     }
 
@@ -106,7 +112,7 @@ public class CrsController {
     @RequestMapping(value = "/crsMonitorSave",method = RequestMethod.POST)
     public String crsMonitorSave(CrsMonitor monitor){
         crsmonitorjpa.save(monitor);
-        return "redirect:/crsmonitor";
+        return "redirect:/monitorList";
     }
 
 
@@ -149,7 +155,7 @@ public class CrsController {
     public String crsMonitordel(Long id)
     {
         crsmonitorjpa.delete(id);
-        return "redirect:/crsmonitor";
+        return "redirect:/monitorList";
     }
     @RequestMapping(value = "/crslog",method = RequestMethod.GET)
     public String crslog(Model model )
@@ -160,6 +166,8 @@ public class CrsController {
         model.addAttribute("crslogclass","treeview active");
         return "crs/log_list";
     }
+
+
 
 }
 
