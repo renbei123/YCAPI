@@ -201,18 +201,21 @@
            // alert(table.cell(1,1).data());
        }
 
+     
        function getOneresult() {
 
            $.get("/getOneresult", null, function (data, status) {
-               console.info("getOneresult:",data);
+               console.info("getOneresult:",data.toString());
                if (data != null&&data.length>0) {
                    // console.info("data:",data,";/");
+                   if (data.toString()!="over")
                     addRow(data);
+                   else stop();
                }
            });
        }
 
-       i = setInterval("getOneresult()", 3000);
+       i = setInterval("getOneresult()", 2000);
 
 
        function stop() {

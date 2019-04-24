@@ -107,11 +107,12 @@ public class  CRSTask {
                 Map headers = heads.trim().length()>0? (Map) StringUtil.StringToMap(heads):null;
 
                 Response cacheResult = send(cachehost+path, method, headers, body);
-                String cacheResult_txt=cacheResult.body().prettyPrint();
+//                String cacheResult_txt=cacheResult.body().prettyPrint();
+            String cacheResult_txt=cacheResult.getBody().asString();
 
                 Response databaseResult = send(databasehost+path, method, headers, body);
-                String databaseResult_txt=databaseResult.body().prettyPrint();
-
+//                String databaseResult_txt=databaseResult.body().prettyPrint();
+            String databaseResult_txt=databaseResult.body().asString();
                 if(api.getExceptString()!=null&&api.getExceptString().length()>0) {
                     String[] excepts = api.getExceptString().split(",");
                     for (String ex : excepts) {
@@ -165,6 +166,9 @@ public class  CRSTask {
                 }
             }
         }
+        List over=new ArrayList();
+        over.add("over");
+        queue.offer(over);
     }
 
     public Response send(String path,String method, Map headers,String body){
@@ -249,8 +253,8 @@ public class  CRSTask {
 
     public String  replaceExcept(String content,String patten){
         // "key":***,
-        String Patten=patten+"(.*)\n";
-
+//        String Patten=patten+"(.*)\n";
+        String Patten=patten+"([^,]*,)";
         Pattern pattern = Pattern.compile(Patten);
         // 忽略大小写的写法
         // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
