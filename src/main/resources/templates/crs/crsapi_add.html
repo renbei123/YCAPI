@@ -216,7 +216,7 @@
                 <!-- general form elements disabled -->
                 <div class="box box-info" style="">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Response</h3>
+                        <h3 class="box-title">Response  -- host(http://10.8.8.14:3000)</h3>
                         <div class="box-tools pull-right">
                             <button id="colaped2" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -344,32 +344,8 @@
     }
 
     function succFunction(results,status,xhr) {
-        // console.log(xhr.getAllResponseHeaders());
-        // var wpoInfo = {
-        //     // 服务器端时间
-        //     "Date" : xhr.getResponseHeader('Date'),
-        //     // 如果开启了gzip，会返回这个东西
-        //     "contentEncoding" : xhr.getResponseHeader('Content-Encoding'),
-        //     // keep-alive ？ close？
-        //     "connection" : xhr.getResponseHeader('Connection'),
-        //     // 响应长度
-        //     "contentLength" : xhr.getResponseHeader('Content-Length'),
-        //     // 服务器类型，apache？lighttpd？
-        //     "Server" : xhr.getResponseHeader('Server'),
-        //     "vary" : xhr.getResponseHeader('Vary'),
-        //     "transferEncoding" : xhr.getResponseHeader('Transfer-Encoding'),
-        //     // text/html ? text/xml?
-        //     "Content-Type" : xhr.getResponseHeader('Content-Type'),
-        //     "cacheControl" : xhr.getResponseHeader('Cache-Control'),
-        //     // 生命周期？
-        //     "exprires" : xhr.getResponseHeader('Exprires'),
-        //     "lastModified" : xhr.getResponseHeader('Last-Modified')
-        // };
-        // $("#response").text(JSON.stringify(wpoInfo));
-        $("#response").text(JSON.stringify(results));
 
-
-        // console.info(response);
+        $("#response").html(JSON.stringify(results, null, 4));
     };
 
     function erryFunction() {

@@ -198,7 +198,7 @@
                                 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
                                 <input type="reset" value="Reset" class="btn btn-info" />
                                 &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
-                                <!--<input type="button" value="发送" class="btn  btn-success" id="debugSend" onclick=""/>-->
+                                <input type="button" value="发送" class="btn  btn-success" id="debugSend" />
                                 &nbsp; &nbsp; &nbsp;
                                 <button type="submit" class="btn btn-info pull-right">保存</button>
                             </div>
@@ -210,29 +210,51 @@
                 </div>
                 <!-- /.box -->
                 <!-- general form elements disabled -->
-                <!--<div class="box box-info" style="">-->
-                    <!--<div class="box-header with-border">-->
-                        <!--<h3 class="box-title">Response</h3>-->
-                        <!--<div class="box-tools pull-right">-->
-                            <!--<button id="colaped2" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>-->
-                            <!--<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--&lt;!&ndash; /.box-header &ndash;&gt;-->
-                    <!--&lt;!&ndash;<ul class="nav nav-tabs">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<li class="active"><a href="#fa-icons" data-toggle="tab">Font Awesome</a></li>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<li><a href="#glyphicons" data-toggle="tab">Glyphicons</a></li>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</ul>&ndash;&gt;-->
-                    <!--<div class="tab-content">-->
-                    <!--<div class="box-body"  id="fa-icons">-->
-                           <!--<pre style="font-weight: 600;" id="response">-->
+                <div class="box box-info" style="width: 100%;">
+                    <div class="box-header with-border">
+                        <table border="0" width="100%">
+                            <tr>
+                                <td width="20%">
+                                    <h3 class="box-title" >
+                                        Response
+                                    </h3>
+                                </td>
+                                <td width="5%">host:</td>
+                                <td width="45%">
+                                    <select class="form-control select2" style="width: 50%;" id="debugHost">
 
-                           <!--</pre>-->
-                    <!--</div>-->
+                                        <option selected="selected">https://android-api-v5-0.yangcong345.com</option>
+                                        <option >https://ios-api-v5-0.yangcong345.com</option>
+                                        <option>https://school-api.yangcong345.com</option>
+                                        <option>https://api-test.yangcong345.com</option>
+                                        <option>https://school-test.yangcong345.com</option>
+                                    </select>
+                                </td>
+                                <td width="30%">
+                                    <div class="box-tools pull-right">
+                                        <button id="colaped2" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
 
-                    <!--</div>-->
-                    <!--&lt;!&ndash; /.box-body &ndash;&gt;-->
-                <!--</div>-->
+                    </div>
+                    <!-- /.box-header -->
+                    <!--<ul class="nav nav-tabs">-->
+                        <!--<li class="active"><a href="#fa-icons" data-toggle="tab">Font Awesome</a></li>-->
+                        <!--<li><a href="#glyphicons" data-toggle="tab">Glyphicons</a></li>-->
+                    <!--</ul>-->
+                    <div class="tab-content">
+                    <div class="box-body"  id="fa-icons">
+                           <pre style="font-weight: 600;" id="response">
+
+                           </pre>
+                    </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                </div>
                 <!-- /.box -->
             </div>
             <!--/.col (right) -->
@@ -303,29 +325,41 @@
     }
 
 
-        按钮单击时执行
-        $("#debugSend").click(function(url){
-            //var url=;
-            htmlobj= $.ajax({
-                url:url,
-                cache:false,
-                timeout:10000,
-                // headers: {
-                //     Accept: "application/json; charset=utf-8"
-                // },
-                // data:{
-                //     user:$('.user').val(),
-                //     pass:$('.pass').val()
-                // },
-                type:'get',
-                // dataType:"json",
-                beforeSend: LoadFunction, //加载执行方法
-                error: erryFunction,  //错误执行方法
-                success: succFunction //成功执行方法
-                // complete: completeFunction
+    //按钮单击时执行
+    $("#debugSend").click(function(){
+        var path=$("#path").val();
+        var host=$("#debugHost").val();
+        var url123;
+        if (path.substring(0, 4) != "http")  {
+            if (path.substring(0, 2) == "{{")
+             var patten="\\{{2}[\\S&&[^\\{{}}]]+}}";
+            path=path.replace(patten,host);
+        }else  {
+            url123=$.trim(path);
+        }
 
-            });
+        var headers="{Content-Type:\"application/json\"}";//$.trim($("#headers").val());
+        var datas=$.trim($("#body").val());
+        var method=$("#method").val();
+        console.info(url123, method);
+        console.info(headers);
+        console.info('body:'+datas);
+        $.ajax({
+            url:url123,
+            cache:false,
+            timeout:10000,
+            contentType: "application/json",
+            data:datas,
+            type:method,
+            dataType:"json",
+            beforeSend: LoadFunction, //加载执行方法
+            error: erryFunction,  //错误执行方法
+            success: succFunction //成功执行方法
+            // complete: completeFunction
+
         });
+
+    });
 
         function LoadFunction() {
             $("#response").html('加载中...');

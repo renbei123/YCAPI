@@ -35,13 +35,13 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <form action="/toComparePage" >
+              <form action="/toComparePage" id="crslistform">
               <table width="100%">
                 <tr>
                   <td width="10%"><button type="button" class="btn btn-primary btn-sm btn-flat" id="newapi">新建接口</button></td>
-                  <td width="40%" align="center">host1(缓存):<input type="text" name="host1" class=""></td>
-                  <td width="37%" align="center">host2(数据库):<input type="text" name="host2" class=""></td>
-                  <td width="10%"><input type="submit" class="btn btn-primary btn-sm btn-flat" value="对比检查当前列表"></input></td>
+                  <td width="40%" align="center">host1(缓存):<input type="text" name="host1" id="host1" class=""></td>
+                  <td width="37%" align="center">host2(数据库):<input type="text" name="host2" id="host2"></td>
+                  <td width="10%"><button type="button" class="btn btn-primary btn-sm btn-flat"  onclick="validate()">对比检查当前列表</button></td>
                 </tr>
               </table>
               </form>
@@ -145,6 +145,14 @@
   });
 
 
+  function validate()  {
+
+    if($.trim($("#host1").val()) == "" || $.trim($("#host2").val()) == "" ){
+      alert( "host不能为空！");
+      throw SyntaxError(); //如果验证不通过，则不执行后面
+    }
+    $('#crslistform').submit();
+  }
 
 </script>
 </body>

@@ -218,7 +218,7 @@
                 <!-- general form elements disabled -->
                 <div class="box box-info" style="">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Response</h3>
+                        <h3 class="box-title">Response  -- host(http://10.8.8.14:3000)</h3>
                         <div class="box-tools pull-right">
                             <button id="colaped2" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -323,9 +323,9 @@
         var headers="{Content-Type:\"application/json\"}";//$.trim($("#headers").val());
         var datas=$.trim($("#body").val());
         var method=$("#method").val();
-        console.info(url123, method);
-        console.info(headers);
-        console.info(datas);
+        // console.info(url123, method);
+        // console.info(headers);
+        // console.info('body:'+datas);
         $.ajax({
             url:url123,
             cache:false,
@@ -370,10 +370,10 @@
         //     "lastModified" : xhr.getResponseHeader('Last-Modified')
         // };
         // $("#response").text(JSON.stringify(wpoInfo));
-        $("#response").html(JSON.stringify(results));
+        // $("#response").html(JSON.stringify(results, null, "\t"));
+        $("#response").html(JSON.stringify(results, null, 4));
 
-
-        // console.info(response);
+        // console.info('results:'+JSON.stringify(results, null, 4));
     };
 
     function erryFunction() {

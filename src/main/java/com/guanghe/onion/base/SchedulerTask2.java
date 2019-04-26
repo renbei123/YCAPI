@@ -85,7 +85,8 @@ public class SchedulerTask2 {
                  if (!plan.getStatus()||plan.getId()==null)  continue;
                 logger.info("plan.getHost():"+plan.getHost());
 
-               String host=(plan.getHost()==null||plan.getHost().trim().equals("")?sysVars.get("host").toString().trim():plan.getHost().trim());
+                // 如果监控计划里有host，取值该host值，否则不取值
+               String host=(plan.getHost()==null||plan.getHost().trim().equals("")?"":plan.getHost().trim());
                int curnumber=plantime.get(plan.getId()).intValue()-1;
                if(curnumber>0){
                    plantime.put(plan.getId(),curnumber);
@@ -102,6 +103,7 @@ public class SchedulerTask2 {
                    String apiname=api[2].toString();
                    String method=api[3].toString();
                    String path=api[4].toString();
+                   //如果path 以 http和https 或者 {{ 开头，取值不变
                    path = (path.startsWith("http://")||path.startsWith("https://")||path.startsWith("{{"))? path : (host + path);
 
                    path=(path.indexOf("{{")!=-1)?replaceSysVar(path):path;
