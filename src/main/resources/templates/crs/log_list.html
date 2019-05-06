@@ -36,7 +36,7 @@
                     <div class="box">
                         <!-- /.box-header   -->
                         <div class="box-body">
-                            <table id="example1" class="table table-bordered table-striped">
+                            <table id="example1" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
                                     <th>name</th>
@@ -51,13 +51,14 @@
 
                                 <!--  tbody 真实的接口数据 SELECT api_name, url, method, assert_result , elapsed_time,res_code,res_size, start_time from error_log-->
                                 <tbody>
-                                <tr  th:each=" log:${loglist}" th:onclick="'edit('+${log[0]}+')'">
+                                <!--<tr  th:each=" log:${loglist}" th:onclick="'edit('+${log[0]}+')'">-->
+                                <tr  th:each=" log:${loglist}" >
                                     <th th:text="${log[1]}" ></th>
                                     <td th:text="${log[2]}"></td>
                                     <td th:text="${log[3]}"></td>
                                     <td th:text="${log[4]}"></td>
                                     <td th:text="${log[5]}"></td>
-                                    <td th:text="${log[6]}"></td>
+                                    <td th:text="${log[6].length()>60?(log[6].substring(0,60)+'...'):log[6]}"></td>
                                 </tr>
                                 </tbody>
 
@@ -121,7 +122,7 @@
 
     function  edit(errorlog_id){
 
-        location.href="/errorlogDetail?id="+errorlog_id;
+        // location.href="/errorlogDetail?id="+errorlog_id;
     }
 </script>
 </body>

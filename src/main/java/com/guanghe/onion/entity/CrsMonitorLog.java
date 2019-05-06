@@ -31,7 +31,7 @@ public class CrsMonitorLog
     private String host2;
 
 
-    @Column(name = "differ", length = 10000)
+    @Column(name = "differ", length = 5000)
     private String differ;
 
 

@@ -48,16 +48,16 @@
             </div>
             <!-- /.box-header   -->
             <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
+              <table id="example1" class="table table-bordered table-striped" width="100%">
                 <thead>
                 <tr>
-                  <th>id</th>
-                  <th>name</th>
-                  <th>method</th>
-                  <th>path</th>
-                  <th>remarks</th>
-                  <th>state</th>
-                  <th>Edit</th>
+                  <th width="5%">id</th>
+                  <th width="10%">name</th>
+                  <th width="5%">method</th>
+                  <th width="55%">path</th>
+                  <th width="10%"> remarks</th>
+                  <th width="5%">state</th>
+                  <th width="10%">Edit</th>
 
                 </tr>
                 </thead>
@@ -66,11 +66,11 @@
                 <tbody>
                 <tr  th:each=" myapi:${apilist}">
                   <td th:text="${myapi.id}">1</td>
-                  <td href="details.html" th:text="${myapi.name}">renjie</td>
-                  <td th:text="${myapi.method}">get</td>
-                  <td th:text="${myapi.path}">/hello</td>
-                  <td th:text="${myapi.remarks}">说明</td>
-                  <td th:text="${myapi.status==true?'使用中':'废弃'}">state</td>
+                  <td href="details.html" th:text="${myapi.name}"></td>
+                  <td th:text="${myapi.method}"></td>
+                  <td th:text="${myapi.path.length()>60?(myapi.path.substring(0,60)+'...'):myapi.path}"> </td>
+                  <td th:text="${myapi.remarks}"></td>
+                  <td th:text="${myapi.status==true?'使用中':'废弃'}"></td>
                   <td><a th:href="@{/crsapieidt(id=${myapi.id})}">edit</a> &nbsp;&nbsp;
                   <a th:href="@{/crsapidelete(id=${myapi.id})}">delete</a></td>
 
@@ -133,11 +133,11 @@
       'paging'      : true,
       'lengthChange': true,
       'searching'   : true,
-      // "scrollX": true,
-      // "scrollY": true,
+      "scrollX": true,
+      "scrollY": true,
       'ordering'    : true,
       'info'        : true,
-      'autoWidth'   : true
+      'autoWidth'   : false
     });
   });
   $('#newapi').click(function () {

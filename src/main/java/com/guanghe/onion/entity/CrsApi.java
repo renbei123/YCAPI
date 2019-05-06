@@ -24,13 +24,13 @@ public class CrsApi
     @Column(name = "name")
     private String name;
 
-    @Column(name = "path",  nullable = false)
+    @Column(name = "path",  nullable = false,  length = 800)
     private String path;
 
     @Column(name = "method", nullable = false, length = 10)
     private String method;
 
-    @Column(name = "headers", length = 500)
+    @Column(name = "headers", length = 1000)
     private String headers;
 
     @Column(name = "body", length =10000)

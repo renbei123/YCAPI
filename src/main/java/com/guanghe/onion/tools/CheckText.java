@@ -13,13 +13,13 @@ public class CheckText {
     private static final BufferedReader cbr =null;
 
     public static String check(String s1, String compare) {
-        System.out.println("======Start Search!=======");
+//        System.out.println("======Start Search!=======");
         long startTime = System.currentTimeMillis();
         StringBuffer result=new StringBuffer();
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(s1.getBytes(Charset.forName("utf8"))), Charset.forName("utf8")));
             BufferedReader cbr = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(compare.getBytes(Charset.forName("utf8"))), Charset.forName("utf8")));
-            cbr.mark(90000000);
+            cbr.mark(90000);
 
             String lineText = null;
             while ((lineText = br.readLine()) != null) {

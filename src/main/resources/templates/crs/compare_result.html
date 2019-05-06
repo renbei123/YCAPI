@@ -60,7 +60,7 @@
                     <div class="box">
                         <!-- /.box-header   -->
                         <div class="box-body">
-                            <table id="example1" class="table table-bordered table-striped">
+                            <table id="example1" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
                                     <th>name</th>
@@ -176,7 +176,10 @@
        //         });
 
        var table= $('#example1').DataTable({
-           'lengthChange': true});
+           'lengthChange': true,
+           "scrollX": true,
+           "scrollY": true
+       });
        var i;
        $(document).ready(function () {
            var host1=$("#host1").val();
@@ -215,7 +218,7 @@
            });
        }
 
-       i = setInterval("getOneresult()", 2000);
+       i = setInterval("getOneresult()", 1500);
 
 
        function stop() {

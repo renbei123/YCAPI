@@ -1,9 +1,11 @@
 package com.guanghe.onion.base;
 
+import com.alibaba.fastjson.JSONObject;
 import com.guanghe.onion.dao.*;
 import com.guanghe.onion.entity.*;
 import com.guanghe.onion.tools.CheckText;
 import com.guanghe.onion.tools.StringUtil;
+import com.sun.tools.javac.code.Attribute;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,21 +42,20 @@ public class  CRSTask {
     @Autowired
     SchedulerTask2 schedulertask2;
 
-    public static Map<Long,Integer> plantime=null;
+    public static Map<Long,Integer> plantime=new HashMap();
 
 //    public static ArrayDeque<List>  compareresult = new ArrayDeque();
 
     public  ConcurrentLinkedQueue queue =new ConcurrentLinkedQueue();
 
-    @Scheduled(initialDelay=1000*60*30, fixedDelay = 1000*60*30)
+    private static final int miniter = 120;
+
+    @Scheduled(initialDelay=1000*60*5, fixedDelay = 1000*60*miniter)
     public void runCrsCompare() {
         schedulertask2.getSystemVar();
         List<CrsMonitor> list=planjpa.findAll();
-        if (plantime==null){
-            plantime=new HashMap();
-            for (CrsMonitor plan:list){
-                plantime.put(plan.getId(),plan.getPlanTime());
-            }
+        for (CrsMonitor plan:list){
+            plantime.put(plan.getId(),plan.getPlanTime());
         }
 
         for (CrsMonitor plan : list) {
@@ -82,18 +83,25 @@ public class  CRSTask {
         for (CrsApi api : apilist) {
             if (!api.getStatus()) continue;
 
+            logger.info("api name:" + api.getName());
+            logger.info("path:" + api.getPath());
             // 把输入的parm-value，转换到sysVars
             if(api.getVar_name().trim().length()>0) {
                 api.setVar_names(api.getVar_name().trim().split(","));
                 api.setVar_values(api.getVar_value().trim().split(","));
+                Object exesqlresult=null;
                 for (int i=0;i<api.getVar_names().length;i++){
                     String sql=api.getVar_values()[i].trim();
-                    String exesqlresult=secondaryJdbcTemplate.queryForObject(sql,String.class);
+                    if (api.getVar_names()[i].contains("[]") ) {
+                        exesqlresult=(List<String>)secondaryJdbcTemplate.queryForList(sql, String.class);
+                    } else {
+                        exesqlresult=(String)secondaryJdbcTemplate.queryForObject(sql, String.class);
+                    }
                     SchedulerTask2.sysVars.put(api.getVar_names()[i],exesqlresult);
 
                 }
             }
-            logger.info("para-value: "+SchedulerTask2.sysVars.toString());
+//            logger.info("para-value: "+SchedulerTask2.sysVars.toString());
                 String path =api.getPath();
                 path = (path.indexOf("{{") != -1) ? replaceSysVar(path) : path;
 
@@ -107,13 +115,16 @@ public class  CRSTask {
                 Map headers = heads.trim().length()>0? (Map) StringUtil.StringToMap(heads):null;
 
                 Response cacheResult = send(cachehost+path, method, headers, body);
-//                String cacheResult_txt=cacheResult.body().prettyPrint();
-            String cacheResult_txt=cacheResult.getBody().asString();
+                String cacheResult_txt=cacheResult.body().prettyPrint();
+            JSONObject cacheResult_JsonObject = JSONObject.parseObject(cacheResult.getBody().asString());
 
                 Response databaseResult = send(databasehost+path, method, headers, body);
-//                String databaseResult_txt=databaseResult.body().prettyPrint();
-            String databaseResult_txt=databaseResult.body().asString();
-                if(api.getExceptString()!=null&&api.getExceptString().length()>0) {
+                String databaseResult_txt=databaseResult.body().prettyPrint();
+
+            JSONObject databaseResult_JsonObject = JSONObject.parseObject(databaseResult.body().asString());
+
+
+                if(api.getExceptString()!=null&&api.getExceptString().trim().length()>0) {
                     String[] excepts = api.getExceptString().split(",");
                     for (String ex : excepts) {
                         cacheResult_txt=replaceExcept(cacheResult_txt, ex);
@@ -121,15 +132,13 @@ public class  CRSTask {
                     }
                 }
 
-            logger.info("api name:" + api.getName());
-            logger.info("path:" + api.getPath());
             if(cacheResult_txt.equals(databaseResult_txt)){
                 logger.info("对比结果正确：ok");
                 if (!iflog){
                     List list=new ArrayList();
                     list.add(api.getName());
                     list.add(api.getMethod());
-                    list.add(path);
+                    list.add(path.length()>60?path.substring(0,60):path);
                     list.add(cachehost);
                     list.add(databasehost);
                     list.add("对比结果正确：ok. 返回状态码:cache_host="+cacheResult.getStatusCode() + "; database_host="+databaseResult.getStatusCode()+"\n");
@@ -139,14 +148,15 @@ public class  CRSTask {
 
                 }
             } else {
-                logger.info("对比结果有误：error!");
-                String result = CheckText.check(cacheResult_txt, databaseResult_txt);
 
+                String result = CheckText.check(cacheResult_txt, databaseResult_txt);
+                result=result.trim().length()>5000?result.trim().substring(0,4999):result.trim();
+                logger.info("对比结果有误：error!!! error is :"+result);
                 if (!iflog){
                     List list=new ArrayList();
                     list.add(api.getName());
                     list.add(api.getMethod());
-                    list.add(path);
+                    list.add(path.length()>60?path.substring(0,60):path);
                     list.add(cachehost);
                     list.add(databasehost);
                     list.add("<font color='red'>对比结果有误：error! </font> \n 返回状态码:cache_host=" + cacheResult.getStatusCode() + "database_host=" + databaseResult.getStatusCode() + "\n 异常内容:" + result);
