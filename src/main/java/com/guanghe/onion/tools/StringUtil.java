@@ -12,7 +12,10 @@ public  class  StringUtil{
 
     @Test
     public void testFun() {
-        String str1 = "{idCard=123, phonenum=1234}";
+        String str1 = "{\n" +
+                "Content-Type=application/json,\n" +
+                "aa=bb\n" +
+                "}";
         String str2 = "{idCard=123, phonenum=1234, map={hhaha=haha}}";
         String str3 = "{idCard=123, phonenum=1234, map={hhaha=haha}, nn={en=ha}}";
         String str4 = "{nn={en=ha}, idCard=123, phonenum=1234, map={hhaha=ni, danshi={ke=shi}}}";
@@ -27,6 +30,9 @@ public  class  StringUtil{
     }
 
     public static Object StringToMap(String param) {
+        System.out.println("param1:" + param+";");
+        param=param.replaceAll("\n","").replaceAll("\r","");
+        System.out.println("param2:" + param+";");
         Map map = new HashMap();
         String str = "";
         String key = "";
@@ -60,6 +66,7 @@ public  class  StringUtil{
                 str += c;
             }
         }
+        System.out.println("map:" + map.toString()+";");
         return map;
     }
 
@@ -84,7 +91,8 @@ public  class  StringUtil{
             //截取一组字符串
             String[] strArray = strings[i].split("=");
             //strArray[0]为KEY  strArray[1]为值
-            map.put(strArray[0],strArray[1]);
+            map.put(strArray[0].trim(),strArray[1].trim());
+//            System.out.println(strArray[0]+":"+strArray[1]);
         }
         return map;
     }
