@@ -160,7 +160,7 @@ public class CrsController {
     @RequestMapping(value = "/crslog",method = RequestMethod.GET)
     public String crslog(Model model )
     {
-        List<Object[]> list=logjpa.Loglist();
+        List<String[]> list=logjpa.Loglist();
         model.addAttribute("loglist",list);
         model.addAttribute("class1","treeview active");
         model.addAttribute("crslogclass","treeview active");

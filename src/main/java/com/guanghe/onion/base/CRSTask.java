@@ -46,7 +46,7 @@ public class  CRSTask {
     SchedulerTask2 schedulertask2;
 
     public static Map<Long,Integer> plantime=new HashMap();
-
+    public static StringBuffer sb=new StringBuffer();
 //    public static ArrayDeque<List>  compareresult = new ArrayDeque();
 
     public  ConcurrentLinkedQueue queue =new ConcurrentLinkedQueue();
@@ -125,7 +125,7 @@ public class  CRSTask {
 
             String heads = api.getHeaders();
             heads = (heads.indexOf("{{") != -1) ? replaceSysVar(heads) : heads;
-            logger.info("heads:" + heads+" end;");
+//            logger.info("heads:" + heads+" end;");
 
             Map headers = heads.trim().length() > 0 ? (Map) StringUtil.StringToMap(heads) : null;
             logger.info("headers:" + headers.toString());
@@ -135,10 +135,14 @@ public class  CRSTask {
             Response databaseResult = send(databasehost + path, method, headers, body);
 
             String cacheResult_txt = cacheResult.body().asString();
-            logger.info("*** cacheResult result  :" + cacheResult.getStatusCode()+"; result:"+cacheResult.asString());
+//            logger.info("*** cacheResult result  :" + cacheResult.getStatusCode()+"; result:"+cacheResult.asString());
 
             String databaseResult_txt = databaseResult.body().asString();
 //            logger.error("*** databaseResult_txt  :" + databaseResult_txt);
+            if (!cacheResult_txt.equals(databaseResult_txt)) {
+                logger.error("*** cacheResult_txt  :" + cacheResult_txt);
+                logger.error("*** databaseResult_txt  :" + databaseResult_txt);
+            }
             JSONObject cacheResult_JsonObject = null;
             JSONObject databaseResult_JsonObject = null;
             try {
@@ -208,7 +212,7 @@ public class  CRSTask {
                     error.setHost1(cachehost);
                     error.setHost2(databasehost);
                     error.setStatus(false);
-                    error.setDiffer("<font color='red'>对比结果有误：error! </font> \n 返回状态码:cache_host=" + cacheResult.getStatusCode()
+                    error.setDiffer("对比结果有误：error! \n 返回状态码:cache_host=" + cacheResult.getStatusCode()
                             + "database_host=" + databaseResult.getStatusCode() + "\n 异常内容:" + compare_result);
                     jpa.save(error);
                 }

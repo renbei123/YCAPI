@@ -30,9 +30,9 @@ public  class  StringUtil{
     }
 
     public static Object StringToMap(String param) {
-        System.out.println("param1:" + param+";");
+
         param=param.replaceAll("\n","").replaceAll("\r","");
-        System.out.println("param2:" + param+";");
+
         Map map = new HashMap();
         String str = "";
         String key = "";
