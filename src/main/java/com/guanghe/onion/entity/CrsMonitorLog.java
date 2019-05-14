@@ -34,10 +34,9 @@ public class CrsMonitorLog
     @Column(name = "differ", length = 5000)
     private String differ;
 
+//    @Column(name = "status")
+//    private Boolean status;   // true: ok   false：wrong
 
-
-    @Column(name = "status")
-    private Boolean status;   // true: ok   false：wrong
-   
-
+    @Column(name = "creatTime")
+    private String creatTime;
 }

@@ -79,7 +79,7 @@ public class  CRSTask {
     public   void compare(String cachehost, String databasehost, CrsMonitorLogJPA jpa, boolean iflog){
         schedulertask2.getSystemVar();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-        System.out.println("crs对比开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
+        logger.info("crs对比开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
 
         List<CrsApi> apilist = crsJPA.findAll();
 
@@ -134,15 +134,39 @@ public class  CRSTask {
 
             Response databaseResult = send(databasehost + path, method, headers, body);
 
+            if (api.getAssert_Code() != null && (cacheResult.getStatusCode() != api.getAssert_Code() || databaseResult.getStatusCode() != api.getAssert_Code())) {
+                if (!iflog) {
+                    List list = new ArrayList();
+                    list.add(api.getName());
+                    list.add(api.getMethod());
+                    list.add(path.length() > 60 ? path.substring(0, 60) : path);
+                    list.add(cachehost);
+                    list.add(databasehost);
+                    list.add("返回码错误！ 返回状态码:cache_host=" + cacheResult.getStatusCode() + "database_host=" + databaseResult.getStatusCode());
+                    queue.offer(list);
+                    logger.info("queue size:" + queue.size());
+
+                } else {
+                    CrsMonitorLog error = new CrsMonitorLog();
+                    error.setApi_id(api.getId());
+                    error.setHost1(cachehost);
+                    error.setHost2(databasehost);
+                    error.setDiffer("返回码错误! \n 返回状态码:cache_host=" + cacheResult.getStatusCode()
+                            + "database_host=" + databaseResult.getStatusCode());
+                    error.setCreatTime(df.format(new Date()));
+                    jpa.save(error);
+                }
+            }
+
             String cacheResult_txt = cacheResult.body().asString();
 //            logger.info("*** cacheResult result  :" + cacheResult.getStatusCode()+"; result:"+cacheResult.asString());
 
             String databaseResult_txt = databaseResult.body().asString();
 //            logger.error("*** databaseResult_txt  :" + databaseResult_txt);
-            if (!cacheResult_txt.equals(databaseResult_txt)) {
+          /*  if (!cacheResult_txt.equals(databaseResult_txt)) {
                 logger.error("*** cacheResult_txt  :" + cacheResult_txt);
                 logger.error("*** databaseResult_txt  :" + databaseResult_txt);
-            }
+            }*/
             JSONObject cacheResult_JsonObject = null;
             JSONObject databaseResult_JsonObject = null;
             try {
@@ -211,9 +235,10 @@ public class  CRSTask {
                     error.setApi_id(api.getId());
                     error.setHost1(cachehost);
                     error.setHost2(databasehost);
-                    error.setStatus(false);
-                    error.setDiffer("对比结果有误：error! \n 返回状态码:cache_host=" + cacheResult.getStatusCode()
+//                    error.setStatus(false);
+                    error.setDiffer("error! \n 返回状态码:cache_host=" + cacheResult.getStatusCode()
                             + "database_host=" + databaseResult.getStatusCode() + "\n 异常内容:" + compare_result);
+                    error.setCreatTime(df.format(new Date()));
                     jpa.save(error);
                 }
             }
@@ -302,22 +327,6 @@ public class  CRSTask {
         return content;
     }
 
-
-//    public String  replaceExcept(String content,String patten){
-//        // "key":***,
-////        String Patten=patten+"(.*)\n";
-//        String Patten=patten+"([^,]*,)";
-//        Pattern pattern = Pattern.compile(Patten);
-//        // 忽略大小写的写法
-//        // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
-//        Matcher m = pattern.matcher(content);
-//        while (m.find()) {
-//            String name=m.group();
-//            logger.info("匹配的except内容名称***:"+name);
-//            content=content.replace(name,"");
-//        }
-//        return content;
-//    }
 }
 
 
