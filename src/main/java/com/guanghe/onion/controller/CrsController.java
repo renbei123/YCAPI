@@ -87,7 +87,7 @@ public class CrsController {
     @RequestMapping(value = "/CRScompare",method = RequestMethod.GET)
     @ResponseBody
     public void CRScompare(Model model,  @RequestParam(value="host1")String  host1, @RequestParam(value="host2")String  host2){
-        task.compare(host1.trim(),host2.trim(),null,false);
+        task.compare(host1.trim(), host2.trim(), null, false, null);
     }
 
     @RequestMapping(value = "/getOneresult", method = RequestMethod.GET)
@@ -167,7 +167,13 @@ public class CrsController {
         return "crs/log_list";
     }
 
+    @RequestMapping(value = "/viewError", method = RequestMethod.GET)
+    public String viewError(Model model, Long id) {
+        List<String[]> errordetail = logjpa.errordetail(id);
+        model.addAttribute("onelog", errordetail);
 
+        return "crs/viewError";
+    }
 
 }
 

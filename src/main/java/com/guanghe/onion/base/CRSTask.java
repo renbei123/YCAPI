@@ -51,9 +51,9 @@ public class  CRSTask {
 
     public  ConcurrentLinkedQueue queue =new ConcurrentLinkedQueue();
 
-    private static final int miniter = 120;
+    private static final int miniter = 3;
 
-    @Scheduled(initialDelay=1000*60*5, fixedDelay = 1000*60*miniter)
+    @Scheduled(initialDelay = 1000 * 60 * 1, fixedDelay = 1000 * 60 * miniter)
     public void runCrsCompare() {
         schedulertask2.getSystemVar();
         List<CrsMonitor> list=planjpa.findAll();
@@ -70,13 +70,13 @@ public class  CRSTask {
                     continue;
                 }else {
                     plantime.put(plan.getId(), plan.getPlanTime());
-                    compare(plan.getHost1(),plan.getHost2(), logjpa, true);
+                    compare(plan.getHost1(), plan.getHost2(), logjpa, true, plan.getDingding());
                 }
             }
         }
     }
 
-    public   void compare(String cachehost, String databasehost, CrsMonitorLogJPA jpa, boolean iflog){
+    public void compare(String cachehost, String databasehost, CrsMonitorLogJPA jpa, boolean iflog, String dingtoken) {
         schedulertask2.getSystemVar();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         logger.info("crs对比开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
@@ -85,7 +85,6 @@ public class  CRSTask {
 
         for (CrsApi api : apilist) {
             if (!api.getStatus()) continue;
-
 
             String method = api.getMethod();
             // 把输入的parm-value，转换到sysVars
@@ -134,6 +133,7 @@ public class  CRSTask {
 
             Response databaseResult = send(databasehost + path, method, headers, body);
 
+            //判断返回状态码是否符合预期，不符continue
             if (api.getAssert_Code() != null && (cacheResult.getStatusCode() != api.getAssert_Code() || databaseResult.getStatusCode() != api.getAssert_Code())) {
                 if (!iflog) {
                     List list = new ArrayList();
@@ -142,7 +142,7 @@ public class  CRSTask {
                     list.add(path.length() > 60 ? path.substring(0, 60) : path);
                     list.add(cachehost);
                     list.add(databasehost);
-                    list.add("返回码错误！ 返回状态码:cache_host=" + cacheResult.getStatusCode() + "database_host=" + databaseResult.getStatusCode());
+                    list.add("<font color='red'>error! 返回码错误</font>  \r\n 返回状态码:cache_host=" + cacheResult.getStatusCode() + "; database_host=" + databaseResult.getStatusCode());
                     queue.offer(list);
                     logger.info("queue size:" + queue.size());
 
@@ -151,11 +151,14 @@ public class  CRSTask {
                     error.setApi_id(api.getId());
                     error.setHost1(cachehost);
                     error.setHost2(databasehost);
-                    error.setDiffer("返回码错误! \n 返回状态码:cache_host=" + cacheResult.getStatusCode()
-                            + "database_host=" + databaseResult.getStatusCode());
+                    error.setDiffer("返回码错误 \r\n返回状态码:cache_host=" + cacheResult.getStatusCode()
+                            + "; database_host=" + databaseResult.getStatusCode());
                     error.setCreatTime(df.format(new Date()));
-                    jpa.save(error);
+                    CrsMonitorLog one = jpa.save(error);
+
+                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://localhost:8081/viewError?id=" + one.getId(), dingtoken);
                 }
+                continue;
             }
 
             String cacheResult_txt = cacheResult.body().asString();
@@ -209,7 +212,7 @@ public class  CRSTask {
                     list.add(path.length() > 60 ? path.substring(0, 60) : path);
                     list.add(cachehost);
                     list.add(databasehost);
-                    list.add("对比结果正确：ok. 返回状态码:cache_host=" + cacheResult.getStatusCode() + "; database_host=" + databaseResult.getStatusCode() + "\n");
+                    list.add("对比结果正确：ok. 返回状态码:cache_host=" + cacheResult.getStatusCode() + ";database_host=" + databaseResult.getStatusCode());
                     queue.offer(list);
                     logger.info("queue size:" + queue.size());
 
@@ -226,26 +229,31 @@ public class  CRSTask {
                     list.add(path.length() > 60 ? path.substring(0, 60) : path);
                     list.add(cachehost);
                     list.add(databasehost);
-                    list.add("<font color='red'>对比结果有误：error! </font> \n 返回状态码:cache_host=" + cacheResult.getStatusCode() + "database_host=" + databaseResult.getStatusCode() + "\n 异常内容:" + compare_result);
+                    list.add("<font color='red'>error!</font> \r\n 返回状态码:cache_host=" + cacheResult.getStatusCode() + ";database_host=" + databaseResult.getStatusCode() + "\r\n ;异常内容:" + compare_result);
                     queue.offer(list);
                     logger.info("queue size:" + queue.size());
 
                 }else {
+
                     CrsMonitorLog error = new CrsMonitorLog();
                     error.setApi_id(api.getId());
                     error.setHost1(cachehost);
                     error.setHost2(databasehost);
 //                    error.setStatus(false);
-                    error.setDiffer("error! \n 返回状态码:cache_host=" + cacheResult.getStatusCode()
-                            + "database_host=" + databaseResult.getStatusCode() + "\n 异常内容:" + compare_result);
+                    error.setDiffer("error! 返回状态码:cache_host=" + cacheResult.getStatusCode()
+                            + "database_host=" + databaseResult.getStatusCode() + "\r\n 异常内容:" + compare_result);
                     error.setCreatTime(df.format(new Date()));
-                    jpa.save(error);
+                    CrsMonitorLog one = jpa.save(error);
+
+                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://localhost:8081/viewError?id=" + one.getId(), dingtoken);
                 }
             }
         }  //end each for apilist
-        List over=new ArrayList();
-        over.add("over");
-        queue.offer(over);
+        if (!iflog) {
+            List over = new ArrayList();
+            over.add("over");
+            queue.offer(over);
+        }
     }
 
     public Response send(String path,String method, Map headers,String body){

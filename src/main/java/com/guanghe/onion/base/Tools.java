@@ -1,0 +1,64 @@
+package com.guanghe.onion.base;
+
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiRobotSendRequest;
+import com.dingtalk.api.response.OapiRobotSendResponse;
+import com.guanghe.onion.entity.SystemVar;
+import com.taobao.api.ApiException;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Tools {
+
+
+    public static boolean CRS_sendDingMsg(String method, String url, int code1, int code2,
+                                          String logUrl, String dtoken) {
+        //  ok:  response:{"errmsg":"ok","errcode":0}
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + dtoken);
+        OapiRobotSendRequest request = new OapiRobotSendRequest();
+        request.setMsgtype("markdown");
+        OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
+        markdown.setTitle("错误警告");
+        markdown.setText("##  " + method + "     " + url + "\r\n" +
+                "---\r\n" +
+                "+ **返回码: host1=" + code1 + "; host2=" + code2 + "**" +
+                "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
+        request.setMarkdown(markdown);
+        OapiRobotSendResponse response = null;
+        try {
+            response = client.execute(request);
+        } catch (ApiException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+//    System.out.println("response:"+response.getBody().toString());
+        if (response.getErrmsg().equals("ok"))
+            return true;
+        else
+            return false;
+    }
+
+
+
+//    public String  replaceExcept(String content,String patten){
+//        // "key":***,
+////        String Patten=patten+"(.*)\n";
+//        String Patten=patten+"([^,]*,)";
+//        Pattern pattern = Pattern.compile(Patten);
+//        // 忽略大小写的写法
+//        // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+//        Matcher m = pattern.matcher(content);
+//        while (m.find()) {
+//            String name=m.group();
+//            logger.info("匹配的except内容名称***:"+name);
+//            content=content.replace(name,"");
+//        }
+//        return content;
+//    }
+
+}

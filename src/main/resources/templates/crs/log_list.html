@@ -39,6 +39,7 @@
                             <table id="example1" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
+                                    <th>CreateTime</th>
                                     <th>name</th>
                                     <th>path</th>
                                     <th>method</th>
@@ -52,19 +53,21 @@
                                 <!--  tbody 真实的接口数据 SELECT api_name, url, method, assert_result , elapsed_time,res_code,res_size, start_time from error_log-->
                                 <tbody>
                                 <!--<tr  th:each=" log:${loglist}" th:onclick="'edit('+${log[0]}+')'">-->
-                                <tr  th:each=" log:${loglist}" >
+                                <tr th:each=" log:${loglist}" th:onclick="'view('+${log[0]}+')'">
                                     <th th:text="${log[1]}" ></th>
-                                    <td th:text="${log[2]}"></td>
+                                    <th th:text="${log[2]}"></th>
                                     <td th:text="${log[3]}"></td>
                                     <td th:text="${log[4]}"></td>
                                     <td th:text="${log[5]}"></td>
-                                    <td th:text="${log[6].length()>60?(log[6].substring(0,60)+'...'):log[6]}"></td>
+                                    <td th:text="${log[6]}"></td>
+                                    <td th:text="${log[7].length()>60?(log[7].substring(0,60)+'...'):log[7]}"></td>
                                 </tr>
                                 </tbody>
 
                                 <!--  tbody 真实的接口数据  end-->
                                 <tfoot>
                                 <tr>
+                                    <th>CreateTime</th>
                                     <th>name</th>
                                     <th>path</th>
                                     <th>method</th>
@@ -115,14 +118,15 @@
         $('#example1').DataTable({
             'autoWidth': true,
             "scrollX": true,
-            "scrollY": true
+            "scrollY": true,
+            "order": [[0, "desc"]]
         });
 
     });
 
-    function  edit(errorlog_id){
+    function view(errorlog_id) {
 
-        // location.href="/errorlogDetail?id="+errorlog_id;
+        location.href = "/viewError?id=" + errorlog_id;
     }
 </script>
 </body>

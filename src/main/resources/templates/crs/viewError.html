@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="common/common_head :: common_resource"></div>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="common/main_header :: main_header"></div>
+
+    <div th:replace="common/main_sidebar :: main_sidebar"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div style="width:96%;margin:0 auto;">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">错误详情</h3>
+
+                        <div class="box-tools pull-right">
+                            <button id="colaped" type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i></button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                    class="fa fa-remove"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- class="box-body"   -->
+                    <div class="box-body">
+                        <form class="form-horizontal">
+
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">时间</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="time" th:value="${onelog[0][0]}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">接口名称(name)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           th:value="${onelog[0][1]}" placeholder="接口的名称定义">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">path</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" th:value="${onelog[0][2]}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">方法(method)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" th:value="${onelog[0][3]}" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">host1</label>
+                                <div class="col-sm-10">
+                                    <input type="text" th:value="${onelog[0][4]}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">host2</label>
+                                <div class="col-sm-10">
+                                    <input type="text" th:value="${onelog[0][5]}" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">预期返回码</label>
+                                <div class="col-sm-10">
+                                    <input type="text" th:value="${onelog[0][6]}" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">错误（不同）</label>
+                                <div class="col-sm-10">
+                                    <textarea th:text="${onelog[0][7]}" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+
+
+                            <!-- botton 按钮 -->
+                            <div class="box-footer">
+                                <button type="button" class="btn btn-default" onclick="tolist()">返回</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <!--/.col (right) -->
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <div th:replace="common/common_footer :: common_footer"></div>
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap 3.3.7 -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Select2 -->
+<script src="bower_components/select2/dist/js/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="plugins/input-mask/jquery.inputmask.js"></script>
+<script src="plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap datepicker -->
+<script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- bootstrap color picker -->
+<script src="bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- SlimScroll -->
+<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="plugins/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function tolist() {
+        location.href = "/crslog";
+    }
+</script>
+
+</body>
+</html>
