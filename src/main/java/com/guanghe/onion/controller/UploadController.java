@@ -27,7 +27,7 @@ import java.util.UUID;
 
 @Controller
 public class UploadController {
-    private final static Logger logger = LoggerFactory.getLogger(UploadController.class);
+    //    private final static Logger logger = LoggerFactory.getLogger(UploadController.class);
     @Autowired
     private ApiJPA apiJPA;
 
@@ -51,6 +51,7 @@ public class UploadController {
        // String filename = UUID.randomUUID() + suffix;
         //服务器端保存的文件对象
         File serverFile = new File(uploadDir + file.getOriginalFilename());
+        System.out.println("upload file: " + serverFile.getAbsolutePath());
         //将上传的文件写入到服务器端文件内
         file.transferTo(serverFile);
     }
@@ -94,7 +95,7 @@ public class UploadController {
         return "上传成功";
     }
     /**
-     * 解析上传的文件
+     * 解析上传的文件-- upload 页面的action指定这里。
      */
     @RequestMapping(value = "/uploadAndResolve",method = RequestMethod.POST)
     @ResponseBody
@@ -115,7 +116,7 @@ public class UploadController {
 
     public  String multipartFileToText(MultipartFile picFile, String charsetName) {
         // 判断是否为空
-        String text = "";
+        StringBuffer text = new StringBuffer();
         if (picFile.isEmpty()) {
             return null;
         }
@@ -125,13 +126,13 @@ public class UploadController {
             BufferedReader br = new BufferedReader(is);
             String tempString = null;
                 while ((tempString=br.readLine()) != null) {
-                    text+=tempString;
+                    text.append(tempString);
                 }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-           return text;
+        return text.toString();
     }
 
    /* @PostMapping("/upload2")

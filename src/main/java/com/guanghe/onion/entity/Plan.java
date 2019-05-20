@@ -31,7 +31,7 @@ public class Plan
     @Column(name = "planName")
     private String planName;
 
-    @Column(name = "apiIds",  nullable = false)
+    @Column(name = "apiIds", nullable = false, length = 5000)
     private String apiIds;
 
     @Column(name = "planTime", nullable = false)
@@ -42,7 +42,7 @@ public class Plan
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "dingding")
+    @Column(name = "dingding", length = 5000)
     private String dingding;
 
     @Column(name = "creater")
