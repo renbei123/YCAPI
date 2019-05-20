@@ -64,7 +64,7 @@ public class SchedulerTask2 {
     }
 
     //    @Async
-    @Scheduled(initialDelay=1000*60*120, fixedDelay = 1000*60*120)
+    @Scheduled(initialDelay = 1000 * 60 * 5, fixedDelay = 1000 * 60 * 5)
     public void runMonitor() {
 
         getSystemVar();
@@ -155,12 +155,12 @@ public class SchedulerTask2 {
                        }
                    }
 //                   for (String assertJsonStr:s){
-//                       if(result.getBody().asString().indexOf(assertStr)==-1){
+//                       if(){
 //
 //                           assertlog.append("返回的结果找不到字符串:"+assertStr);
 //                       }
 //                   }
-//
+
                    if (assertlog.toString().length()>0){
                        monitorlog.setIsok(false);
                        errorlog=new ErrorLog();

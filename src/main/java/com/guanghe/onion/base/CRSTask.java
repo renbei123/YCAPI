@@ -51,7 +51,7 @@ public class  CRSTask {
 
     public  ConcurrentLinkedQueue queue =new ConcurrentLinkedQueue();
 
-    private static final int miniter = 3;
+    private static final int miniter = 5;
 
     @Scheduled(initialDelay = 1000 * 60 * 1, fixedDelay = 1000 * 60 * miniter)
     public void runCrsCompare() {
@@ -98,13 +98,6 @@ public class  CRSTask {
                     if (api.getVar_names()[i].contains("[]") ) {
                         exesqlresult=(List<String>)secondaryJdbcTemplate.queryForList(sql, String.class);
                         SchedulerTask2.sysVars.put(api.getVar_names()[i].trim().substring(0,api.getVar_names()[i].trim().length()-2),exesqlresult);
-//                        String exesqlresult2=null;
-//                        if (!method.equals("GET")) {
-//                            exesqlresult2 = (String) ((List<String>)exesqlresult).stream()
-//                                    .map(s -> "\"" + s + "\"")
-//                                    .collect(Collectors.joining(", "));
-//                            SchedulerTask2.sysVars.put(api.getVar_names()[i].trim().substring(0,api.getVar_names()[i].trim().length()-2),"["+exesqlresult2+"]");
-//                        }
 
                     } else {
                         exesqlresult=(String)secondaryJdbcTemplate.queryForObject(sql, String.class);
@@ -193,7 +186,7 @@ public class  CRSTask {
                 exceptlist = Arrays.asList(excepts);
             }
 
-            String compare_result=fastJsonDiff.compareJson(databaseResult_JsonObject, cacheResult_JsonObject, exceptlist);
+            String compare_result = fastJsonDiff.compareJson(databaseResult_JsonObject, cacheResult_JsonObject, null, exceptlist);
 
               /*  if(api.getExceptString()!=null&&api.getExceptString().trim().length()>0) {
                     String[] excepts = api.getExceptString().split(",");
@@ -204,7 +197,7 @@ public class  CRSTask {
                 }*/
 
             if(compare_result.trim().length()==0){
-                logger.info("对比结果正确：ok");
+                logger.info("对比结果正确：ok. \r\n");
                 if (!iflog){
                     List list = new ArrayList();
                     list.add(api.getName());
@@ -241,7 +234,7 @@ public class  CRSTask {
                     error.setHost2(databasehost);
 //                    error.setStatus(false);
                     error.setDiffer("error! 返回状态码:cache_host=" + cacheResult.getStatusCode()
-                            + "database_host=" + databaseResult.getStatusCode() + "\r\n 异常内容:" + compare_result);
+                            + ";  database_host=" + databaseResult.getStatusCode() + "\r\n 异常内容:\r\n" + compare_result);
                     error.setCreatTime(df.format(new Date()));
                     CrsMonitorLog one = jpa.save(error);
 

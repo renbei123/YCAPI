@@ -61,10 +61,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
+
+		<!-- 因配置外部Tomcat 而配置的依赖-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<!--<scope>provided</scope>-->
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -101,7 +103,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.31</version>
+			<version>1.2.58</version>
 		</dependency>
 
 		<dependency>
@@ -200,16 +202,27 @@
 			<version>2.8.5</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.dingtalk.api</groupId>
+			<artifactId>dingtalk</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/resources/lib/taobao-sdk-java-auto.jar</systemPath>
+		</dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
+				<!--maven打包时应用-->
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!--fork:如果没有该项配置,整个devtools不会起作用-->
                     <fork>true</fork>
+					<executable>true</executable>
+					<includeSystemScope>true</includeSystemScope>
                 </configuration>
 
 				<!--<dependencies>-->
@@ -222,7 +235,20 @@
 				<!--</dependencies>-->
 
             </plugin>
+
+			<!-- 告知maven ，不要web.xml文件的插件，打包war时需要-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+
 		</plugins>
+		<!-- 定义打包war 的包名-->
+		<finalName>YcApi</finalName>
 	</build>
 
 
