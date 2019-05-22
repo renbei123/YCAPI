@@ -53,7 +53,7 @@ public class  CRSTask {
 
     private static final int miniter = 5;
 
-    @Scheduled(initialDelay = 1000 * 60 * 1, fixedDelay = 1000 * 60 * miniter)
+    @Scheduled(initialDelay = 1000 * 60 * 5, fixedDelay = 1000 * 60 * miniter)
     public void runCrsCompare() {
         schedulertask2.getSystemVar();
         List<CrsMonitor> list=planjpa.findAll();
@@ -69,14 +69,15 @@ public class  CRSTask {
                     plantime.put(plan.getId(), curnumber);
                     continue;
                 }else {
+                    String[] dingding = plan.getDingding() == null ? null : plan.getDingding().split(",");
                     plantime.put(plan.getId(), plan.getPlanTime());
-                    compare(plan.getHost1(), plan.getHost2(), logjpa, true, plan.getDingding());
+                    compare(plan.getHost1(), plan.getHost2(), logjpa, true, dingding);
                 }
             }
         }
     }
 
-    public void compare(String cachehost, String databasehost, CrsMonitorLogJPA jpa, boolean iflog, String dingtoken) {
+    public void compare(String cachehost, String databasehost, CrsMonitorLogJPA jpa, boolean iflog, String[] dingding) {
         schedulertask2.getSystemVar();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         logger.info("crs对比开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
@@ -149,7 +150,7 @@ public class  CRSTask {
                     error.setCreatTime(df.format(new Date()));
                     CrsMonitorLog one = jpa.save(error);
 
-                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://localhost:8081/viewError?id=" + one.getId(), dingtoken);
+                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://10.8.8.18:8081/viewError?id=" + one.getId(), dingding);
                 }
                 continue;
             }
@@ -238,7 +239,7 @@ public class  CRSTask {
                     error.setCreatTime(df.format(new Date()));
                     CrsMonitorLog one = jpa.save(error);
 
-                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://localhost:8081/viewError?id=" + one.getId(), dingtoken);
+                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://localhost:8081/viewError?id=" + one.getId(), dingding);
                 }
             }
         }  //end each for apilist

@@ -13,6 +13,7 @@ import com.guanghe.onion.entity.Plan;
 import com.guanghe.onion.entity.PlanApisOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -79,7 +80,7 @@ public class PlanController {
             for(String s:newIds)
               orderedId.add(new BigInteger(s.trim()));
         }
-        System.out.println("**** orderedId:"+orderedId);
+//        System.out.println("**** orderedId:"+orderedId);
         planApisOrderJPA.deleteByPlanId(plan.getId());
 
         for (int i=1;i<=orderedId.size();i++){
@@ -90,7 +91,8 @@ public class PlanController {
             planApisOrderJPA.save(planapisorder);
         }
         planJPA.save(plan);
-        SchedulerTask2.plantime.put(plan.getId(),plan.getPlanTime());  //重置轮询任务里的计划执行时间段
+        if (SchedulerTask2.plantime != null)
+            SchedulerTask2.plantime.put(plan.getId(), plan.getPlanTime());  //重置轮询任务里的计划执行时间段
         return "redirect:/planlist";
     }
 
@@ -103,7 +105,8 @@ public class PlanController {
         List<String> ids = Arrays.asList(plan.getApiIds().split(","));
         model.addAttribute("ids",ids);
         model.addAttribute("planId",id);
-        List<Api> list=apiJPA.findAll();
+        Sort sort = new Sort(Sort.Direction.ASC, "id");
+        List<Api> list = apiJPA.findAll(sort);
         model.addAttribute("apilist",list);
         return "plan_edit";
     }
@@ -125,7 +128,8 @@ public class PlanController {
     {
         planJPA.delete(id);
         planApisOrderJPA.deleteByPlanId(id);
-        SchedulerTask2.plantime.remove(id);
+        if (SchedulerTask2.plantime.containsKey(id))
+            SchedulerTask2.plantime.remove(id);
         return "redirect:/planlist";
     }
 

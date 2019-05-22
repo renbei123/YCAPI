@@ -4,6 +4,7 @@ import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiRobotSendRequest;
 import com.dingtalk.api.response.OapiRobotSendResponse;
+import com.guanghe.onion.entity.ErrorLog;
 import com.guanghe.onion.entity.SystemVar;
 import com.taobao.api.ApiException;
 
@@ -16,31 +17,67 @@ public class Tools {
 
 
     public static boolean CRS_sendDingMsg(String method, String url, int code1, int code2,
-                                          String logUrl, String dtoken) {
+                                          String logUrl, String[] dingding) {
         //  ok:  response:{"errmsg":"ok","errcode":0}
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + dtoken);
-        OapiRobotSendRequest request = new OapiRobotSendRequest();
-        request.setMsgtype("markdown");
-        OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
-        markdown.setTitle("错误警告");
-        markdown.setText("##  " + method + "     " + url + "\r\n" +
-                "---\r\n" +
-                "+ **返回码: host1=" + code1 + "; host2=" + code2 + "**" +
-                "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
-        request.setMarkdown(markdown);
-        OapiRobotSendResponse response = null;
-        try {
-            response = client.execute(request);
-        } catch (ApiException e) {
-            e.printStackTrace();
-            return false;
-        }
+        for (String ding : dingding) {
+            DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding);
+            OapiRobotSendRequest request = new OapiRobotSendRequest();
+            request.setMsgtype("markdown");
+            OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
+            markdown.setTitle("错误警告");
+            markdown.setText("##  " + method + "     " + url + "\r\n" +
+                    "---\r\n" +
+                    "+ **返回码: host1=" + code1 + "; host2=" + code2 + "**" +
+                    "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
+            request.setMarkdown(markdown);
+            OapiRobotSendResponse response = null;
+            try {
+                response = client.execute(request);
+            } catch (ApiException e) {
+                e.printStackTrace();
+                return false;
+            }
 
 //    System.out.println("response:"+response.getBody().toString());
-        if (response.getErrmsg().equals("ok"))
-            return true;
-        else
-            return false;
+            if (response.getErrmsg().equals("ok"))
+                return true;
+            else
+                return false;
+        }
+        return false;
+
+    }
+
+
+    public static boolean sendDingMsg(ErrorLog errorLog, String logUrl, String[] dingding) {
+        //  ok:  response:{"errmsg":"ok","errcode":0}
+        for (String ding : dingding) {
+            DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding);
+            OapiRobotSendRequest request = new OapiRobotSendRequest();
+            request.setMsgtype("markdown");
+            OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
+            markdown.setTitle("错误警告");
+            markdown.setText("##  " + errorLog.getMethod() + "     " + errorLog.getUrl() + "\r\n" +
+                    "---\r\n" +
+                    "+ **返回码: " + errorLog.getRes_code() + "; 相应时长:" + errorLog.getElapsedTime() + "ms; **" +
+                    "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
+            request.setMarkdown(markdown);
+            OapiRobotSendResponse response = null;
+            try {
+                response = client.execute(request);
+            } catch (ApiException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+//    System.out.println("response:"+response.getBody().toString());
+            if (response.getErrmsg().equals("ok"))
+                return true;
+            else
+                return false;
+        }
+        return false;
+
     }
 
 

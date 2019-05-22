@@ -62,11 +62,10 @@ public  class  StringUtil{
                 }
                 map.put(key, value);
                 return map;
-            } else if (c != ' ') {
+            } else {
                 str += c;
             }
         }
-        System.out.println("map:" + map.toString()+";");
         return map;
     }
 

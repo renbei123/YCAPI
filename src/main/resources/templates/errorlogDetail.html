@@ -76,7 +76,8 @@
                             <div class="form-group">
                                 <label for="elapsedTime" class="col-sm-2 control-label">响应时长</label>
                                 <div class="col-sm-10">
-                                    <input type="text" th:value="*{elapsedTime+' ms'}" class="form-control" id="elapsedTime" name="elapsedTime">ms
+                                    <input type="text" th:value="*{elapsedTime+' ms'}" class="form-control"
+                                           id="elapsedTime" name="elapsedTime">
                                 </div>
                             </div>
 
@@ -125,14 +126,15 @@
                             <div class="form-group">
                                 <label for="res_body" class="col-sm-2 control-label">返回body</label>
                                 <div class="col-sm-10">
-                                    <textarea th:text="*{res_body}" class="form-control" rows="5"  id="res_body"  name="res_body"></textarea>
+                                    <textarea th:text="*{res_body}" class="form-control" rows="9" id="res_body"
+                                              name="res_body"></textarea>
                                 </div>
                             </div>
 
 
                             <!-- botton 按钮 -->
                             <div class="box-footer">
-                                <button type="button" class="btn btn-default" onclick="javascript:history.back();">返回</button>
+                                <button type="button" class="btn btn-default" onclick="tolist()">返回错误日志列表</button>
                             </div>
 
                         </form>
@@ -286,8 +288,7 @@
         }
 
 
-    function  list(){
-alert(3);
+    function tolist() {
         location.href="/errorlist";
     }
 

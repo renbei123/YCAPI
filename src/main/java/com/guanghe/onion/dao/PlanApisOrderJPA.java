@@ -25,9 +25,9 @@ public interface PlanApisOrderJPA extends JpaRepository<PlanApisOrder, Long> {
 
     PlanApisOrder findByApiOrdersAndPlanId(Integer order, Long PlanId);
 
-    @Query(value = "SELECT pao.api_orders ,pao.api_id , a.name ,a.method, a.path, a.body,  a.assert_code,a.assert_has_string," +
-            "       a.assert_json_check,a.headers, a.label,a.status from " +
-            "           plan_apis_order pao, api a where pao.plan_id=:planId and  pao.api_id=a.id and a.status=true order by api_orders"
+    @Query(value = "SELECT pao.api_orders ,pao.api_id , a.name ,a.method, a.path, a.body, a.headers, a.label,a.status, a.assert_code,a.assert_has_string," +
+            "       a.assert_json_path,a.assert_json_value,a.plan_var_name,a.plan_var_jsonpath from " +
+            "       plan_apis_order pao, api a where pao.plan_id=:planId and  pao.api_id=a.id and a.status=true order by api_orders"
             ,  nativeQuery = true)
     List<Object[]> getexePlanApis(@Param("planId") Long planId);
 

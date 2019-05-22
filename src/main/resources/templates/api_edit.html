@@ -42,7 +42,8 @@
 
                     <!-- class="box-body"   -->
                     <div class="box-body">
-                        <form class="form-horizontal"   th:action="@{/apisave}" th:object="${api}"  method="post" >
+                        <form class="form-horizontal" th:action="@{/apisave}" th:object="${api}" method="post"
+                              id="apiform">
                             <input type="hidden" name="id" th:value="*{id}" />
 
                             <!-- 接口名称  -->
@@ -119,41 +120,49 @@
 
                             </div>
                             <div class="form-group">
-                                <label for="remarks" class="col-sm-2 control-label">断言:</label>
-                                <!--<div class="col-sm-10">-->
-                                    <!--<input type="text" th:value="*{remarks}" class="form-control" id="assert" name="assert">-->
-                                <!--</div>-->
+                                <label class="col-sm-2 control-label"><font color="#8a2be2">以下设置断言</font></label>
+                                <div class="col-sm-10">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="assert_Code" class="col-sm-2 control-label">返回码</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="assert_Code" name="assert_Code" th:value="*{assert_Code}">
+                                    <table border="0" width="20%">
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control" id="assert_Code"
+                                                       name="assert_Code" th:value="*{assert_Code}">
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">包含字符 </label>
                                 <div class="col-sm-10">
-                                    <table border="0" width="60%">
+                                    <table border="0" width="70%" align="left" aria-rowspan="3">
                                         <tr   th:if="*{assert_hasStringArray==null}">
-                                            <td width="60%">
+                                            <td width="55%">
                                                 <input type="text"  class="form-control"  name="assert_hasString" >
                                             </td>
-                                            <td width="20%">
+                                            <td width="5%"></td>
+                                            <td width="5%">
                                                 <input type="button" value=" + " onclick="addRow(this)">
                                             </td>
-                                            <td width="20%">
+                                            <td width="5%">
                                                 <input type="button" value=" - " onclick="delRow(this)">
                                             </td>
                                         </tr>
 
                                         <tr  th:each=" hasStr:*{assert_hasStringArray}" th:if="*{assert_hasStringArray!=null}">
-                                            <td width="60%">
+                                            <td width="55%">
                                                 <input type="text"  class="form-control"  name="assert_hasString" th:value="${hasStr}">
                                             </td>
-                                            <td width="20%">
+                                            <td width="5%"></td>
+                                            <td width="5%">
                                                 <input type="button" value=" + " onclick="addRow(this)">
                                             </td>
-                                            <td width="20%">
+                                            <td width="5%">
                                                 <input type="button" value=" - " onclick="delRow(this)">
                                             </td>
                                         </tr>
@@ -161,34 +170,101 @@
 
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <label  class="col-sm-2 control-label">json匹配</label>
                                 <div class="col-sm-10">
-                                    <table border="0" width="60%">
-                                        <tr  th:if="*{assert_jsonCheckArray==null}" >
-                                            <td width="70%">
-                                                <input type="text"  class="form-control"  name="assert_jsonCheck" >
+                                    <table border="0" width="70%" align="left">
+                                        <tr th:if="*{assert_json_pathArray==null}">
+                                            <td width="25%">
+                                                <input type="text" class="form-control" name="assert_json_path">
                                             </td>
-                                            <td width="15%">
+                                            <td width="5%" align="center"> =</td>
+                                            <td width="25%">
+                                                <input type="text" class="form-control" name="assert_json_value">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
                                                 <input type="button" value=" + " onclick="addRow(this)">
                                             </td>
-                                            <td width="15%">
+
+                                            <td width="5%">
                                                 <input type="button" value=" - " onclick="delRow(this)">
                                             </td>
                                         </tr>
 
-                                        <tr  th:each=" hasJson:*{assert_jsonCheckArray}">
-                                            <td width="60%">
-                                                <input type="text"  class="form-control"  name="assert_jsonCheck" th:value="${hasJson}">
+                                        <tr th:if="*{assert_json_pathArray!=null}"
+                                            th:each=" i :${#numbers.sequence(0,assert_json_length)}">
+                                            <td width="25%">
+                                                <input type="text" class="form-control" name="assert_json_path"
+                                                       th:value="${api.assert_json_pathArray[i]==null?'':api.assert_json_pathArray[i].toString().trim()}">
                                             </td>
-                                            <td width="20%">
+                                            <td width="5%" align="center"> =</td>
+                                            <td width="25%">
+                                                <input type="text" class="form-control" name="assert_json_value"
+                                                       th:value="${api.assert_json_valueArray[i]==null?'':api.assert_json_valueArray[i].toString().trim()}">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
                                                 <input type="button" value=" + " onclick="addRow(this)">
                                             </td>
-                                            <td width="20%">
+                                            <td width="5%">
                                                 <input type="button" value=" - " onclick="delRow(this)">
                                             </td>
                                         </tr>
-                                           </table>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><font
+                                        color="#8a2be2">以下设置集合变量:name=json表达式的值</font></label>
+                                <div class="col-sm-10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">设置变量: </label>
+                                <div class="col-sm-10">
+                                    <table border="0" width="70%" align="left">
+                                        <tr th:if="*{PlanVar_nameArray==null}">
+                                            <td width="25%">
+                                                <input type="text" class="form-control" name="PlanVar_name">
+                                            </td>
+                                            <td width="5%" align="center"> =</td>
+                                            <td width="25%">
+                                                <input type="text" class="form-control" name="PlanVar_jsonpath">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input type="button" value=" + " onclick="addRow(this)">
+                                            </td>
+
+                                            <td width="5%">
+                                                <input type="button" value=" - " onclick="delRow(this)">
+                                            </td>
+                                        </tr>
+
+                                        <tr th:if="*{PlanVar_nameArray!=null}"
+                                            th:each=" i :${#numbers.sequence(0,plan_var_length)}">
+                                            <td width="25%">
+                                                <input type="text" class="form-control" name="PlanVar_name"
+                                                       th:value="${api.planVar_nameArray[i]==null?'':api.planVar_nameArray[i].toString().trim()}">
+                                            </td>
+                                            <td width="5%" align="center"> =</td>
+                                            <td width="25%">
+                                                <input type="text" class="form-control" name="PlanVar_jsonpath"
+                                                       th:value="${api.getPlanVar_jsonpathArray()[i]==null?'':api.getPlanVar_jsonpathArray()[i].toString().trim()}">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input type="button" value=" + " onclick="addRow(this)">
+                                            </td>
+                                            <td width="5%">
+                                                <input type="button" value=" - " onclick="delRow(this)">
+                                            </td>
+                                        </tr>
+                                    </table>
 
                                 </div>
                             </div>
@@ -301,6 +377,17 @@
 <script src="dist/js/adminlte.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    $(document).ready(function () {
+        $('#apiform input').keyup(trimkeyup);
+    });
+
+    function trimkeyup(e) {
+        lucene_objInput = $(this);
+        if (e.keyCode != 38 && e.keyCode != 40 && e.keyCode != 13) {
+            var im = $.trim(lucene_objInput.val());
+            lucene_objInput.val(im);
+        }
+    }
     function addRow(currentButton)
     {    //alert(currentButton.value);
 

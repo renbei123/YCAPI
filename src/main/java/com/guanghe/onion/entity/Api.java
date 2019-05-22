@@ -55,14 +55,29 @@ public class Api
     @Column(name = "assert_Code",nullable = true)
     private Integer assert_Code;
 
-    @Column(name = "assert_hasString" ,nullable = true )
+    @Column(name = "assert_hasString", nullable = true, length = 800)
     private String assert_hasString;
 
-    @Column(name = "assert_jsonCheck",nullable = true)
-    private String assert_jsonCheck;
+    @Column(name = "assert_json_path", nullable = true)
+    private String assert_json_path;
+
+    @Column(name = "assert_json_value", nullable = true, length = 800)
+    private String assert_json_value;
+
+    @Column(name = "PlanVar_name", nullable = true)
+    private String PlanVar_name;
+    @Column(name = "PlanVar_jsonpath", nullable = true)
+    private String PlanVar_jsonpath;
 
     @Transient
-    private String[] assert_hasStringArray;
+    private String[] assert_hasStringArray = null;
     @Transient
-    private String[] assert_jsonCheckArray;
+    private String[] assert_json_pathArray = null;
+    @Transient
+    private String[] assert_json_valueArray = null;
+    @Transient
+    private String[] PlanVar_nameArray = null;
+    @Transient
+    private String[] PlanVar_jsonpathArray = null;
+
 }
