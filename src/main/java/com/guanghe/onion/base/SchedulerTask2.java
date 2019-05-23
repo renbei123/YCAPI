@@ -73,7 +73,7 @@ public class SchedulerTask2 {
     }
 
     //    @Async
-    @Scheduled(initialDelay = 1000 * 30 * 1, fixedDelay = 1000 * 60 * 5)
+    @Scheduled(initialDelay = 1000 * 60 * 5, fixedDelay = 1000 * 60 * 5)
     public void runMonitor() {
 
         getSystemVar();
@@ -145,7 +145,7 @@ public class SchedulerTask2 {
                     long starTime = System.currentTimeMillis();//获取开始时间数
 
                     //发送请求  得到response
-                    logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
+//                    logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
                     Response result = send(path, method, headers, body);
 
 
@@ -168,10 +168,11 @@ public class SchedulerTask2 {
                     if (assert_code != null && result.getStatusCode() != Integer.parseInt(assert_code)) {
 
                         assertlog.append("预期返回码是:" + assert_code + "，实际返回:" + result.getStatusCode() + "\r\n");
+                        if (Integer.parseInt(assert_code) >= 500) {
+                            assertlog.append("服务器错误: code= " + assert_code + ";\r\n");
+                        }
                     }
-                    if (Integer.parseInt(assert_code) >= 500) {
-                        assertlog.append("服务器错误: code= " + assert_code + ";\r\n");
-                    }
+
 
 //                   string包含断言
                     if (assert_has_string != null) {
@@ -273,6 +274,7 @@ public class SchedulerTask2 {
                         errorlog = errorlogjpa.save(errorlog);
 
                         logger.error("********* 请求失败！！！code:{}; elapsetime:{}; response:{}", result.getStatusCode(), elapsetime, result.getBody().asString());
+                        logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
                         boolean dingsendok = Tools.sendDingMsg(errorlog, "http://10.8.8.18:8081/errorlogDetail?id=" + errorlog.getId(), dingding);
                         if (!dingsendok)
                             logger.error("发送钉钉失败! 错误日志id={}", errorlog.getId());
@@ -316,10 +318,15 @@ public class SchedulerTask2 {
                     .patch(path);
         }
         if (method.equalsIgnoreCase("DELETE")) {
-            return given()
-                    .headers(headers)
-                    .body(body)
-                    .delete(path);
+            if (isnull(body))
+                return given()
+                        .headers(headers)
+                        .delete(path);
+            else
+                return given()
+                        .headers(headers)
+                        .body(body)
+                        .delete(path);
         }
         if (method.equalsIgnoreCase("OPTIONS")) {
             return given()
@@ -345,11 +352,12 @@ public class SchedulerTask2 {
 
             //优先使用集合自定义实时变量
             if (planvarmap.containsKey(temp)) {
-                logger.info("replace vars: {}; {};", temp, planvarmap.get(temp).toString());
+//                logger.info("replace vars: {}; {};", temp, planvarmap.get(temp).toString());
                 value = planvarmap.containsKey(temp) ? planvarmap.get(temp).toString() : null;
             } else {
-                logger.info("replace vars: {}; {};", temp, sysVars.get(temp).toString());
+
                 value = sysVars.containsKey(temp) ? sysVars.get(temp).toString() : null;
+
             }
 
             content = (value == null ? content : content.replace(name, value));

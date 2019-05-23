@@ -28,7 +28,7 @@
     </appender>
 
     <!-- 日志输出级别   日志文件的输出-->
-    <root level="info">
+    <root level="error">
         <appender-ref ref="STDOUT" />
         <!-- <appender-ref ref="FILE" />-->
      </root>

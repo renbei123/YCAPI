@@ -30,13 +30,17 @@ public  class  StringUtil{
     }
 
     public static Object StringToMap(String param) {
-        param = param.trim().replaceAll("\n", "").replaceAll("\r", "").replaceAll("\t", "");
-        param = param.substring(1, param.length() - 1);
+        param = param.trim().replaceAll("\n", "").replaceAll("\r", "").replaceAll("\t", "")
+                .replaceAll("\\{}", "");  //有的head为{}
         Map map = new HashMap();
-        String[] key_value_array = param.split(",");
-        for (String temp : key_value_array) {
-            String[] s = temp.split("=");
-            map.put(s[0].trim(), s[1].trim());
+        if (param.length() > 0) {
+            param = param.substring(1, param.length() - 1);
+
+            String[] key_value_array = param.split(",");
+            for (String temp : key_value_array) {
+                String[] s = temp.split("=");
+                map.put(s[0].trim(), s[1].trim());
+            }
         }
         return map;
     }
