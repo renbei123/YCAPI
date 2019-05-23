@@ -19,65 +19,69 @@ public class Tools {
     public static boolean CRS_sendDingMsg(String method, String url, int code1, int code2,
                                           String logUrl, String[] dingding) {
         //  ok:  response:{"errmsg":"ok","errcode":0}
-        for (String ding : dingding) {
-            DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding);
-            OapiRobotSendRequest request = new OapiRobotSendRequest();
-            request.setMsgtype("markdown");
-            OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
-            markdown.setTitle("错误警告");
-            markdown.setText("##  " + method + "     " + url + "\r\n" +
-                    "---\r\n" +
-                    "+ **返回码: host1=" + code1 + "; host2=" + code2 + "**" +
-                    "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
-            request.setMarkdown(markdown);
-            OapiRobotSendResponse response = null;
-            try {
-                response = client.execute(request);
-            } catch (ApiException e) {
-                e.printStackTrace();
-                return false;
-            }
+
+        if (dingding != null) {
+            for (String ding : dingding) {
+                DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding);
+                OapiRobotSendRequest request = new OapiRobotSendRequest();
+                request.setMsgtype("markdown");
+                OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
+                markdown.setTitle("错误警告");
+                markdown.setText("##  " + method + "     " + url + "\r\n" +
+                        "---\r\n" +
+                        "+ **返回码: host1=" + code1 + "; host2=" + code2 + "**" +
+                        "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
+                request.setMarkdown(markdown);
+                OapiRobotSendResponse response = null;
+                try {
+                    response = client.execute(request);
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                    return false;
+                }
 
 //    System.out.println("response:"+response.getBody().toString());
-            if (response.getErrmsg().equals("ok"))
-                return true;
-            else
-                return false;
+                if (response.getErrmsg().equals("ok"))
+                    return true;
+                else
+                    return false;
+            }
         }
-        return false;
-
+        return true;
     }
 
 
     public static boolean sendDingMsg(ErrorLog errorLog, String logUrl, String[] dingding) {
         //  ok:  response:{"errmsg":"ok","errcode":0}
-        for (String ding : dingding) {
-            DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding);
-            OapiRobotSendRequest request = new OapiRobotSendRequest();
-            request.setMsgtype("markdown");
-            OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
-            markdown.setTitle("错误警告");
-            markdown.setText("##  " + errorLog.getMethod() + "     " + errorLog.getUrl() + "\r\n" +
-                    "---\r\n" +
-                    "+ **返回码: " + errorLog.getRes_code() + "; 相应时长:" + errorLog.getElapsedTime() + "ms; **" +
-                    "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
-            request.setMarkdown(markdown);
-            OapiRobotSendResponse response = null;
-            try {
-                response = client.execute(request);
-            } catch (ApiException e) {
-                e.printStackTrace();
-                return false;
-            }
+        if (dingding != null) {
+            for (String ding : dingding) {
+                DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding);
+                OapiRobotSendRequest request = new OapiRobotSendRequest();
+                request.setMsgtype("markdown");
+                OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
+                markdown.setTitle("错误警告");
+                markdown.setText("##  " + errorLog.getMethod() + "     " + errorLog.getUrl() + "\r\n" +
+                        "---\r\n" +
+                        "+ **返回码: " + errorLog.getRes_code() + "; 相应时长:" + errorLog.getElapsedTime() + "ms; **" +
+                        "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
+                request.setMarkdown(markdown);
+                OapiRobotSendResponse response = null;
+                try {
+                    response = client.execute(request);
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                    return false;
+                }
 
 //    System.out.println("response:"+response.getBody().toString());
-            if (response.getErrmsg().equals("ok"))
-                return true;
-            else
-                return false;
-        }
-        return false;
+                if (response.getErrmsg().equals("ok"))
+                    return true;
+                else
+                    return false;
+            }
 
+        }
+        return true;
     }
 
 

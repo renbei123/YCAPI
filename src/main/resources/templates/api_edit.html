@@ -276,7 +276,7 @@
                                 &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
                                 <input type="button" value="发送" class="btn  btn-success" id="debugSend" />
                                 &nbsp; &nbsp; &nbsp;
-                                <button type="submit" class="btn btn-info pull-right">保存</button>
+                                <button type="submit" class="btn btn-info pull-right" id="savebutton">保存</button>
                             </div>
 
                         </form>
@@ -377,17 +377,14 @@
 <script src="dist/js/adminlte.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#apiform input').keyup(trimkeyup);
+    $(document).ready(function () {//通用方法去输入框前后空格
+        $("form").on("change", function () {
+            $("form input[type=text]").each(function () {
+                this.value = $.trim(this.value);
+            });
+        })
     });
 
-    function trimkeyup(e) {
-        lucene_objInput = $(this);
-        if (e.keyCode != 38 && e.keyCode != 40 && e.keyCode != 13) {
-            var im = $.trim(lucene_objInput.val());
-            lucene_objInput.val(im);
-        }
-    }
     function addRow(currentButton)
     {    //alert(currentButton.value);
 

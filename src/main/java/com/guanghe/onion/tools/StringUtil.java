@@ -30,8 +30,19 @@ public  class  StringUtil{
     }
 
     public static Object StringToMap(String param) {
+        param = param.trim().replaceAll("\n", "").replaceAll("\r", "").replaceAll("\t", "");
+        param = param.substring(1, param.length() - 1);
+        Map map = new HashMap();
+        String[] key_value_array = param.split(",");
+        for (String temp : key_value_array) {
+            String[] s = temp.split("=");
+            map.put(s[0].trim(), s[1].trim());
+        }
+        return map;
+    }
+ /*   public static Object StringToMap(String param) {
 
-        param=param.replaceAll("\n","").replaceAll("\r","");
+        param=param.replaceAll("\n","").replaceAll("\r","").replaceAll("\t","");
 
         Map map = new HashMap();
         String str = "";
@@ -67,7 +78,7 @@ public  class  StringUtil{
             }
         }
         return map;
-    }
+    }*/
 
 
     //没有大括号，只有key=value，key=value。。。。
