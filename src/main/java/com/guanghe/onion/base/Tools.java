@@ -22,7 +22,7 @@ public class Tools {
 
         if (dingding != null) {
             for (String ding : dingding) {
-                DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding);
+                DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding.trim());
                 OapiRobotSendRequest request = new OapiRobotSendRequest();
                 request.setMsgtype("markdown");
                 OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
