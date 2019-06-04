@@ -277,7 +277,7 @@ public class SchedulerTask2 {
                         logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
                         boolean dingsendok = Tools.sendDingMsg(errorlog, "http://10.8.8.18:8081/errorlogDetail?id=" + errorlog.getId(), dingding);
                         if (!dingsendok)
-                            logger.error("发送钉钉失败! 错误日志id={}", errorlog.getId());
+                            logger.error("发送钉钉失败! 错误日志id={}; 发送的钉钉={}", errorlog.getId(), dingding.toString());
                     } else {
                         monitorlog.setIsok(true);
                     }

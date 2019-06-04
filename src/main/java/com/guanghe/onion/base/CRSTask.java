@@ -69,7 +69,7 @@ public class  CRSTask {
                     plantime.put(plan.getId(), curnumber);
                     continue;
                 }else {
-                    String[] dingding = plan.getDingding() == null ? null : plan.getDingding().split(",");
+                    String[] dingding = isnull(plan.getDingding()) ? null : plan.getDingding().split(",");
                     plantime.put(plan.getId(), plan.getPlanTime());
                     compare(plan.getHost1(), plan.getHost2(), logjpa, true, dingding);
                 }
@@ -150,7 +150,9 @@ public class  CRSTask {
                     error.setCreatTime(df.format(new Date()));
                     CrsMonitorLog one = jpa.save(error);
 
-                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://10.8.8.18:8081/viewError?id=" + one.getId(), dingding);
+                    boolean dingsendok = Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://10.8.8.18:8081/viewError?id=" + one.getId(), dingding);
+                    if (!dingsendok)
+                        logger.error("发送钉钉失败! 错误日志id={}, 发送的钉钉={}", one.getId(), dingding.toString());
                 }
                 continue;
             }
@@ -288,30 +290,6 @@ public class  CRSTask {
         return null;
     }
 
-    public Response  GET(String url, Map para, Map heads, Map cookies){
-        return  given()
-                .cookies(cookies)
-                .headers(heads)
-                .params(para)
-                .get(url);
-
-    }
-
-    public Response  GET(String url, Map para, Map heads){
-        return  given()
-                .headers(heads)
-                .params(para)
-                .get(url);
-
-    }
-
-    public Response  POST(String url, Map para, Map heads, Map cookies){
-        return  given()
-                .cookies(cookies)
-                .headers(heads)
-                .params(para)
-                .post(url);
-    }
 
     public String  replaceSysVar(String content){
         // 匹配{{host}}类型的变量
@@ -327,6 +305,10 @@ public class  CRSTask {
             content=(value==null?content:content.replace(name,value));
         }
         return content;
+    }
+
+    public boolean isnull(Object s) {
+        return s == null || s.toString().trim().equals("");
     }
 
 }

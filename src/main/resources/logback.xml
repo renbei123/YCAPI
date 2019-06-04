@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
-    <property name="LOG_HOME" value="./logs" />
+    <property name="LOG_HOME" value="./YcApilogs"/>
     <!-- 控制台输出 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -23,13 +23,13 @@
         </encoder>
         <!--日志文件最大的大小-->
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>100MB</MaxFileSize>
+            <MaxFileSize>500MB</MaxFileSize>
         </triggeringPolicy>
     </appender>
 
     <!-- 日志输出级别   日志文件的输出-->
-    <root level="error">
+    <root level="info">
         <appender-ref ref="STDOUT" />
-        <!-- <appender-ref ref="FILE" />-->
+        <appender-ref ref="FILE"/>
      </root>
  </configuration>

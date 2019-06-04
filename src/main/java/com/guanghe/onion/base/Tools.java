@@ -7,6 +7,8 @@ import com.dingtalk.api.response.OapiRobotSendResponse;
 import com.guanghe.onion.entity.ErrorLog;
 import com.guanghe.onion.entity.SystemVar;
 import com.taobao.api.ApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +16,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tools {
+    private final static Logger logger = LoggerFactory.getLogger("DingdingTool");
 
 
     public static boolean CRS_sendDingMsg(String method, String url, int code1, int code2,
                                           String logUrl, String[] dingding) {
         //  ok:  response:{"errmsg":"ok","errcode":0}
-
+        boolean sendstat = true;
         if (dingding != null) {
             for (String ding : dingding) {
                 DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding.trim());
@@ -37,22 +40,27 @@ public class Tools {
                     response = client.execute(request);
                 } catch (ApiException e) {
                     e.printStackTrace();
-                    return false;
+                    sendstat = false;
+                    logger.error("发送钉钉{}失败:" + ding);
                 }
 
 //    System.out.println("response:"+response.getBody().toString());
-                if (response.getErrmsg().equals("ok"))
-                    return true;
-                else
-                    return false;
+                if (response.getErrmsg().equals("ok")) {
+//                    sendstat=true;
+                    logger.info("发送钉钉{}成功:" + ding);
+                } else {
+                    sendstat = false;
+                    logger.error("发送钉钉{}失败:" + ding);
+                }
             }
         }
-        return true;
+        return sendstat;
     }
 
 
     public static boolean sendDingMsg(ErrorLog errorLog, String logUrl, String[] dingding) {
         //  ok:  response:{"errmsg":"ok","errcode":0}
+        boolean sendstat = true;
         if (dingding != null) {
             for (String ding : dingding) {
                 DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding);
@@ -70,18 +78,21 @@ public class Tools {
                     response = client.execute(request);
                 } catch (ApiException e) {
                     e.printStackTrace();
-                    return false;
+                    sendstat = false;
+                    logger.error("发送钉钉{}失败:" + ding);
                 }
 
-//    System.out.println("response:"+response.getBody().toString());
-                if (response.getErrmsg().equals("ok"))
-                    return true;
-                else
-                    return false;
+                if (response.getErrmsg().equals("ok")) {
+//                    sendstat=true;
+                    logger.info("发送钉钉{}成功:" + ding);
+                } else {
+                    sendstat = false;
+                    logger.error("发送钉钉{}失败:" + ding);
+                }
             }
 
         }
-        return true;
+        return sendstat;
     }
 
 
