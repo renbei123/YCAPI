@@ -1,38 +1,28 @@
 package com.guanghe.onion.base;
 
-import com.google.gson.JsonObject;
-import com.guanghe.onion.controller.UploadController;
 import com.guanghe.onion.dao.*;
-import com.guanghe.onion.entity.*;
+import com.guanghe.onion.entity.ErrorLog;
+import com.guanghe.onion.entity.MonitorLog;
+import com.guanghe.onion.entity.Plan;
+import com.guanghe.onion.entity.SystemVar;
 import com.guanghe.onion.tools.StringUtil;
 import com.jayway.jsonpath.JsonPath;
-import io.restassured.RestAssured;
-import io.restassured.config.SSLConfig;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.restassured.RestAssured.*;
-import io.restassured.matcher.RestAssuredMatchers.*;
-import org.hamcrest.Matchers.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
 
 @Component
 //@EnableAsync
@@ -82,6 +72,7 @@ public class SchedulerTask2 {
         logger.info("SchedulerTask2 轮询开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
 
         List<Plan> planList = planJPA.findAll();
+
         if (plantime == null) {
             plantime = new HashMap<Long, Integer>();
             for (Plan plan : planList) {

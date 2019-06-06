@@ -241,17 +241,17 @@
             </plugin>
 
 			<!-- 告知maven ，不要web.xml文件的插件，打包war时需要-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-war-plugin</artifactId>-->
+            <!--<version>2.6</version>-->
+            <!--<configuration>-->
+            <!--<failOnMissingWebXml>false</failOnMissingWebXml>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
 
 		</plugins>
-		<!-- 定义打包war 的包名-->
+        <!-- 定义打包jar、war 的包名-->
 		<finalName>YcApi</finalName>
 	</build>
 
