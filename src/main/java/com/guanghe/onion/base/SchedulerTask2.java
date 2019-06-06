@@ -82,13 +82,13 @@ public class SchedulerTask2 {
         logger.info("SchedulerTask2 轮询开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
 
         List<Plan> planList = planJPA.findAll();
-
         if (plantime == null) {
             plantime = new HashMap<Long, Integer>();
             for (Plan plan : planList) {
                 plantime.put(plan.getId(), plan.getPlanTime());
             }
         }
+        logger.info("api plantime={}", plantime.toString());
 
         planvarmap = new HashMap();
         /*开始计划集合*/

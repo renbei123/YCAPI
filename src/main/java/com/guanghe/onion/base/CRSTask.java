@@ -37,15 +37,15 @@ public class  CRSTask {
     private CrsMonitorJPA planjpa;
     @Autowired
     private CrsMonitorLogJPA logjpa;
+    @Autowired
+    private SystemVarJPA systemvarjpa;
+
 
     @Autowired
     @Qualifier("secondaryJdbcTemplate")
     private JdbcTemplate secondaryJdbcTemplate;
 
-    @Autowired
-    SchedulerTask2 schedulertask2;
-
-    public static Map<Long,Integer> plantime=new HashMap();
+    public static Map<Long, Integer> plantime = null;
     public static StringBuffer sb=new StringBuffer();
 //    public static ArrayDeque<List>  compareresult = new ArrayDeque();
 
@@ -53,12 +53,16 @@ public class  CRSTask {
 
     private static final int miniter = 5;
 
+
     @Scheduled(initialDelay = 1000 * 60 * 5, fixedDelay = 1000 * 60 * miniter)
     public void runCrsCompare() {
-        schedulertask2.getSystemVar();
         List<CrsMonitor> list=planjpa.findAll();
-        for (CrsMonitor plan:list){
-            plantime.put(plan.getId(),plan.getPlanTime());
+
+        if (plantime == null) {
+            plantime = new HashMap<Long, Integer>();
+            for (CrsMonitor plan : list) {
+                plantime.put(plan.getId(), plan.getPlanTime());
+            }
         }
 
         for (CrsMonitor plan : list) {
@@ -67,9 +71,11 @@ public class  CRSTask {
                 int curnumber = plantime.get(plan.getId()).intValue() - 1;
                 if (curnumber > 0) {
                     plantime.put(plan.getId(), curnumber);
+                    logger.info("crs轮询一次， plantime={}", plantime.toString());
                     continue;
                 }else {
                     String[] dingding = isnull(plan.getDingding()) ? null : plan.getDingding().split(",");
+                    logger.info("crs接口开始对比！");
                     plantime.put(plan.getId(), plan.getPlanTime());
                     compare(plan.getHost1(), plan.getHost2(), logjpa, true, dingding);
                 }
@@ -78,7 +84,7 @@ public class  CRSTask {
     }
 
     public void compare(String cachehost, String databasehost, CrsMonitorLogJPA jpa, boolean iflog, String[] dingding) {
-        schedulertask2.getSystemVar();
+        getSystemVar();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         logger.info("crs对比开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
 
@@ -99,7 +105,6 @@ public class  CRSTask {
                     if (api.getVar_names()[i].contains("[]") ) {
                         exesqlresult=(List<String>)secondaryJdbcTemplate.queryForList(sql, String.class);
                         SchedulerTask2.sysVars.put(api.getVar_names()[i].trim().substring(0,api.getVar_names()[i].trim().length()-2),exesqlresult);
-
                     } else {
                         exesqlresult=(String)secondaryJdbcTemplate.queryForObject(sql, String.class);
                         SchedulerTask2.sysVars.put(api.getVar_names()[i],exesqlresult);
@@ -309,6 +314,16 @@ public class  CRSTask {
 
     public boolean isnull(Object s) {
         return s == null || s.toString().trim().equals("");
+    }
+
+    public void getSystemVar() {
+        if (SchedulerTask2.sysVars == null) {
+            SchedulerTask2.sysVars = new HashMap();
+            List<SystemVar> list = systemvarjpa.findAll();
+            for (SystemVar var : list) {
+                SchedulerTask2.sysVars.put(var.getName(), var.getValue());
+            }
+        }
     }
 
 }
