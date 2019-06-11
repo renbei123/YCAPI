@@ -1,13 +1,16 @@
 package com.guanghe.onion.base;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.guanghe.onion.dao.*;
-import com.guanghe.onion.entity.*;
-import com.guanghe.onion.tools.CheckText;
+import com.guanghe.onion.dao.CrsApiJPA;
+import com.guanghe.onion.dao.CrsMonitorJPA;
+import com.guanghe.onion.dao.CrsMonitorLogJPA;
+import com.guanghe.onion.dao.SystemVarJPA;
+import com.guanghe.onion.entity.CrsApi;
+import com.guanghe.onion.entity.CrsMonitor;
+import com.guanghe.onion.entity.CrsMonitorLog;
+import com.guanghe.onion.entity.SystemVar;
 import com.guanghe.onion.tools.StringUtil;
 import com.guanghe.onion.tools.fastJsonDiff;
-import com.sun.tools.javac.code.Attribute;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +23,8 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 
@@ -45,16 +46,16 @@ public class  CRSTask {
     @Qualifier("secondaryJdbcTemplate")
     private JdbcTemplate secondaryJdbcTemplate;
 
-    public static Map<Long, Integer> plantime = null;
+    private static Map<Long, Integer> plantime = null;
     public static StringBuffer sb=new StringBuffer();
 //    public static ArrayDeque<List>  compareresult = new ArrayDeque();
 
     public  ConcurrentLinkedQueue queue =new ConcurrentLinkedQueue();
 
-    private static final int miniter = 5;
 
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 
-    @Scheduled(initialDelay = 1000 * 60 * 5, fixedDelay = 1000 * 60 * miniter)
+    @Scheduled(initialDelay = 1000 * 60 * 7, fixedDelay = 1000 * 60 * 5)
     public void runCrsCompare() {
         List<CrsMonitor> list=planjpa.findAll();
 
@@ -85,7 +86,7 @@ public class  CRSTask {
 
     public void compare(String cachehost, String databasehost, CrsMonitorLogJPA jpa, boolean iflog, String[] dingding) {
         getSystemVar();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+
         logger.info("crs对比开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
 
         List<CrsApi> apilist = crsJPA.findAll();
@@ -103,10 +104,10 @@ public class  CRSTask {
                     String sql=api.getVar_values()[i].trim();
                     // 接口里的变量如果是数组 varname[]
                     if (api.getVar_names()[i].contains("[]") ) {
-                        exesqlresult=(List<String>)secondaryJdbcTemplate.queryForList(sql, String.class);
+                        exesqlresult = secondaryJdbcTemplate.queryForList(sql, String.class);
                         SchedulerTask2.sysVars.put(api.getVar_names()[i].trim().substring(0,api.getVar_names()[i].trim().length()-2),exesqlresult);
                     } else {
-                        exesqlresult=(String)secondaryJdbcTemplate.queryForObject(sql, String.class);
+                        exesqlresult = secondaryJdbcTemplate.queryForObject(sql, String.class);
                         SchedulerTask2.sysVars.put(api.getVar_names()[i],exesqlresult);
                     }
                 }
@@ -153,11 +154,11 @@ public class  CRSTask {
                     error.setDiffer("返回码错误 \r\n返回状态码:cache_host=" + cacheResult.getStatusCode()
                             + "; database_host=" + databaseResult.getStatusCode());
                     error.setCreatTime(df.format(new Date()));
-                    CrsMonitorLog one = jpa.save(error);
+                    CrsMonitorLog oneCrslog = jpa.save(error);
 
-                    boolean dingsendok = Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://10.8.8.18:8081/viewError?id=" + one.getId(), dingding);
+                    boolean dingsendok = Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://10.8.8.18:8081/viewError?id=" + oneCrslog.getId(), dingding);
                     if (!dingsendok)
-                        logger.error("发送钉钉失败! 错误日志id={}, 发送的钉钉={}", one.getId(), dingding.toString());
+                        logger.error("发送钉钉失败! 错误日志id={}, 发送的钉钉={}", oneCrslog.getId(), dingding.toString());
                 }
                 continue;
             }

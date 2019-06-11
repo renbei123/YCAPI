@@ -46,11 +46,14 @@ public class SchedulerTask2 {
 
     public static Map sysVars = null;
 
-    private Map planvarmap = null;
+    //    private Map planvarmap  = new HashMap();
+    private static Map<Long, Map> planvarmap = new HashMap<Long, Map>();
 
     private final static Logger logger = LoggerFactory.getLogger("SchedulerTask2");
 
     public static Map<Long, Integer> plantime = null;
+
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 
     public void getSystemVar() {
         if (sysVars == null) {
@@ -68,9 +71,6 @@ public class SchedulerTask2 {
 
         getSystemVar();
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-        logger.info("SchedulerTask2 轮询开始时间：" + df.format(new Date()));// new Date()为获取当前系统时间
-
         List<Plan> planList = planJPA.findAll();
 
         if (plantime == null) {
@@ -81,17 +81,10 @@ public class SchedulerTask2 {
         }
         logger.info("api plantime={}", plantime.toString());
 
-        planvarmap = new HashMap();
+
         /*开始计划集合*/
         for (Plan plan : planList) {
             if (!plan.getStatus() || plan.getId() == null) continue;
-            logger.info("plan.getHost():" + plan.getHost());
-            planvarmap.clear();
-
-            String[] dingding = isnull(plan.getDingding()) ? null : plan.getDingding().split(",");
-
-            // 如果监控计划里有host，取值该host值，否则不取值
-            String host = (plan.getHost() == null || plan.getHost().trim().equals("") ? "" : plan.getHost().trim());
 
             int curnumber = plantime.get(plan.getId()).intValue() - 1;
             if (curnumber > 0) {
@@ -99,7 +92,19 @@ public class SchedulerTask2 {
                 continue;
             }
 
+            logger.info("SchedulerTask2 执行时间：" + df.format(new Date()));// new Date()为获取当前系统时间
+
             plantime.put(plan.getId(), plan.getPlanTime());
+
+            String[] dingding = isnull(plan.getDingding()) ? null : plan.getDingding().split(",");
+
+            // 如果监控计划里有host，取值该host值，否则不取值
+            String host = (plan.getHost() == null || plan.getHost().trim().equals("") ? "" : plan.getHost().trim());
+
+            if (planvarmap.get(plan.getId()) == null) {
+                planvarmap.put(plan.getId(), new HashMap());
+            }
+
 
             List<Object[]> apiList = planApisOrderJPA.getexePlanApis(plan.getId());
 
@@ -116,14 +121,14 @@ public class SchedulerTask2 {
                     //如果path 以 http和https 或者 {{ 开头，取值不变
                     path = (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("{{")) ? path : (host + path);
 
-                    path = (path.contains("{{")) ? replaceSysVar(path) : path;
+                    path = (path.contains("{{")) ? replaceSysVar(plan.getId(), path) : path;
                     logger.info(apiname + " : " + path);
 
                     String body = isnull(api[5]) ? "" : api[5].toString();
-                    body = (body.contains("{{")) ? replaceSysVar(body) : body;
+                    body = (body.contains("{{")) ? replaceSysVar(plan.getId(), body) : body;
 
                     String heads = isnull(api[6]) ? "" : api[6].toString();
-                    heads = (heads.contains("{{")) ? replaceSysVar(heads) : heads;
+                    heads = (heads.contains("{{")) ? replaceSysVar(plan.getId(), heads) : heads;
                     Map headers = (Map) StringUtil.StringToMap(heads);
 
                     String assert_code = isnull(api[9]) ? null : api[9].toString();
@@ -143,6 +148,7 @@ public class SchedulerTask2 {
                     long endTime = System.currentTimeMillis();    //获取结束时间
                     long elapsetime = endTime - starTime;
                     logger.info("运行时间：{}ms ; 返回码：{} , statusline:{}", elapsetime, result.getStatusCode(), result.getStatusLine());
+
                     MonitorLog monitorlog = new MonitorLog();
                     monitorlog.setApiId(Long.parseLong(apid));
                     monitorlog.setPlanId(plan.getId());
@@ -151,6 +157,7 @@ public class SchedulerTask2 {
                     int res_body_size = result.getBody().asString().length();
                     monitorlog.setResponseSize(res_body_size);
                     monitorlog.setStatusCode(result.statusCode());
+
                     StringBuilder assertlog = new StringBuilder(0);
                     ErrorLog errorlog = null;
 
@@ -206,15 +213,15 @@ public class SchedulerTask2 {
                                 try {
                                     if (plan_var_jsonpath[i].startsWith("#")) {
                                         if (plan_var_jsonpath[i].startsWith("#header."))
-                                            planvarmap.put(plan_var_name[i], result.getHeader(plan_var_jsonpath[i].substring(8).trim()));
+                                            planvarmap.get(plan.getId()).put(plan_var_name[i], result.getHeader(plan_var_jsonpath[i].substring(8).trim()));
                                         if (plan_var_jsonpath[i].startsWith("#body."))
-                                            planvarmap.put(plan_var_name[i], JsonPath.parse(result.getBody().asString()).read("$." + plan_var_jsonpath[i].substring(6).trim()).toString());
+                                            planvarmap.get(plan.getId()).put(plan_var_name[i], JsonPath.parse(result.getBody().asString()).read("$." + plan_var_jsonpath[i].substring(6).trim()).toString());
                                     } else {
-                                        planvarmap.put(plan_var_name[i], JsonPath.parse(result.getBody().asString()).read("$." + plan_var_jsonpath[i].trim()).toString());
+                                        planvarmap.get(plan.getId()).put(plan_var_name[i], JsonPath.parse(result.getBody().asString()).read("$." + plan_var_jsonpath[i].trim()).toString());
                                     }
 
 
-                                    logger.info("计划的自定义变量：{}={};", plan_var_name[i], planvarmap.get(plan_var_name[i]).toString());
+                                    logger.info("计划的自定义变量：{}={};", plan_var_name[i], planvarmap.get(plan.getId()).get(plan_var_name[i]).toString());
                                 } catch (NullPointerException exception) {
                                     logger.error("找不到输入的json表达式:" + plan_var_jsonpath[i] + ",请重新检查更新输入！\r\n");
                                 }
@@ -225,17 +232,17 @@ public class SchedulerTask2 {
                                 try {
                                     if (plan_var_jsonpath[i].startsWith("#")) {
                                         if (plan_var_jsonpath[i].startsWith("#header."))
-                                            planvarmap.put(plan_var_name[i], result.getHeader(plan_var_jsonpath[i].substring(8).trim()));
+                                            planvarmap.get(plan.getId()).put(plan_var_name[i], result.getHeader(plan_var_jsonpath[i].substring(8).trim()));
                                         if (plan_var_jsonpath[i].startsWith("#body."))
-                                            planvarmap.put(plan_var_name[i], result.jsonPath().get(plan_var_jsonpath[i].substring(6).trim()).toString());
+                                            planvarmap.get(plan.getId()).put(plan_var_name[i], result.jsonPath().get(plan_var_jsonpath[i].substring(6).trim()).toString());
                                     } else {
                                         logger.info("varName:{}; jsonpath:{}", plan_var_name[i], plan_var_jsonpath[i]);
                                         logger.info("var_value:{}", result.jsonPath().get(plan_var_jsonpath[i].trim()).toString());
-                                        planvarmap.put(plan_var_name[i], result.jsonPath().get(plan_var_jsonpath[i].trim()).toString());
+                                        planvarmap.get(plan.getId()).put(plan_var_name[i], result.jsonPath().get(plan_var_jsonpath[i].trim()).toString());
                                     }
 
 
-                                    logger.info("计划的自定义变量：{}={};", plan_var_name[i], planvarmap.get(plan_var_name[i]));
+                                    logger.info("计划的自定义变量：{}={};", plan_var_name[i], planvarmap.get(plan.getId()).get(plan_var_name[i]));
                                 } catch (NullPointerException exception) {
                                     logger.error("找不到输入的json表达式:" + plan_var_jsonpath[i] + ",请重新检查更新输入！\r\n");
                                 }
@@ -329,7 +336,7 @@ public class SchedulerTask2 {
     }
 
 
-    public String replaceSysVar(String content) {
+    public String replaceSysVar(Long key, String content) {
         // 匹配{{host}}类型的变量
         String patten = "\\{{2}[\\S&&[^\\{{}}]]+}}";
         Pattern pattern = Pattern.compile(patten);
@@ -342,9 +349,9 @@ public class SchedulerTask2 {
             String value = null;
 
             //优先使用集合自定义实时变量
-            if (planvarmap.containsKey(temp)) {
-//                logger.info("replace vars: {}; {};", temp, planvarmap.get(temp).toString());
-                value = planvarmap.containsKey(temp) ? planvarmap.get(temp).toString() : null;
+            if (planvarmap.get(key).containsKey(temp)) {
+//                logger.info("replace vars: {}; {};", temp, planvarmap.get(key).get(temp).toString());
+                value = planvarmap.get(key).containsKey(temp) ? planvarmap.get(key).get(temp).toString() : null;
             } else {
 
                 value = sysVars.containsKey(temp) ? sysVars.get(temp).toString() : null;

@@ -1,7 +1,6 @@
 package com.guanghe.onion.base;
 
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 //@Component
 public class SchedulerTask {
@@ -13,7 +12,6 @@ public class SchedulerTask {
 
         System.out.println("this is scheduler task runing  "+(count++));
     }
-
 }
 
 
