@@ -142,7 +142,10 @@
 <script>
     $(function () {
         $('#example1').DataTable({
-            "order": [[ 6, "desc" ]]
+            "order": [[6, "desc"]],
+            'autoWidth': true,
+            "scrollX": true,
+            "scrollY": true
         });
     });
 

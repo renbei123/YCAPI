@@ -126,7 +126,7 @@ public class SchedulerTask2 {
 
                     String body = isnull(api[5]) ? "" : api[5].toString();
                     body = (body.contains("{{")) ? replaceSysVar(plan.getId(), body) : body;
-
+                    logger.info("after body String");
                     String heads = isnull(api[6]) ? "" : api[6].toString();
                     heads = (heads.contains("{{")) ? replaceSysVar(plan.getId(), heads) : heads;
                     Map headers = (Map) StringUtil.StringToMap(heads);
@@ -139,15 +139,16 @@ public class SchedulerTask2 {
                     String[] plan_var_jsonpath = isnull(api[14]) ? null : api[14].toString().split(",");
 
                     long starTime = System.currentTimeMillis();//获取开始时间数
-
+                    logger.info(" starTime :  {}:", starTime);
                     //发送请求  得到response
 //                    logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
                     Response result = send(path, method, headers, body);
+                    result.then().extract().response().time();
 
 
                     long endTime = System.currentTimeMillis();    //获取结束时间
                     long elapsetime = endTime - starTime;
-                    logger.info("运行时间：{}ms ; 返回码：{} , statusline:{}", elapsetime, result.getStatusCode(), result.getStatusLine());
+                    logger.info("运行时间：{}ms ;  statusline:{}  \r\n", elapsetime, result.getStatusLine());
 
                     MonitorLog monitorlog = new MonitorLog();
                     monitorlog.setApiId(Long.parseLong(apid));
@@ -280,8 +281,11 @@ public class SchedulerTask2 {
                         monitorlog.setIsok(true);
                     }
                     monitorlogjpa.save(monitorlog);
+                    monitorlog = null;
                 } catch (Exception e) {
                     e.printStackTrace();
+                    logger.error("error! there is has Exception :{},{}", e.getMessage(), e.toString());
+                    continue;
                 }
             }
 
