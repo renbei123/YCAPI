@@ -66,7 +66,7 @@ public class SchedulerTask2 {
     }
 
     //    @Async
-    @Scheduled(initialDelay = 1000 * 60 * 5, fixedDelay = 1000 * 60 * 5)
+    @Scheduled(initialDelay = 1000 * 60 * 1, fixedDelay = 1000 * 60 * 50)
     public void runMonitor() {
 
         getSystemVar();
@@ -274,7 +274,7 @@ public class SchedulerTask2 {
 
                         logger.error("********* 请求失败！！！code:{}; elapsetime:{}; response:{}", result.getStatusCode(), elapsetime, result.getBody().asString());
                         logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
-                        boolean dingsendok = Tools.sendDingMsg(errorlog, "http://10.8.8.18:8081/errorlogDetail?id=" + errorlog.getId(), dingding);
+                        boolean dingsendok = Tools.sendDingMsg(errorlog, "http://localhost:8081/errorlogDetail?id=" + errorlog.getId(), dingding);
                         if (!dingsendok)
                             logger.error("发送钉钉失败! 错误日志id={}; 发送的钉钉={}", errorlog.getId(), dingding.toString());
                     } else {
@@ -285,6 +285,9 @@ public class SchedulerTask2 {
                 } catch (Exception e) {
                     e.printStackTrace();
                     logger.error("error! there is has Exception :{},{}", e.getMessage(), e.toString());
+                    boolean dingsendok = Tools.sendDingMsg2(e.getMessage() + "\r\n +" + e.toString(), dingding);
+                    if (!dingsendok)
+                        logger.error("发送钉钉失败! in catch Exception");
                     continue;
                 }
             }

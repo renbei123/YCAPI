@@ -5,25 +5,16 @@ package com.guanghe.onion.controller;
  */
 
 import com.guanghe.onion.dao.ApiJPA;
-import com.guanghe.onion.dao.MySqlJPA;
 import com.guanghe.onion.entity.Api;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Random;
 
 @Controller
 @CacheConfig(cacheNames = "Api")
@@ -127,15 +118,14 @@ public class ApiController {
 //        return apiJPA.findAll(pageRequest).getContent();
 //    }
 
-
-    @RequestMapping(value = "/apicurpage2")
-        public void testPageQuery() throws Exception {
-        int page=1,size=10;
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = new PageRequest(page, size, sort);
-        apiJPA.findAll(pageable);
-
-    }
+//
+//    @RequestMapping(value = "/apicurpage2")
+//        public void testPageQuery()  {
+//        int page=1,size=10;
+//        Sort sort = new Sort(Sort.Direction.DESC, "id");
+//        Pageable pageable = new PageRequest(page, size, sort);
+//        apiJPA.findAll(pageable);
+//    }
 
 }
 

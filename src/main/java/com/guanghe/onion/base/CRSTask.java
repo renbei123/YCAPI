@@ -248,7 +248,7 @@ public class  CRSTask {
                     error.setCreatTime(df.format(new Date()));
                     CrsMonitorLog one = jpa.save(error);
 
-                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://localhost:8081/viewError?id=" + one.getId(), dingding);
+                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://10.8.8.18:8081/viewError?id=" + one.getId(), dingding);
                 }
             }
         }  //end each for apilist

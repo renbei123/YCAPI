@@ -90,6 +90,40 @@ public class Tools {
     }
 
 
+    public static boolean sendDingMsg2(String msg, String[] dingding) {
+        //  ok:  response:{"errmsg":"ok","errcode":0}
+        boolean sendstat = true;
+        if (dingding != null) {
+            for (String ding : dingding) {
+                DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=" + ding.trim());
+                OapiRobotSendRequest request = new OapiRobotSendRequest();
+                request.setMsgtype("markdown");
+                OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
+                markdown.setTitle("错误警告");
+                markdown.setText("##   出现异常: \r\n +" + msg + "\r\n"
+                );
+                request.setMarkdown(markdown);
+                OapiRobotSendResponse response = null;
+                try {
+                    response = client.execute(request);
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                    sendstat = false;
+                    logger.error("发送钉钉{}失败:" + ding);
+                }
+
+                if (response.getErrmsg().equals("ok")) {
+//                    sendstat=true;
+                    logger.info("发送钉钉{}成功:" + ding);
+                } else {
+                    sendstat = false;
+                    logger.error("发送钉钉{}失败:" + ding);
+                }
+            }
+
+        }
+        return sendstat;
+    }
 
 //    public String  replaceExcept(String content,String patten){
 //        // "key":***,

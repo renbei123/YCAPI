@@ -7,12 +7,10 @@ package com.guanghe.onion.controller;
 
 import com.guanghe.onion.base.CRSTask;
 import com.guanghe.onion.dao.CrsApiJPA;
-
 import com.guanghe.onion.dao.CrsMonitorJPA;
 import com.guanghe.onion.dao.CrsMonitorLogJPA;
 import com.guanghe.onion.entity.CrsApi;
 import com.guanghe.onion.entity.CrsMonitor;
-import com.guanghe.onion.entity.CrsMonitorLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -92,7 +89,7 @@ public class CrsController {
 
     @RequestMapping(value = "/getOneresult", method = RequestMethod.GET)
     @ResponseBody
-    public List getOneresult() throws InterruptedException {
+    public List getOneresult() {
 
         if (!task.queue.isEmpty()) {
             logger.info("queue size:"+task.queue.size());
