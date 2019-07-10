@@ -11,6 +11,8 @@ import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +48,12 @@ public class SchedulerTask2 {
 
     public static Map sysVars = null;
 
+//    @Autowired
+//    private Environment env;
+
+    @Value("${deployhost}")
+    private String deployhost;
+
     //    private Map planvarmap  = new HashMap();
     private static Map<Long, Map> planvarmap = new HashMap<Long, Map>();
 
@@ -66,7 +74,7 @@ public class SchedulerTask2 {
     }
 
     //    @Async
-    @Scheduled(initialDelay = 1000 * 60 * 1, fixedDelay = 1000 * 60 * 50)
+    @Scheduled(initialDelay = 1000 * 60 * 0, fixedDelay = 1000 * 60 * 5)
     public void runMonitor() {
 
         getSystemVar();
@@ -80,6 +88,7 @@ public class SchedulerTask2 {
             }
         }
         logger.info("api plantime={}", plantime.toString());
+        logger.info("http://"+deployhost+":8081/errorlogDetail?id=");
 
 
         /*开始计划集合*/
@@ -274,7 +283,7 @@ public class SchedulerTask2 {
 
                         logger.error("********* 请求失败！！！code:{}; elapsetime:{}; response:{}", result.getStatusCode(), elapsetime, result.getBody().asString());
                         logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
-                        boolean dingsendok = Tools.sendDingMsg(errorlog, "http://localhost:8081/errorlogDetail?id=" + errorlog.getId(), dingding);
+                        boolean dingsendok = Tools.sendDingMsg(errorlog, "http://"+deployhost+":8081/errorlogDetail?id=" + errorlog.getId(), dingding);
                         if (!dingsendok)
                             logger.error("发送钉钉失败! 错误日志id={}; 发送的钉钉={}", errorlog.getId(), dingding.toString());
                     } else {

@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -30,7 +32,7 @@ import static io.restassured.RestAssured.given;
 
 @Component
 //@EnableAsync
-public class  CRSTask {
+public class  CRSTask<cons> {
     private final static Logger logger = LoggerFactory.getLogger("CRSTask");
     @Autowired
     private CrsApiJPA crsJPA;
@@ -40,6 +42,10 @@ public class  CRSTask {
     private CrsMonitorLogJPA logjpa;
     @Autowired
     private SystemVarJPA systemvarjpa;
+
+    @Value("${deployhost}")
+    private String deployhost;
+
 
 
     @Autowired
@@ -55,7 +61,7 @@ public class  CRSTask {
 
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 
-    @Scheduled(initialDelay = 1000 * 60 * 7, fixedDelay = 1000 * 60 * 5)
+    @Scheduled(initialDelay =  1000 * 60 * 5, fixedDelay = 1000 * 60 * 5)
     public void runCrsCompare() {
         List<CrsMonitor> list=planjpa.findAll();
 
@@ -248,7 +254,7 @@ public class  CRSTask {
                     error.setCreatTime(df.format(new Date()));
                     CrsMonitorLog one = jpa.save(error);
 
-                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://10.8.8.18:8081/viewError?id=" + one.getId(), dingding);
+                    Tools.CRS_sendDingMsg(method, path, cacheResult.getStatusCode(), databaseResult.getStatusCode(), "http://"+deployhost+":8081/viewError?id=" + one.getId(), dingding);
                 }
             }
         }  //end each for apilist
