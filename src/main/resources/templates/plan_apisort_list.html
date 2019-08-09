@@ -59,8 +59,24 @@
                     <div class="col-xs-12">
                         <div class="box">
                             <div class="box-header">
-                                <button type="submit" class="btn btn-primary btn-sm btn-flat">提交</button>
+                                <table width="100%">
+                                    <tr>
+                                        <td width="40%"></td>
+                                        <td width="20%">
+                                            <button type="submit" class="btn btn-primary btn-sm btn-flat">保存当前排序
+                                            </button>
+                                        </td>
+
+                                        <td width="40%"></td>
+                                    </tr>
+                                </table>
+
                             </div>
+
+
+                            <!--<div class="box-header">-->
+                            <!--<button type="button" onclick="delRow()" class="btn btn-primary btn-sm btn-flat">删除api</button>-->
+                            <!--</div>-->
                             <!-- /.box-header   -->
                             <div class="box-body">
                                 <table id="example" class="display" style="width:100%">
@@ -73,8 +89,8 @@
                                         <th>路径</th>
                                         <th>标签</th>
                                         <th>接口id</th>
-                                        <th style="display: none"></th>
 
+                                        <th style="display: none"></th>
 
                                     </tr>
                                     </thead>
@@ -83,32 +99,21 @@
                                     <tbody>
                                     <tr th:each=" myplans:${planApiList}">
                                         <td th:text="${myplans[0]}"></td>
+                                        <td th:text="${myplans[1]}"></td>
                                         <td th:text="${myplans[2]}"></td>
                                         <td th:text="${myplans[3]}"></td>
                                         <td th:text="${myplans[4]}"></td>
                                         <td th:text="${myplans[5]}"></td>
-                                        <td th:text="${myplans[1]}"></td>
+
                                         <td style="display: none">
-                                            <input type="checkbox" name="api_id" th:value="${myplans[1]}"
+                                            <input type="checkbox" name="api_id" th:value="${myplans[5]}"
                                                    checked="checked"/>
                                         </td>
 
 
+
                                     </tr>
                                     </tbody>
-
-                                    <!--  tbody 真实的接口数据  end-->
-                                    <tfoot>
-                                    <tr>
-                                        <th>执行序列</th>
-                                        <th>名称</th>
-                                        <th>方法</th>
-                                        <th>路径</th>
-                                        <th>标签</th>
-                                        <th>接口id</th>
-
-                                    </tr>
-                                    </tfoot>
 
                                 </table>
                             </div>
@@ -141,8 +146,9 @@
 <!--<script src="../static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>-->
 <script src="https://cdn.datatables.net/rowreorder/1.2.5/js/dataTables.rowReorder.min.js"></script>
 <script>
+    var table;
     $(function () {
-        $('#example').DataTable({
+        table = $('#example').DataTable({
             paging: false,
             searching: false,
             select: true,
@@ -151,9 +157,24 @@
             },
             columnDefs: [
                 {targets: 0, visible: true}
-            ],
+            ]
             // ordering: false
         });
+    });
+
+    // 初始化刪除按钮
+    $('#deleteRow').on('click', 'a.delete', function (e) {
+        // e.preventDefault();
+
+        if (confirm("确定要删除该属性？")) {
+
+            table.row($(this).parents('tr')).remove().draw();
+        }
+
+    });
+
+    $('#ajust').on('click', function () {
+        document.location.href = "/ajustAPIs";
     });
 
 </script>

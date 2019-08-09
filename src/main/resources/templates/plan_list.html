@@ -46,10 +46,11 @@
                                     <th>计划名称</th>
                                     <th>执行时间间隔</th>
                                     <!--<th>钉钉</th>-->
-                                    <th>备注</th>
                                     <th>创建人</th>
+                                    <th>备注</th>
+
                                     <th>状态</th>
-                                    <th></th>
+                                    <th>操作</th>
 
                                 </tr>
                                 </thead>
@@ -61,12 +62,13 @@
                                     <td href="details.html" th:text="${myplans[1]}" >name</td>
                                     <td th:text="${myplans[2]}">get</td>
                                     <!--<td th:text="${myplans[3]}">/ding</td>-->
-                                    <td th:text="${myplans[4]}">teacher</td>
-                                    <td th:text="${myplans[5]}">说明</td>
-                                    <td th:text="${myplans[6]}==true?'进行中':'已停止'">说明</td>
+                                    <td th:text="${myplans[4]}">备注</td>
+                                    <td th:text="${myplans[5]}">创建人</td>
+                                    <td th:text="${myplans[6]}==true?'进行中':'已停止'">状态</td>
                                     <td><a th:href="@{/planedit(id=${myplans[0]})}">edit</a> &nbsp;&nbsp;
                                         <a th:href="@{/planApiSort(id=${myplans[0]})}">sort</a>&nbsp;&nbsp;
-                                        <a th:href="@{/plandelete(id=${myplans[0]})}">delete</a>
+                                        <!--<a th:href="@{/plandelete(id=${myplans[0]})}">delete</a>-->
+                                        <a th:onclick="|delplan(${myplans[0]})|">delete</a>
                                     </td>
 
 
@@ -75,15 +77,7 @@
 
                                 <!--  tbody 真实的接口数据  end-->
                                 <tfoot>
-                                <tr>
-                                    <th>id</th>
-                                    <th>计划名称</th>
-                                    <th>执行时间间隔</th>
-                                    <!--<th>钉钉</th>-->
-                                    <th>备注</th>
-                                    <th>创建人</th>
-                                    <th></th>
-                                </tr>
+
                                 </tfoot>
                             </table>
                         </div>
@@ -135,8 +129,10 @@
         location.href="/apiselect";
     });
 
-    function  editplan(id){
-        alert(id);
+    function delplan(id) {
+        if (confirm("确定要删除该计划吗？"))
+            location.href = "/plandelete?id=" + id;
+
     }
 </script>
 </body>

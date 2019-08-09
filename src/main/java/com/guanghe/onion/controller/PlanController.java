@@ -63,7 +63,7 @@ public class PlanController {
          return "redirect:/planlist";
     }
 
-    @RequestMapping(value = "/planEditSave",method = RequestMethod.POST)
+    @RequestMapping(value = "/planEditSave2", method = RequestMethod.POST)
     @Transactional
     public String edit(Plan plan){
         List<BigInteger> orderedId=planApisOrderJPA.findApiIdByPlanId(plan.getId());
@@ -96,18 +96,51 @@ public class PlanController {
         return "redirect:/planlist";
     }
 
+    @RequestMapping(value = "/planEditSave", method = RequestMethod.POST)
+    @Transactional
+    public String planedit(Plan plan) {
 
-    @RequestMapping(value = "/planedit")
-    public String edit(Model model,Long id)
+        planJPA.save(plan);
+        if (SchedulerTask2.plantime != null)
+            SchedulerTask2.plantime.put(plan.getId(), plan.getPlanTime());  //重置轮询任务里的计划执行时间段
+        return "redirect:/planlist";
+    }
+
+    @RequestMapping(value = "/apiselect2")
+    public String apiselect(Model model, Long id)
     {
         Plan plan=planJPA.findOne(id);
-        model.addAttribute("plan",plan);
+//        model.addAttribute("plan",plan);
         List<String> ids = Arrays.asList(plan.getApiIds().split(","));
         model.addAttribute("ids",ids);
         model.addAttribute("planId",id);
         Sort sort = new Sort(Sort.Direction.ASC, "id");
         List<Api> list = apiJPA.findAll(sort);
         model.addAttribute("apilist",list);
+        return "plan_apiselect";
+    }
+
+
+    @RequestMapping(value = "/apiselect", method = RequestMethod.GET)
+    public String apiselect(Model model) {
+        List<Api> list = apiJPA.findAll();
+        model.addAttribute("apilist", list);
+        return "api_select";
+    }
+
+    @RequestMapping(value = "/apiselect2", method = RequestMethod.POST)
+    public String apiselect2(Model model, @RequestParam(value = "api_id", required = false) String apiId) {
+        System.out.println("apiId*******************:" + apiId);
+        model.addAttribute("api_id", apiId);
+
+        return "api_select2";
+    }
+
+
+    @RequestMapping(value = "/planedit")
+    public String edit(Model model, Long id) {
+        Plan plan = planJPA.findOne(id);
+        model.addAttribute("plan", plan);
         return "plan_edit";
     }
 
@@ -128,7 +161,7 @@ public class PlanController {
     {
         planJPA.delete(id);
         planApisOrderJPA.deleteByPlanId(id);
-        if (SchedulerTask2.plantime.containsKey(id))
+        if (SchedulerTask2.plantime != null)
             SchedulerTask2.plantime.remove(id);
         return "redirect:/planlist";
     }
@@ -136,13 +169,25 @@ public class PlanController {
     @RequestMapping(value = "/planApiSort")
     public String planApiSort(Model model,Long id)
     {
-        List<Object[]> list=planApisOrderJPA.planApiOrder(id);
+        List<Object[]> list = planApisOrderJPA.planApiOrderlist(id);
         model.addAttribute("planApiList",list);
         model.addAttribute("planId",id);
         return "plan_apisort_list";
     }
 
     @RequestMapping(value = "/reorderPlanApis",method = RequestMethod.POST)
+    public String reorderPlanApis(Model model, @RequestParam(value = "api_id") String apiIds, long planId) {
+        System.out.println("apiId*******************:" + apiIds);
+        Plan plan = planJPA.getOne(planId);
+        plan.setApiIds(apiIds);
+        planJPA.save(plan);
+        List<Object[]> list = planApisOrderJPA.planApiOrderlist(planId);
+        model.addAttribute("planApiList", list);
+        model.addAttribute("planId", planId);
+        return "plan_apisort_list";
+    }
+
+/*    @RequestMapping(value = "/reorderPlanApis",method = RequestMethod.POST)
     public String reorderPlanApis(Model model,@RequestParam(value="api_id") String apiIds,long planId){
         System.out.println("apiId*******************:"+apiIds);
         String[] api_ids= apiIds.split(",");
@@ -156,7 +201,7 @@ public class PlanController {
         model.addAttribute("planId",planId);
         return "plan_apisort_list";
     }
-
+    */
 
 //    @Autowired
 //    private EntityManager em;

@@ -36,7 +36,7 @@
                     <div class="box">
                         <!-- /.box-header   -->
                         <div class="box-body">
-                            <table id="example1" class="table table-bordered table-striped">
+                            <table id="example1" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
                                     <th>接口名称</th>
@@ -122,7 +122,8 @@
         $('#example1').DataTable({
             'autoWidth': true,
             "scrollX": true,
-            "scrollY": true
+            "scrollY": true,
+            "order": [[8, "desc"]]
         });
 
     });
