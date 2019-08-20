@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +26,8 @@
     <![endif]-->
 
     <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -78,15 +79,15 @@
 
                                 <!--  tbody 真实的接口数据 -->
                                 <tbody>
-                                <tr  th:each=" log:${loglist}" >
-                                    <th th:text="${log[0]}" >1</th>
-                                    <td href="details.html" th:text="${log[1]}" >name</td>
+                                <tr th:each=" log:${loglist}">
+                                    <th th:text="${log[0]}">1</th>
+                                    <td href="details.html" th:text="${log[1]}">name</td>
                                     <td th:text="${log[2]}">get</td>
                                     <td th:text="${log[3]}">/hello</td>
                                     <td th:text="${log[4]}">teacher</td>
                                     <td th:switch="${log[5]}">
-                                        <font th:case="true" size="3" color="green" >成功</font>
-                                        <font th:case="false" size="3" color="red" >失败</font>
+                                        <font th:case="true" size="3" color="green">成功</font>
+                                        <font th:case="false" size="3" color="red">失败</font>
                                     </td>
                                     <td th:text="${log[6]}"></td>
 
@@ -141,39 +142,11 @@
 <script src="../../dist/js/demo.js"></script>
 <script>
     $(function () {
-        var lang = {
-            "sProcessing": "处理中...",
-            "sLengthMenu": "每页 _MENU_ 项",
-            "sZeroRecords": "没有匹配结果",
-            "sInfo": "当前显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项。",
-            "sInfoEmpty": "当前显示第 0 至 0 项，共 0 项",
-            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
-            "sInfoPostFix": "",
-            "sSearch": "搜索:",
-            "sUrl": "",
-            "sEmptyTable": "表中数据为空",
-            "sLoadingRecords": "载入中...",
-            "sInfoThousands": ",",
-            "oPaginate": {
-                "sFirst": "首页",
-                "sPrevious": "上一页",
-                "sNext": "下一页",
-                "sLast": "末页",
-                "sJump": "跳转"
-            },
-            "oAria": {
-                "sSortAscending": ": 以升序排列此列",
-                "sSortDescending": ": 以降序排列此列"
-            }
-        };
-
-
         $('#example1').DataTable({
-            language: lang,  //提示信息
+            "order": [[6, "desc"]],
             'autoWidth': true,
-            // "scrollX": true,
-            // "scrollY": true,
-            "order": [[6, "desc"]]
+            "scrollX": true,
+            "scrollY": true
         });
     });
 

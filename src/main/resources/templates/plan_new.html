@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <div th:replace="common/common_head :: common_resource"></div>
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css"/>
+
+    <!-- page specific plugin styles -->
+    <link rel="stylesheet" href="assets/css/select2.min.css"/>
+
+    <!-- text fonts -->
+    <link rel="stylesheet" href="assets/css/fonts.googleapis.com.css"/>
+
+    <!-- ace styles -->
+    <link rel="stylesheet" href="assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style"/>
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="assets/css/ace-part2.min.css" class="ace-main-stylesheet"/>
+    <![endif]-->
+    <link rel="stylesheet" href="assets/css/ace-skins.min.css"/>
+    <link rel="stylesheet" href="assets/css/ace-rtl.min.css"/>
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="assets/css/ace-ie.min.css"/>
+    <![endif]-->
+
+    <!-- inline styles related to this page -->
+
+    <!-- ace settings handler -->
+    <script src="assets/js/ace-extra.min.js"></script>
+
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+    <!--[if lte IE 8]>
+    <script src="assets/js/html5shiv.min.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="common/main_header :: main_header"></div>
+
+    <div th:replace="common/main_sidebar :: main_sidebar"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                接口列表数据
+                <small>洋葱接口</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="#">Tables</a></li>
+                <li class="active">Data tables</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!--表格内容数据 -->
+            <div class="page-content">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <div class="table-header">
+
+                                    <table border="0" width="100%">
+                                        <tr>
+                                            <td width="50%"> 配置计划的基本信息,提交保存</td>
+                                            <td width="50%"></td>
+                                            <!--<td width="20%"><a href="javascript:history.go(-1);" ><font color="white">返回</font></a> </td>-->
+                                            <!--<td width="15%"><a href="javascript:document.mytable.submit();" ><font color="white">下一步</font></a></td>-->
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!--data-->
+                                <div class="widget-body">
+                                    <div class="widget-main">
+
+                                        <form class="form-horizontal" id="mytable" name="mytable" action="/planEditSave"
+                                              method="post">
+
+                                            <div id="fuelux-wizard-container">
+                                                <div class="step-content pos-rel">
+                                                    <div class="step-pane active">
+                                                        <h3 class="lighter block green">Enter the following
+                                                            information</h3>
+
+                                                        <div class="form-group">
+                                                            <label class="control-label col-xs-12 col-sm-3 no-padding-right"
+                                                                   for="planName">host:</label>
+
+                                                            <div class="col-xs-12 col-sm-9">
+                                                                <div class="clearfix">
+                                                                    <input type="text" name="host" id="host"
+                                                                           class="col-xs-12 col-sm-6"
+                                                                           placeholder="选填项。使用范围仅适用于本计划接口集合，使用优先级优于系统变量"
+                                                                           value=""/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="control-label col-xs-12 col-sm-3 no-padding-right"
+                                                                   for="planName">计划的名称:</label>
+
+                                                            <div class="col-xs-12 col-sm-9">
+                                                                <div class="clearfix">
+                                                                    <input type="text" name="planName" id="planName"
+                                                                           class="col-xs-12 col-sm-6" placeholder="必填项"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="space-2"></div>
+
+                                                        <div class="form-group">
+                                                            <label class="control-label col-xs-12 col-sm-3 no-padding-right"
+                                                                   for="planTime">执行间隔时间:</label>
+
+                                                            <div class="col-xs-12 col-sm-9">
+                                                                <div class="clearfix">
+                                                                    <input type="text" name="planTime" id="planTime"
+                                                                           class="col-xs-12 col-sm-6"
+                                                                           placeholder="必填，每5分钟为最小一个单位，最终时间为n*5分钟"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="space-2"></div>
+
+                                                        <div class="form-group">
+                                                            <label class="control-label col-xs-12 col-sm-3 no-padding-right"
+                                                                   for="dingding">错误通知人-钉钉:</label>
+
+                                                            <div class="col-xs-12 col-sm-9">
+                                                                <div class="clearfix">
+                                                                    <input type="text" name="dingding" id="dingding"
+                                                                           class="col-xs-12 col-sm-4"
+                                                                           placeholder="多个人用逗号隔开"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="control-label col-xs-12 col-sm-3 no-padding-right"
+                                                                   for="comment">备注</label>
+
+                                                            <div class="col-xs-12 col-sm-9">
+                                                                <div class="clearfix">
+                                                                    <textarea
+                                                                            style="margin: 0px; width: 398px; height: 66px;"
+                                                                            name="comment" id="comment"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="hr hr-dotted"></div>
+
+                                                        <div class="form-group">
+                                                            <label class="control-label col-xs-12 col-sm-3 no-padding-right"
+                                                                   for="selectAPi">选择计划的API集合</label>
+
+                                                            <div class="col-xs-12 col-sm-9">
+                                                                <div class="clearfix">
+                                                                    <input type="button" value="选择API,如果没有变化不用重复选择"
+                                                                           name="selectAPi" id="selectAPi"
+                                                                           th:onclick="|toselectApi()|"
+                                                                           class="btn btn-success btn-next"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <hr/>
+                                            <div class="wizard-actions">
+                                                <!--<button class="btn btn-prev" onclick="javascript:history.back();">-->
+                                                <!--返回-->
+                                                <!--</button>-->
+
+                                                <input type="submit" class="btn btn-success btn-next"
+                                                       data-last="Finish"/>
+
+
+                                            </div>
+                                        </form>
+                                    </div>  <!--widget-main-->
+                                </div>
+                                <!--data-->
+
+
+                            </div>
+                        </div>
+
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div>
+            <!-- /.page-content -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <div th:replace="common/common_footer :: common_footer"></div>
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!--[if !IE]> -->
+<script src="assets/js/jquery-2.1.4.min.js"></script>
+<!-- <![endif]-->
+<!--[if IE]>
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+<script type="text/javascript">
+    if ('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+</script>
+<script src="assets/js/bootstrap.min.js"></script>
+<!-- page specific plugin scripts -->
+<script src="assets/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/jquery.dataTables.bootstrap.min.js"></script>
+<script src="assets/js/dataTables.buttons.min.js"></script>
+<script src="assets/js/buttons.flash.min.js"></script>
+<script src="assets/js/buttons.html5.min.js"></script>
+<script src="assets/js/buttons.print.min.js"></script>
+<script src="assets/js/buttons.colVis.min.js"></script>
+<script src="assets/js/dataTables.select.min.js"></script>
+
+
+<!-- ace scripts -->
+<script src="assets/js/ace-elements.min.js"></script>
+<script src="assets/js/ace.min.js"></script>
+
+<script>
+
+    function toselectApi() {
+        location.href = "/apiselect?id=" + planid;
+    }
+</script>
+
+
+</body>
+</html>

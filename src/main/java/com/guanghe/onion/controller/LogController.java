@@ -4,22 +4,18 @@ package com.guanghe.onion.controller;
  * Created by renjie on 2018/12/5.
  */
 
-import com.guanghe.onion.dao.ApiJPA;
+import com.guanghe.onion.base.PageData;
 import com.guanghe.onion.dao.ErrorLogJPA;
 import com.guanghe.onion.dao.MonitorLogJPA;
-import com.guanghe.onion.dao.PlanJPA;
 import com.guanghe.onion.entity.ErrorLog;
-
-import com.guanghe.onion.entity.MonitorLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -35,14 +31,57 @@ public class LogController {
 
     //@Cacheable
     //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
+//    @RequestMapping(value = "/loglist",method = RequestMethod.GET)
+//    public String loglist(Model model ){
+//        List<Object[]> list=monitorlogjpa.detailLoglist();
+//        model.addAttribute("loglist",list);
+//        model.addAttribute("logclass","treeview active");
+//        model.addAttribute("logclass2","active");
+//        return "log_list";
+//    }
+
+
     @RequestMapping(value = "/loglist",method = RequestMethod.GET)
-    public String loglist(Model model){
-        List<Object[]> list=monitorlogjpa.detailLoglist();
-        model.addAttribute("loglist",list);
+    public String loglist(Model model) {
+
         model.addAttribute("logclass","treeview active");
         model.addAttribute("logclass2","active");
-        return "log_list";
+        return "log_list2";
     }
+
+    @RequestMapping(value = "/loglist2", method = RequestMethod.GET)
+    @ResponseBody
+    public Object loglistPage(Model model, @RequestParam(value = "draw") int draw,
+                              @RequestParam(value = "start") long start,
+                              @RequestParam(value = "length") int length,
+                              @RequestParam(value = "search[value]") String search,
+                              @RequestParam(value = "order[0][column]") String order
+//                              @RequestParam(value="order") String[][] order
+    ) {
+
+        String[][] data = null;
+        long total;
+        if (search != null && !search.equals("")) {
+
+            data = monitorlogjpa.searchLoglist(start, length, search);
+            total = monitorlogjpa.searchTotal(search);
+        } else {
+            data = monitorlogjpa.detailLoglist(start, length);
+            total = monitorlogjpa.total();
+        }
+
+//        System.out.println("start:"+start);
+
+        PageData pagedata = new PageData();
+        pagedata.setData(data);
+        pagedata.setDraw(draw);
+        pagedata.setRecordsTotal(total);
+        pagedata.setRecordsFiltered(total);
+//        String responseData = JSON.toJSONString(pagedata);
+//        System.out.println(responseData);
+        return pagedata;
+    }
+
 
     @RequestMapping(value = "/errorlist",method = RequestMethod.GET)
     public String errlist(Model model){

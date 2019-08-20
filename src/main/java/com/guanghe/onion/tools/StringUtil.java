@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public  class  StringUtil{
@@ -111,6 +110,10 @@ public  class  StringUtil{
         return map;
     }
 
+    public static boolean isNumeric(String str) {
+        Pattern pattern = Pattern.compile("[0-9]*");
+        return pattern.matcher(str).matches();
+    }
 
 
 }

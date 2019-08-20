@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +26,8 @@
     <![endif]-->
 
     <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -76,23 +77,6 @@
                                 </tr>
                                 </thead>
 
-                                <!--  tbody 真实的接口数据 -->
-                                <tbody>
-                                <tr  th:each=" log:${loglist}" >
-                                    <th th:text="${log[0]}" >1</th>
-                                    <td href="details.html" th:text="${log[1]}" >name</td>
-                                    <td th:text="${log[2]}">get</td>
-                                    <td th:text="${log[3]}">/hello</td>
-                                    <td th:text="${log[4]}">teacher</td>
-                                    <td th:switch="${log[5]}">
-                                        <font th:case="true" size="3" color="green" >成功</font>
-                                        <font th:case="false" size="3" color="red" >失败</font>
-                                    </td>
-                                    <td th:text="${log[6]}"></td>
-
-                                </tr>
-                                </tbody>
-
                                 <!--  tbody 真实的接口数据  end-->
                                 <tfoot>
                                 <tr>
@@ -126,10 +110,14 @@
 </div>
 <!-- ./wrapper -->
 <!-- jQuery 3 -->
-<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<!--<script src="../../bower_components/jquery/dist/jquery.min.js"></script>-->
 <!-- Bootstrap 3.3.7 -->
 <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<!--<script src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>-->
 <script src="../static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- Slimscroll -->
 <script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
@@ -170,11 +158,24 @@
 
         $('#example1').DataTable({
             language: lang,  //提示信息
-            'autoWidth': true,
-            // "scrollX": true,
-            // "scrollY": true,
-            "order": [[6, "desc"]]
+            // "paging": true,//开启分页
+            // lengthMenu: [ //自定义分页长度
+            //     [ 20, 50, 100 ],
+            //     [ '20 页', '50 页', '100页' ]
+            // ],
+            stripeClasses: ["odd", "even"],
+            autoWidth: true,
+            serverSide: true,
+            processing: true,
+            ajax: "/loglist2"
+            // ajax: {
+            //     url: '/loglist2',
+            //     type: 'POST'
+            // }
+            // "order": [[6, "desc"]]
         });
+
+
     });
 
 </script>
