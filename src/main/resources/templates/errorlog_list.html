@@ -42,10 +42,9 @@
                                     <th>接口名称</th>
                                     <th>路径</th>
                                     <th>方法</th>
-                                    <th>返回码</th>
                                     <th>断言</th>
                                     <th>响应时长ms</th>
-
+                                    <th>返回码</th>
                                     <th>返回大小Bytes</th>
                                     <th>开始时间</th>
 
@@ -54,32 +53,32 @@
                                 </thead>
 
                                 <!--  tbody 真实的接口数据 SELECT api_name, url, method, assert_result , elapsed_time,res_code,res_size, start_time from error_log-->
-                                <tbody>
-                                <tr  th:each=" log:${list}" th:onclick="'edit('+${log[8]}+')'">
-                                    <th th:text="${log[0]}" ></th>
-                                    <td th:text="${log[1]}"></td>
-                                    <td th:text="${log[2]}"></td>
-                                    <td th:text="${log[5]}"></td>
-                                    <td th:text="${log[3]}"></td>
-                                    <td th:text="${log[4]}"></td>
-                                    <td th:text="${log[6]}"></td>
-                                    <td th:text="${log[7]}"></td>
-                                </tr>
-                                </tbody>
+                                <!--<tbody>-->
+                                <!--<tr  th:each=" log:${list}" th:onclick="'edit('+${log[8]}+')'">-->
+                                <!--<th th:text="${log[0]}" ></th>-->
+                                <!--<td th:text="${log[1]}"></td>-->
+                                <!--<td th:text="${log[2]}"></td>-->
+                                <!--<td th:text="${log[5]}"></td>-->
+                                <!--<td th:text="${log[3]}"></td>-->
+                                <!--<td th:text="${log[4]}"></td>-->
+                                <!--<td th:text="${log[6]}"></td>-->
+                                <!--<td th:text="${log[7]}"></td>-->
+                                <!--</tr>-->
+                                <!--</tbody>-->
 
                                 <!--  tbody 真实的接口数据  end-->
-                                <tfoot>
-                                <tr>
-                                    <th>接口名称</th>
-                                    <th>路径</th>
-                                    <th>方法</th>
-                                    <th>返回码</th>
-                                    <th>断言</th>
-                                    <th>响应时长</th>
-                                    <th>返回大小</th>
-                                    <th>开始时间</th>
-                                </tr>
-                                </tfoot>
+                                <!--<tfoot>-->
+                                <!--<tr>-->
+                                <!--<th>接口名称</th>-->
+                                <!--<th>路径</th>-->
+                                <!--<th>方法</th>-->
+                                <!--<th>返回码</th>-->
+                                <!--<th>断言</th>-->
+                                <!--<th>响应时长</th>-->
+                                <!--<th>返回大小</th>-->
+                                <!--<th>开始时间</th>-->
+                                <!--</tr>-->
+                                <!--</tfoot>-->
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -118,20 +117,33 @@
 <script src="../static/dist/js/demo.js"></script>
 <!-- page script -->
 <script>
+    var table;
     $(function () {
-        $('#example1').DataTable({
-            'autoWidth': true,
-            "scrollX": true,
-            "scrollY": true,
-            "order": [[8, "desc"]]
+
+        table = $('#example1').DataTable({
+            // language: lang,  //提示信息
+            serverSide: true,
+            processing: true,
+            ajax: "/errorlist2"
+
         });
 
     });
 
-    function  edit(errorlog_id){
 
-        location.href="/errorlogDetail?id="+errorlog_id;
-    }
+    $(document).ready(function () {
+        table.on('click', 'tbody tr', function () {
+            var rowdata = table.row(this).data();
+            // alert( 'You clicked on '+rowdata[8]+' \'s row' );
+
+            location.href = "/errorlogDetail?id=" + rowdata[8];
+        });
+    });
+
+    // $("#example1").on("click","tbody tr",function(){//给tr或者td添加click事件
+    //     // var data=table.row(this).data();//获取值的对象数据
+    //     // alert(1);//某一行中要是用的表头值
+    // });
 </script>
 </body>
 </html>

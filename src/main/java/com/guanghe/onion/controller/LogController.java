@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-
 @Controller
 @CacheConfig(cacheNames = "Logs")
 public class LogController {
@@ -85,12 +83,39 @@ public class LogController {
 
     @RequestMapping(value = "/errorlist",method = RequestMethod.GET)
     public String errlist(Model model){
-        List<Object[]> list=errorlogjpa.errorLoglist();
-        model.addAttribute("list",list);
         model.addAttribute("logclass","treeview active");
         model.addAttribute("errorlogclass","active");
         return "errorlog_list";
     }
+
+    @RequestMapping(value = "/errorlist2", method = RequestMethod.GET)
+    @ResponseBody
+    public Object errlist2(Model model,
+                           @RequestParam(value = "draw") int draw,
+                           @RequestParam(value = "start") long start,
+                           @RequestParam(value = "length") int length,
+                           @RequestParam(value = "search[value]") String search,
+                           @RequestParam(value = "order[0][column]") String order) {
+        String[][] data = null;
+        long total;
+        if (search != null && !search.equals("")) {
+
+            data = errorlogjpa.searcherrorLoglist(start, length, search);
+            total = errorlogjpa.searchTotal(search);
+        } else {
+            data = errorlogjpa.errorLoglist(start, length);
+            total = errorlogjpa.total();
+        }
+
+        PageData pagedata = new PageData();
+        pagedata.setData(data);
+        pagedata.setDraw(draw);
+        pagedata.setRecordsTotal(total);
+        pagedata.setRecordsFiltered(total);
+
+        return pagedata;
+    }
+
 
     @RequestMapping(value = "/errorlogDetail",method = RequestMethod.GET)
     public String errorlogDetail(Model model, Long id){

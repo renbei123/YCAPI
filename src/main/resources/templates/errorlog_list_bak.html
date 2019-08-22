@@ -12,19 +12,18 @@
 
     <div th:replace="common/main_sidebar :: main_sidebar"></div>
 
-
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                监控日志列表
+                错误日志列表
                 <small></small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li><a href="#">List</a></li>
-                <li class="active">Log list</li>
+                <li class="active">Error Log Data</li>
             </ol>
         </section>
 
@@ -35,33 +34,49 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
-
                         <!-- /.box-header   -->
                         <div class="box-body">
-                            <table id="example1" class="table table-bordered table-striped">
+                            <table id="example1" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                 <tr>
-                                    <th>接口id</th>
                                     <th>接口名称</th>
-                                    <th>状态码</th>
-                                    <th>响应时长(ms)</th>
-                                    <th>响应大小(B)</th>
-                                    <th>执行状态</th>
+                                    <th>路径</th>
+                                    <th>方法</th>
+                                    <th>返回码</th>
+                                    <th>断言</th>
+                                    <th>响应时长ms</th>
+
+                                    <th>返回大小Bytes</th>
                                     <th>开始时间</th>
 
 
                                 </tr>
                                 </thead>
 
+                                <!--  tbody 真实的接口数据 SELECT api_name, url, method, assert_result , elapsed_time,res_code,res_size, start_time from error_log-->
+                                <tbody>
+                                <tr th:each=" log:${list}" th:onclick="'edit('+${log[8]}+')'">
+                                    <th th:text="${log[0]}"></th>
+                                    <td th:text="${log[1]}"></td>
+                                    <td th:text="${log[2]}"></td>
+                                    <td th:text="${log[5]}"></td>
+                                    <td th:text="${log[3]}"></td>
+                                    <td th:text="${log[4]}"></td>
+                                    <td th:text="${log[6]}"></td>
+                                    <td th:text="${log[7]}"></td>
+                                </tr>
+                                </tbody>
+
                                 <!--  tbody 真实的接口数据  end-->
                                 <tfoot>
                                 <tr>
-                                    <th>接口id</th>
                                     <th>接口名称</th>
-                                    <th>状态码</th>
-                                    <th>响应时长(ms)</th>
-                                    <th>响应大小(B)</th>
-                                    <th>执行状态</th>
+                                    <th>路径</th>
+                                    <th>方法</th>
+                                    <th>返回码</th>
+                                    <th>断言</th>
+                                    <th>响应时长</th>
+                                    <th>返回大小</th>
                                     <th>开始时间</th>
                                 </tr>
                                 </tfoot>
@@ -85,6 +100,7 @@
     <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
+
 <!-- jQuery 3 -->
 <script src="../static/bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
@@ -100,67 +116,22 @@
 <script src="../static/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="../static/dist/js/demo.js"></script>
+<!-- page script -->
 <script>
     $(function () {
-        var lang = {
-            "sProcessing": "处理中...",
-            "sLengthMenu": "每页 _MENU_ 项",
-            "sZeroRecords": "没有匹配结果",
-            "sInfo": "当前显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项。",
-            "sInfoEmpty": "当前显示第 0 至 0 项，共 0 项",
-            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
-            "sInfoPostFix": "",
-            "sSearch": "名称搜索:",
-            "sUrl": "",
-            "sEmptyTable": "表中数据为空",
-            "sLoadingRecords": "载入中...",
-            "sInfoThousands": ",",
-            "oPaginate": {
-                "sFirst": "首页",
-                "sPrevious": "上一页",
-                "sNext": "下一页",
-                "sLast": "末页",
-                "sJump": "跳转"
-            },
-            "oAria": {
-                "sSortAscending": ": 以升序排列此列",
-                "sSortDescending": ": 以降序排列此列"
-            }
-        };
-
-
         $('#example1').DataTable({
-            language: lang,  //提示信息
-            // "paging": true,//开启分页
-            // lengthMenu: [ //自定义分页长度
-            //     [ 20, 50, 100 ],
-            //     [ '20 页', '50 页', '100页' ]
-            // ],
-            // stripeClasses: ["odd", "even"],
-            // autoWidth: true,
-            serverSide: true,
-            // processing: true,
-            ajax: "/loglist2",
-            // ajax: {
-            //     url: '/loglist2',
-            //     type: 'POST'
-            // }
-            // "order": [[6, "desc"]]
-            columnDefs: [{
-                //   指定第一列，从0开始，0表示第一列，1表示第二列……
-                targets: 5,
-                render: function (data, type, row, meta) {
-                    if (data == 'false')
-                        return '<td>' + '<font  color="red" >' + data + '</font></td>';
-                    else
-                        return '<td>' + '<font  color="green" >' + data + '</font></td>';
-                }
-            }]
+            'autoWidth': true,
+            "scrollX": true,
+            "scrollY": true,
+            "order": [[8, "desc"]]
         });
-
 
     });
 
+    function edit(errorlog_id) {
+
+        location.href = "/errorlogDetail?id=" + errorlog_id;
+    }
 </script>
 </body>
 </html>
