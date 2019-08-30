@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -27,8 +26,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static io.restassured.RestAssured.given;
 
 @Component
 //@EnableAsync
@@ -61,7 +58,7 @@ public class  CRSTask<cons> {
 
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 
-    @Scheduled(initialDelay =  1000 * 60 * 5, fixedDelay = 1000 * 60 * 5)
+    @Scheduled(initialDelay = 1000 * 60 * 7, fixedDelay = 1000 * 60 * 5)
     public void runCrsCompare() {
         List<CrsMonitor> list=planjpa.findAll();
 
@@ -135,10 +132,10 @@ public class  CRSTask<cons> {
             Map headers = heads.trim().length() > 0 ? (Map) StringUtil.StringToMap(heads) : null;
             logger.info("headers:" + headers.toString());
 
-            
-            Response cacheResult = send(cachehost + path, method, headers, body);
 
-            Response databaseResult = send(databasehost + path, method, headers, body);
+            Response cacheResult = Https.send(cachehost + path, method, headers, body);
+
+            Response databaseResult = Https.send(databasehost + path, method, headers, body);
 
             //判断返回状态码是否符合预期，不符continue
             if (api.getAssert_Code() != null && (cacheResult.getStatusCode() != api.getAssert_Code() || databaseResult.getStatusCode() != api.getAssert_Code())) {
@@ -265,43 +262,6 @@ public class  CRSTask<cons> {
         }
     }
 
-    public Response send(String path,String method, Map headers,String body){
-
-        if(method.equalsIgnoreCase("GET")){
-            return  given()
-                    .headers(headers)
-                    .get(path);
-        }
-
-        if(method.equalsIgnoreCase("POST")){
-            return given()
-                    .headers(headers)
-                    .body(body)
-                    .post(path);
-        }
-        if(method.equalsIgnoreCase("PUT")){
-            return given()
-                    .headers(headers)
-                    .body(body)
-                    .put(path);
-        } if(method.equalsIgnoreCase("PATCH")){
-            return  given()
-                    .headers(headers)
-                    .body(body)
-                    .patch(path);
-        }if(method.equalsIgnoreCase("DELETE")){
-            return  given()
-                    .headers(headers)
-                    .body(body)
-                    .delete(path);
-        }if(method.equalsIgnoreCase("OPTIONS")){
-            return  given()
-                    .headers(headers)
-                    .body(body)
-                    .options(path);
-        }
-        return null;
-    }
 
 
     public String  replaceSysVar(String content){

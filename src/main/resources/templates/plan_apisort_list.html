@@ -67,7 +67,10 @@
                                             </button>
                                         </td>
 
-                                        <td width="40%"></td>
+                                        <td width="40%">
+                                            <!--<button type="submit" class="btn btn-primary btn-sm btn-flat" id="deleterow">删除行</button>-->
+
+                                        </td>
                                     </tr>
                                 </table>
 
@@ -79,7 +82,7 @@
                             <!--</div>-->
                             <!-- /.box-header   -->
                             <div class="box-body">
-                                <table id="example" class="display" style="width:100%">
+                                <table id="example" class="display" cellspacing="0" width="100%">
 
                                     <thead>
                                     <tr>
@@ -89,7 +92,7 @@
                                         <th>路径</th>
                                         <th>标签</th>
                                         <th>接口id</th>
-
+                                        <th>操作</th>
                                         <th style="display: none"></th>
 
                                     </tr>
@@ -97,13 +100,17 @@
 
                                     <!--  tbody 真实的接口数据 -->
                                     <tbody>
-                                    <tr th:each=" myplans:${planApiList}">
+                                    <tr th:each=" myplans:${planApiList}" th:id="${myplans[5]}">
                                         <td th:text="${myplans[0]}"></td>
                                         <td th:text="${myplans[1]}"></td>
                                         <td th:text="${myplans[2]}"></td>
                                         <td th:text="${myplans[3]}"></td>
                                         <td th:text="${myplans[4]}"></td>
                                         <td th:text="${myplans[5]}"></td>
+                                        <td>
+                                            <a href="#" th:onclick="'javascript:add(\''+${myplans[5]}+'\')'">add</a>
+                                            <a href="#" th:onclick="'javascript:del(\''+${myplans[5]}+'\')'">delete</a>
+                                        </td>
 
                                         <td style="display: none">
                                             <input type="checkbox" name="api_id" th:value="${myplans[5]}"
@@ -147,36 +154,28 @@
 <script src="https://cdn.datatables.net/rowreorder/1.2.5/js/dataTables.rowReorder.min.js"></script>
 <script>
     var table;
-    $(function () {
+    $(document).ready(function () {
         table = $('#example').DataTable({
             paging: false,
             searching: false,
-            select: true,
+            // select: true,
+            //  ordering: false,
             rowReorder: {
                 selector: 'tr'
-            },
-            columnDefs: [
-                {targets: 0, visible: true}
-            ]
-            // ordering: false
+            }
         });
-    });
-
-    // 初始化刪除按钮
-    $('#deleteRow').on('click', 'a.delete', function (e) {
-        // e.preventDefault();
-
-        if (confirm("确定要删除该属性？")) {
-
-            table.row($(this).parents('tr')).remove().draw();
-        }
 
     });
 
-    $('#ajust').on('click', function () {
-        document.location.href = "/ajustAPIs";
-    });
+    function add(id) {
+        // window.location.href="https://www.baidu.com";
+        document.location.href = "https://www.baidu.com";
+    }
 
+    function del(id) {
+        alert('#' + id);
+        table.row('#' + id).remove().draw(false);
+    }
 </script>
 </body>
 </html>

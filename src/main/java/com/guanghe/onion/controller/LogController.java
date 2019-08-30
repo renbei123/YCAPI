@@ -52,8 +52,8 @@ public class LogController {
     public Object loglistPage(Model model, @RequestParam(value = "draw") int draw,
                               @RequestParam(value = "start") long start,
                               @RequestParam(value = "length") int length,
-                              @RequestParam(value = "search[value]") String search,
-                              @RequestParam(value = "order[0][column]") String order
+                              @RequestParam(value = "search[value]") String search
+//                              @RequestParam(value = "order[0][column]") String order
 //                              @RequestParam(value="order") String[][] order
     ) {
 
@@ -94,8 +94,9 @@ public class LogController {
                            @RequestParam(value = "draw") int draw,
                            @RequestParam(value = "start") long start,
                            @RequestParam(value = "length") int length,
-                           @RequestParam(value = "search[value]") String search,
-                           @RequestParam(value = "order[0][column]") String order) {
+                           @RequestParam(value = "search[value]") String search
+//                           @RequestParam(value = "order[0][column]") String order
+    ) {
         String[][] data = null;
         long total;
         if (search != null && !search.equals("")) {

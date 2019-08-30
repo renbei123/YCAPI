@@ -6,19 +6,29 @@ package com.guanghe.onion.controller;
 
 import com.guanghe.onion.dao.ApiJPA;
 import com.guanghe.onion.entity.Api;
+import com.guanghe.onion.tools.StringUtil;
+import io.restassured.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static io.restassured.RestAssured.given;
 
 @Controller
 @CacheConfig(cacheNames = "Api")
 public class ApiController {
-
 
     @Autowired
     private ApiJPA apiJPA;
@@ -76,6 +86,94 @@ public class ApiController {
         return "redirect:/apilist";
     }
 
+    @RequestMapping(value = "/ajaxAPI", method = RequestMethod.POST)
+    @ResponseBody
+    public String ajaxAPI(HttpServletRequest request, String url, String headers, String body, String method) {
+        HttpSession session = request.getSession();
+        HashMap debugVars = null;
+        if (session.getAttribute("debugVar") == null) {
+            session.setAttribute("debugVar", new HashMap());
+            System.out.println("不存在session");
+        } else {
+            debugVars = (HashMap) session.getAttribute("debugVar");
+            System.out.println("存在session");
+        }
+        headers = (headers.contains("{{")) ? replaceVar(headers, debugVars) : headers;
+        Map Headers = (Map) StringUtil.StringToMap(headers);
+        Response result = send(url, method, Headers, body);
+        return result.body().prettyPrint();
+    }
+
+
+    public static String replaceVar(String content, HashMap debugVars) {
+        // 匹配{{host}}类型的变量
+        String patten = "\\{{2}[\\S&&[^\\{{}}]]+}}";
+        Pattern pattern = Pattern.compile(patten);
+        // 忽略大小写的写法
+        // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+        Matcher m = pattern.matcher(content);
+        while (m.find()) {
+            String name = m.group();
+            String temp = name.substring(2, name.length() - 2);
+            String value = null;
+
+            value = debugVars.containsKey(temp) ? debugVars.get(temp).toString() : null;
+
+            content = (value == null ? content : content.replace(name, value));
+        }
+        return content;
+    }
+
+
+    public Response send(String path, String method, Map headers, String body) {
+
+        if (method.equalsIgnoreCase("GET")) {
+            return given()
+                    .headers(headers)
+                    .get(path);
+        }
+
+        if (method.equalsIgnoreCase("POST")) {
+            return given()
+                    .headers(headers)
+                    .body(body)
+                    .post(path);
+        }
+        if (method.equalsIgnoreCase("PUT")) {
+            return given()
+                    .headers(headers)
+                    .body(body)
+                    .put(path);
+        }
+        if (method.equalsIgnoreCase("PATCH")) {
+            return given()
+                    .headers(headers)
+                    .body(body)
+                    .patch(path);
+        }
+        if (method.equalsIgnoreCase("DELETE")) {
+            if (isnull(body))
+                return given()
+                        .headers(headers)
+                        .delete(path);
+            else
+                return given()
+                        .headers(headers)
+                        .body(body)
+                        .delete(path);
+        }
+        if (method.equalsIgnoreCase("OPTIONS")) {
+            return given()
+                    .headers(headers)
+                    .body(body)
+                    .options(path);
+        }
+        return null;
+    }
+
+    public boolean isnull(Object s) {
+        return s == null || s.toString().trim().equals("");
+    }
 
 //    /**
 //     * 分页查询测试

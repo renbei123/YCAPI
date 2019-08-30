@@ -12,10 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.net.ConnectException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.restassured.RestAssured.given;
+import static com.guanghe.onion.base.Https.isnull;
 
 @Component
 //@EnableAsync
@@ -74,7 +74,7 @@ public class SchedulerTask2 {
     }
 
     //    @Async
-    @Scheduled(initialDelay = 1000 * 60 * 0, fixedDelay = 1000 * 60 * 5)
+    @Scheduled(initialDelay = 1000 * 60 * 5, fixedDelay = 1000 * 60 * 5)
     public void runMonitor() {
 
         getSystemVar();
@@ -151,8 +151,8 @@ public class SchedulerTask2 {
                     logger.info(" starTime :  {}:", starTime);
                     //发送请求  得到response
 //                    logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
-                    Response result = send(path, method, headers, body);
-                    result.then().extract().response().time();
+                    Response result = Https.send(path, method, headers, body);
+//                    result.then().extract().response().time();
 
 
                     long endTime = System.currentTimeMillis();    //获取结束时间
@@ -294,7 +294,12 @@ public class SchedulerTask2 {
                 } catch (Exception e) {
                     e.printStackTrace();
                     logger.error("error! there is has Exception :{},{}", e.getMessage(), e.toString());
-                    boolean dingsendok = Tools.sendDingMsg2(e.getMessage() + "\r\n +" + e.toString(), dingding);
+                    boolean dingsendok = true;
+                    if (e instanceof ConnectException) {
+                        dingsendok = Tools.sendDingMsg2("请求接口(" + api[2].toString() + ":" + api[4].toString() + ",)时发生一次连接超时.", dingding);
+                    } else {
+                        dingsendok = Tools.sendDingMsg2(e.getMessage() + "\r\n +" + e.toString(), dingding);
+                    }
                     if (!dingsendok)
                         logger.error("发送钉钉失败! in catch Exception");
                     continue;
@@ -302,53 +307,6 @@ public class SchedulerTask2 {
             }
 
         }
-    }
-
-
-    public Response send(String path, String method, Map headers, String body) {
-
-        if (method.equalsIgnoreCase("GET")) {
-            return given()
-                    .headers(headers)
-                    .get(path);
-        }
-
-        if (method.equalsIgnoreCase("POST")) {
-            return given()
-                    .headers(headers)
-                    .body(body)
-                    .post(path);
-        }
-        if (method.equalsIgnoreCase("PUT")) {
-            return given()
-                    .headers(headers)
-                    .body(body)
-                    .put(path);
-        }
-        if (method.equalsIgnoreCase("PATCH")) {
-            return given()
-                    .headers(headers)
-                    .body(body)
-                    .patch(path);
-        }
-        if (method.equalsIgnoreCase("DELETE")) {
-            if (isnull(body))
-                return given()
-                        .headers(headers)
-                        .delete(path);
-            else
-                return given()
-                        .headers(headers)
-                        .body(body)
-                        .delete(path);
-        }
-        if (method.equalsIgnoreCase("OPTIONS")) {
-            return given()
-                    .headers(headers)
-                    .body(body)
-                    .options(path);
-        }
-        return null;
     }
 
 
@@ -377,10 +335,6 @@ public class SchedulerTask2 {
             content = (value == null ? content : content.replace(name, value));
         }
         return content;
-    }
-
-    public boolean isnull(Object s) {
-        return s == null || s.toString().trim().equals("");
     }
 
 }

@@ -270,11 +270,11 @@
                             </div>
                             <!-- botton 按钮 -->
                             <div class="box-footer">
-                                <button type="button" class="btn btn-default" onclick="javascript:history.go(-1);">返回</button>
+                                <button type="button" class="btn btn-default" onclick="history.go(-1);">返回</button>
                                 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
                                 <input type="reset" value="Reset" class="btn btn-info" />
                                 &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
-                                <input type="button" value="发送" class="btn  btn-success" id="debugSend" />
+                                <input type="button" value="调试" class="btn  btn-success" id="debugSend"/>
                                 &nbsp; &nbsp; &nbsp;
                                 <button type="submit" class="btn btn-info pull-right" id="savebutton">保存</button>
                             </div>
@@ -297,14 +297,14 @@
                                 </td>
                                 <td width="5%">host:</td>
                                 <td width="45%">
-                                    <select class="form-control select2" style="width: 50%;" id="debugHost">
+                                    <!--<select class="form-control select2" style="width: 50%;" id="debugHost">-->
 
-                                        <option selected="selected">https://android-api-v5-0.yangcong345.com</option>
-                                        <option >https://ios-api-v5-0.yangcong345.com</option>
-                                        <option>https://school-api.yangcong345.com</option>
-                                        <option>https://api-test.yangcong345.com</option>
-                                        <option>https://school-test.yangcong345.com</option>
-                                    </select>
+                                    <!--<option selected="selected">https://android-api-v5-0.yangcong345.com</option>-->
+                                    <!--<option >https://ios-api-v5-0.yangcong345.com</option>-->
+                                    <!--<option>https://school-api.yangcong345.com</option>-->
+                                    <!--<option>https://api-test.yangcong345.com</option>-->
+                                    <!--<option>https://school-test.yangcong345.com</option>-->
+                                    <!--</select>-->
                                 </td>
                                 <td width="30%">
                                     <div class="box-tools pull-right">
@@ -411,31 +411,20 @@
 
     //按钮单击时执行
     $("#debugSend").click(function(){
-        var path=$("#path").val();
-        var host=$("#debugHost").val();
-        var url123;
-        if (path.substring(0, 4) != "http")  {
-            if (path.substring(0, 2) == "{{")
-             var patten="\\{{2}[\\S&&[^\\{{}}]]+}}";
-            path=path.replace(patten,host);
-        }else  {
-            url123=$.trim(path);
-        }
-
-        var headers="{Content-Type:\"application/json\"}";//$.trim($("#headers").val());
-        var datas=$.trim($("#body").val());
+        var url = $("#path").val();
+        var headers = $.trim($("#headers").val());
+        var body = $.trim($("#body").val());
         var method=$("#method").val();
-        console.info(url123, method);
-        console.info(headers);
-        console.info('body:'+datas);
+        var para = {"url": url, "headers": headers, "body": body, "method": method};
+
         $.ajax({
-            url:url123,
+            url: "/ajaxAPI",
             cache:false,
             timeout:10000,
-            contentType: "application/json",
-            data:datas,
-            type:method,
-            dataType:"json",
+            // contentType: "application/json",
+            data: para,
+            type: "POST",
+            // dataType:"json",
             beforeSend: LoadFunction, //加载执行方法
             error: erryFunction,  //错误执行方法
             success: succFunction //成功执行方法
@@ -476,9 +465,9 @@
 
 
             // console.info(response);
-        };
+        }
 
-        function erryFunction() {
+    function erryFunction() {
             alert("error");
         }
 

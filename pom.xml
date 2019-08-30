@@ -86,7 +86,8 @@
 			<!--<groupId>org.springframework.boot</groupId>-->
 			<!--<artifactId>spring-boot-starter-cache</artifactId>-->
 		<!--</dependency>-->
-		<!--&lt;!&ndash; 添加Redis缓存支持 &ndash;&gt;-->
+
+        <!--&lt;!&ndash; 添加Redis缓存支持 &ndash;&gt;-->
 		<!--<dependency>-->
 			<!--<groupId>org.springframework.boot</groupId>-->
 			<!--<artifactId>spring-boot-starter-redis</artifactId>-->
