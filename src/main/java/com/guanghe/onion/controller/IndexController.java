@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.exceptions.TemplateInputException;
 
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,25 +43,38 @@ public class IndexController {
     }
 
     @RequestMapping("statics")
-    public String statics(Model model, @RequestParam(value = "code") int code) throws TemplateInputException {
-        String gettokenUrl = "http://backstage-test.yc345.tv:3003/api/auth/code/" + code;
-        String meapi_url = "http://backstage-test.yc345.tv:3003/api/auth/me";
+    public String statics(Model model, @RequestParam(value = "code", required = false) String code,
+                          @RequestParam(value = "login", required = false) boolean login, HttpSession session
+    ) throws TemplateInputException {
 
-        String onionsToken = given().get(gettokenUrl).jsonPath().get("onionsToken");
-        String shadowToken = given().get(gettokenUrl).jsonPath().get("shadowToken");
+        if (!login) {
+            String gettokenUrl = "http://backstage-test.yc345.tv:3003/api/auth/code/" + code;
+            String meapi_url = "http://backstage-test.yc345.tv:3003/api/auth/me";
 
-        HashMap header = new HashMap<>();
-        header.put("onionsToken", onionsToken);
-        header.put("shadowToken", shadowToken);
+            Response result = given().get(gettokenUrl);
+            String response_body = result.getBody().asString();
+            System.out.println("response_body:" + response_body);
 
-        Response result = given().headers(header).get(meapi_url);
-        String name = result.jsonPath().getString("name");
-        String mail = result.jsonPath().getString("mail");
-        int status = result.jsonPath().getInt("status");
+            String onionsToken = result.jsonPath().get("onionsToken");
+            String shadowToken = result.jsonPath().get("shadowToken");
 
-        model.addAttribute("name", name);
-        model.addAttribute("mail", mail);
-        model.addAttribute("status", status);
+            HashMap header = new HashMap<>();
+            header.put("Authorization", onionsToken);
+            header.put("ShadowAuthorization", shadowToken);
+
+            Response result2 = given().headers(header).get(meapi_url);
+            String name = result2.jsonPath().getString("name");
+            String mail = result2.jsonPath().getString("mail");
+            int status = result2.jsonPath().getInt("status");
+
+            model.addAttribute("Authorization", onionsToken);
+            model.addAttribute("ShadowAuthorization", shadowToken);
+            model.addAttribute("name", name);
+            model.addAttribute("mail", mail);
+            model.addAttribute("status", status);
+            session.setAttribute("name", name);
+            session.setAttribute("mail", mail);
+        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date today = new Date();

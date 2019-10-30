@@ -14,15 +14,8 @@
         if (!window.localStorage) {
             alert("浏览器不支持localstorage");
         } else {
-            var storage = window.localStorage;
-            if (storage.onionsToken == null) {
-                console.info("onionsToken is null");
-                window.location.href = "http://backstage-test.yc345.tv:8081/#/?fromWebUrl=http%3A%2F%2Flocalhost%3A8080%2Fstatics";
-            } else {
 
-                alert("onionsToken is :", window.localStorage.onionsToken);
-                window.location.href = "/statics?"
-            }
+            window.location.href = "http://backstage-test.yc345.tv:8081/#/?fromWebUrl=http%3A%2F%2Flocalhost%3A8080%2Fstatics?login=false";
 
         }
     });
