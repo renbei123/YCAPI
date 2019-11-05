@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,19 +88,10 @@ public class ApiController {
     @RequestMapping(value = "/ajaxAPI", method = RequestMethod.POST)
     @ResponseBody
     public String ajaxAPI(HttpServletRequest request, String url, String headers, String body, String method) {
-        HttpSession session = request.getSession();
-        HashMap debugVars = null;
-        if (session.getAttribute("debugVar") == null) {
-            session.setAttribute("debugVar", new HashMap());
-            System.out.println("不存在session");
-        } else {
-            debugVars = (HashMap) session.getAttribute("debugVar");
-            System.out.println("存在session");
-        }
-        headers = (headers.contains("{{")) ? replaceVar(headers, debugVars) : headers;
+
         Map Headers = (Map) StringUtil.StringToMap(headers);
         Response result = send(url, method, Headers, body);
-        return result.body().prettyPrint();
+        return result.body().asString();
     }
 
 

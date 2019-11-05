@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- json渲染插件 -->
+    <link href="jsonEdit/jsoneditor.min.css" rel="stylesheet" type="text/css">
+
+    <!-- json渲染插件 -->
     <div th:replace="common/common_head :: common_resource"></div>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -227,7 +231,7 @@
                                 <label class="col-sm-2 control-label">设置变量: </label>
                                 <div class="col-sm-10">
                                     <table border="0" width="70%" align="left">
-                                        <tr th:if="*{PlanVar_nameArray==null}">
+                                        <tr th:if="${api.planVar_nameArray==null}">
                                             <td width="25%">
                                                 <input type="text" class="form-control" name="PlanVar_name">
                                             </td>
@@ -245,7 +249,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr th:if="*{PlanVar_nameArray!=null}"
+                                        <tr th:if="${api.planVar_nameArray!=null}"
                                             th:each=" i :${#numbers.sequence(0,plan_var_length)}">
                                             <td width="25%">
                                                 <input type="text" class="form-control" name="PlanVar_name"
@@ -285,57 +289,89 @@
 
                 </div>
                 <!-- /.box -->
-                <!-- general form elements disabled -->
-                <div class="box box-info" style="width: 100%;">
-                    <div class="box-header with-border">
-                        <table border="0" width="100%">
-                            <tr>
-                                <td width="20%">
-                                    <h3 class="box-title" >
-                                        Response
-                                    </h3>
-                                </td>
-                                <td width="5%">host:</td>
-                                <td width="45%">
-                                    <!--<select class="form-control select2" style="width: 50%;" id="debugHost">-->
 
-                                    <!--<option selected="selected">https://android-api-v5-0.yangcong345.com</option>-->
-                                    <!--<option >https://ios-api-v5-0.yangcong345.com</option>-->
-                                    <!--<option>https://school-api.yangcong345.com</option>-->
-                                    <!--<option>https://api-test.yangcong345.com</option>-->
-                                    <!--<option>https://school-test.yangcong345.com</option>-->
-                                    <!--</select>-->
-                                </td>
-                                <td width="30%">
-                                    <div class="box-tools pull-right">
-                                        <button id="colaped2" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
 
-                    </div>
-                    <!-- /.box-header -->
-                    <!--<ul class="nav nav-tabs">-->
-                        <!--<li class="active"><a href="#fa-icons" data-toggle="tab">Font Awesome</a></li>-->
-                        <!--<li><a href="#glyphicons" data-toggle="tab">Glyphicons</a></li>-->
-                    <!--</ul>-->
-                    <div class="tab-content">
-                    <div class="box-body"  id="fa-icons">
-                           <pre style="font-weight: 600;" id="response">
-
-                           </pre>
-                    </div>
-
-                    </div>
-                    <!-- /.box-body -->
-                </div>
                 <!-- /.box -->
             </div>
             <!--/.col (right) -->
             <!-- /.row -->
         </section>
+        <!-- Main content -->
+        <section class="content">
+            <div style="width:96%;margin:0 auto;">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#fa-icons" data-toggle="tab">Response</a></li>
+                                <li><a href="#glyphicons" data-toggle="tab">调试变量</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <!-- Font Awesome Icons -->
+                                <div class="tab-pane active" id="fa-icons">
+
+                                    <div class="tab-content">
+                                        <div class="box-body">
+                                          <pre style="font-weight: 600;" id="response">
+
+                                             </pre>
+                                            <span style="font-weight: 600;" id="loading">
+
+                                             </span>
+                                        </div>
+
+                                    </div>
+                                    <!-- /.box-body -->
+
+                                </div>
+                                <!-- /#fa-icons -->
+
+                                <!-- 调试变量-->
+                                <div class="tab-pane" id="glyphicons">
+
+                                    <div class="box-body">
+                                        <form class="form-horizontal" method="">
+                                            <table border="0" width="90%" class="table table-bordered table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <td width="5%"></td>
+                                                    <td width="5%"></td>
+                                                    <td align="center" width="40">name</td>
+                                                    <td align="center" width="50%">value</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="tbody1">
+                                                <tr>
+                                                    <td><input type="button" value=" + " onclick="addRow(this)"></td>
+                                                    <td><input type="button" value=" - " onclick="delRow(this)">
+                                                        <input type="hidden" name="id" value=""/>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" name="varname"
+                                                               id="varname" onblur=""/></td>
+                                                    <td><input type="text" class="form-control" name="value" onblur=""/>
+                                                    </td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /#ion-icons -->
+
+                            </div>
+                            <!-- /.tab-content -->
+                    </div>
+                        <!-- /.nav-tabs-custom -->
+                </div>
+                    <!-- /.col -->
+            </div>
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -375,15 +411,29 @@
 <script src="bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
+<script src="jsonEdit/jsoneditor.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-    $(document).ready(function () {//通用方法去输入框前后空格
+    var storage = window.localStorage;
+    var editor;
+
+    // json渲染 -- start
+    var container = document.getElementById("response");
+    var options = {};
+    editor = new JSONEditor(container, options);
+    $("#response").css({display: 'none'});
+    // json渲染 --end
+
+    $(document).ready(function () {    //通用方法去输入框前后空格
+
+        // other ...
         $("form").on("change", function () {
             $("form input[type=text]").each(function () {
                 this.value = $.trim(this.value);
             });
         })
     });
+
 
     function addRow(currentButton)
     {    //alert(currentButton.value);
@@ -408,21 +458,49 @@
 
     }
 
+    function replaceVar(value) {
+        var patten = /\{{2}\w+\}{2}/g;
+        if (patten.test(value)) {
+            var vars = value.match(patten);
+            for (i = 0; i < vars.length; i++) {
+                var key = vars[i].replace("{{", "").replace("}}", "");
+                if (storage.getItem(key) == null) {
+                    alert("找不到" + key);
 
-    //按钮单击时执行
+                } else {
+                    value = value.replace(vars[i], storage.getItem(key));
+                }
+            }
+
+            return value;
+        } else
+            return value;
+    }
+
+
+    //按钮单击时执行   debug
     $("#debugSend").click(function(){
-        var url = $("#path").val();
-        var headers = $.trim($("#headers").val());
-        var body = $.trim($("#body").val());
-        var method=$("#method").val();
+        var url = replaceVar($("#path").val());
+        var headers = replaceVar($.trim($("#headers").val()));
+        var body = replaceVar($.trim($("#body").val()));
+        var method = replaceVar($("#method").val());
         var para = {"url": url, "headers": headers, "body": body, "method": method};
+
+        // console.log(para.url+' ,'+para.headers+' ,'+para.body+' ,'+para.method)
+        //  传递JSON对象的时候，需要用@RequestBody Map<String, Object> data，后台才能够接收到参数。
+        //  但是对于data，有两种
+        //
+        //  一种是使用json字符串，不能使用JSON.stringify(({name3:"name3"})，contentType为默认值application/x-www-form-urlencoded
+        //
+        //  一种是使用json对象，必须使用JSON.stringify(({name3:"name3"})，contentType : 'application/json;charset=UTF-8',
 
         $.ajax({
             url: "/ajaxAPI",
             cache:false,
             timeout:10000,
-            // contentType: "application/json",
+            // contentType: "application/json;charset=UTF-8",
             data: para,
+            // data : JSON.stringify(para),
             type: "POST",
             // dataType:"json",
             beforeSend: LoadFunction, //加载执行方法
@@ -435,10 +513,13 @@
     });
 
         function LoadFunction() {
-            $("#response").html('加载中...');
+            $("#response").css({display: 'none'});
+            $("#loading").css({display: 'block'});
+            $("#loading").text('加载中...');
         }
 
         function succFunction(results,status,xhr) {
+            console.info(results);
             // console.log(xhr.getAllResponseHeaders());
             // var wpoInfo = {
             //     // 服务器端时间
@@ -460,11 +541,12 @@
             //     "exprires" : xhr.getResponseHeader('Exprires'),
             //     "lastModified" : xhr.getResponseHeader('Last-Modified')
             // };
-            // $("#response").text(JSON.stringify(wpoInfo));
-            $("#response").text(JSON.stringify(results));
+            $("#response").css({display: 'block'});
+            $("#loading").css({display: 'none'});
+            editor.set(JSON.parse(results));
+            // $("#response").text(JSON.stringify(results));
 
 
-            // console.info(response);
         }
 
     function erryFunction() {

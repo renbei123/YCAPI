@@ -34,7 +34,7 @@
                     <div class="box-header with-border">
                         <table border="0" width="40%">
                             <tr>
-                                <td width="30%"><h3 class="box-title">默认全局变量</h3></td>
+                                <td width="30%"><h3 class="box-title">系统全局变量</h3></td>
                                 <td width="10%">
 
                                 </td>
@@ -164,6 +164,22 @@
         //移除
         $(obj).parent().parent().remove();
     }
+
+    var storage = window.localStorage;
+    $(document).ready(function () {
+        var length = $('input[name="varname"]').length;
+
+        for (i = 0; i < length; i++) {
+            storage.setItem($('input[name="varname"]')[i].value, $('input[name="value"]')[i].value);
+        }
+
+        // for(var a=0;a<storage.length;a++){
+        //     var key=storage.key(a);
+        //     console.log(key, storage.getItem(key))
+        // }
+
+
+    });
 
 
 </script>
