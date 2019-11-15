@@ -303,12 +303,13 @@
                     <div class="col-xs-12">
                         <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#fa-icons" data-toggle="tab">Response</a></li>
+                                <li class="active"><a data-toggle="tab" href="#res_body">Body</a></li>
+                                <li><a data-toggle="tab" href="#res_header">Header</a></li>
                                 <li><a href="#glyphicons" data-toggle="tab">调试变量</a></li>
                             </ul>
                             <div class="tab-content">
-                                <!-- Font Awesome Icons -->
-                                <div class="tab-pane active" id="fa-icons">
+                                <!-- body -->
+                                <div class="tab-pane active" id="res_body">
 
                                     <div class="tab-content">
                                         <div class="box-body">
@@ -324,33 +325,49 @@
                                     <!-- /.box-body -->
 
                                 </div>
-                                <!-- /#fa-icons -->
+                                <!-- /header -->
+
+                                <div class="tab-pane active" id="res_header">
+
+                                    <div class="tab-content">
+                                        <div class="box-body">
+                                          <pre id="response_headers" style="font-weight: 600;">
+
+                                             </pre>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <!-- /header -->
 
                                 <!-- 调试变量-->
                                 <div class="tab-pane" id="glyphicons">
 
                                     <div class="box-body">
                                         <form class="form-horizontal" method="">
-                                            <table border="0" width="90%" class="table table-bordered table-striped">
+                                            <table border="0" class="table table-bordered table-striped"
+                                                   style="table-layout:fixed;" width="100%">
                                                 <thead>
                                                 <tr>
-                                                    <td width="5%"></td>
-                                                    <td width="5%"></td>
+                                                    <td align="center" colspan="2" id="errormsg"></td>
+                                                </tr>
+                                                <tr>
+
                                                     <td align="center" width="40">name</td>
                                                     <td align="center" width="50%">value</td>
                                                 </tr>
                                                 </thead>
                                                 <tbody id="tbody1">
-                                                <tr>
-                                                    <td><input type="button" value=" + " onclick="addRow(this)"></td>
-                                                    <td><input type="button" value=" - " onclick="delRow(this)">
-                                                        <input type="hidden" name="id" value=""/>
-                                                    </td>
-                                                    <td><input type="text" class="form-control" name="varname"
-                                                               id="varname" onblur=""/></td>
-                                                    <td><input type="text" class="form-control" name="value" onblur=""/>
-                                                    </td>
-                                                </tr>
+                                                <!--<tr>-->
+                                                <!--<td width="5%"></td>-->
+                                                <!--<td width="5%"></td>-->
+
+                                                <!--<td name="varname"></td>-->
+                                                <!--<td name="varvalue">-->
+                                                <!--</td>-->
+                                                <!--</tr>-->
 
                                                 </tbody>
                                             </table>
@@ -480,24 +497,35 @@
 
     //按钮单击时执行   debug
     $("#debugSend").click(function(){
+
+
         var url = replaceVar($("#path").val());
         var headers = replaceVar($.trim($("#headers").val()));
         var body = replaceVar($.trim($("#body").val()));
         var method = replaceVar($("#method").val());
         var para = {"url": url, "headers": headers, "body": body, "method": method};
 
-        // console.log(para.url+' ,'+para.headers+' ,'+para.body+' ,'+para.method)
-        //  传递JSON对象的时候，需要用@RequestBody Map<String, Object> data，后台才能够接收到参数。
-        //  但是对于data，有两种
-        //
-        //  一种是使用json字符串，不能使用JSON.stringify(({name3:"name3"})，contentType为默认值application/x-www-form-urlencoded
-        //
-        //  一种是使用json对象，必须使用JSON.stringify(({name3:"name3"})，contentType : 'application/json;charset=UTF-8',
+
+        var var_names = [];
+        var var_values = [];
+        $("input[name='PlanVar_name']").each(function (index) {
+            if (this.value) { // "",null,undefined,NaN
+                var_names[index] = this.value;
+            }
+        });
+        $("input[name='PlanVar_jsonpath']").each(function (index) {
+            if (this.value) { // "",null,undefined,NaN
+                var_values[index] = this.value;
+            }
+        });
+        para.varNames = var_names.toString();
+        para.varValues = var_values.toString();
+        // console.info("var:",para)
 
         $.ajax({
             url: "/ajaxAPI",
             cache:false,
-            timeout:10000,
+            timeout: 9000000,
             // contentType: "application/json;charset=UTF-8",
             data: para,
             // data : JSON.stringify(para),
@@ -514,12 +542,13 @@
 
         function LoadFunction() {
             $("#response").css({display: 'none'});
-            $("#loading").css({display: 'block'});
-            $("#loading").text('加载中...');
+
+            $("#loading").css({display: 'block'}).text('加载中...');
+
         }
 
         function succFunction(results,status,xhr) {
-            console.info(results);
+            // console.info(results);
             // console.log(xhr.getAllResponseHeaders());
             // var wpoInfo = {
             //     // 服务器端时间
@@ -543,14 +572,43 @@
             // };
             $("#response").css({display: 'block'});
             $("#loading").css({display: 'none'});
-            editor.set(JSON.parse(results));
-            // $("#response").text(JSON.stringify(results));
+
+            // console.info(results.varNames);
+
+            editor.set(JSON.parse(results.body));
+
+            $("#response_headers").text(results.header);
+
+            //下面是显示变量
+            $("#tbody1").html('');
+            $("#errormsg").html('');
+            if (results.errormsg)
+                $("#errormsg").html('<font color="red" >解析出现错误</font>');
+            else {
+                for (x in results.varNames) {
+                    // console.log("xhahahahahahh:",results.varNames[x])
+
+                    var tr_html = " <tr>\n" +
+                        "<td style=\"word-wrap:break-word;\"  width=\"40\">varname</td>\n" +
+                        "<td style=\"word-wrap:break-word;\"  width=\"50\">varvalue\n" +
+                        "</td>\n" +
+                        "</tr>";
+
+                    tr_html = tr_html.replace('varname', results.varNames[x]).replace('varvalue', results.varValues[x]);
+
+                    $('#tbody1').append(tr_html);
+                }
+            }
+
+
+
+
 
 
         }
 
     function erryFunction() {
-            alert("error");
+        alert("调用接口时发生错误");
         }
 
         function completeFunction(xhr,data) {

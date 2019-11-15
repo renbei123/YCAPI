@@ -7,7 +7,10 @@ package com.guanghe.onion.controller;
 import com.guanghe.onion.dao.ApiJPA;
 import com.guanghe.onion.entity.Api;
 import com.guanghe.onion.tools.StringUtil;
+import com.jayway.jsonpath.JsonPath;
 import io.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Controller;
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,8 @@ public class ApiController {
 
     @Autowired
     private ApiJPA apiJPA;
+
+    private final static Logger logger = LoggerFactory.getLogger("ApiController");
 
     //@Cacheable
     //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
@@ -87,11 +91,64 @@ public class ApiController {
 
     @RequestMapping(value = "/ajaxAPI", method = RequestMethod.POST)
     @ResponseBody
-    public String ajaxAPI(HttpServletRequest request, String url, String headers, String body, String method) {
+    public Map<String, Object> ajaxAPI(String url, String headers, String body, String method, String[] varNames, String[] varValues) {
 
         Map Headers = (Map) StringUtil.StringToMap(headers);
         Response result = send(url, method, Headers, body);
-        return result.body().asString();
+        String response_body = result.body().asString();
+        String response_header = result.headers().toString();
+        Map<String, Object> response_result = new HashMap<String, Object>();
+
+        response_result.put("body", response_body);
+        response_result.put("header", response_header);
+        String errormsg = null;
+
+        logger.info("varNames:" + varNames.toString());
+
+        if (varNames.length > 0 && varValues.length == varNames.length) {
+            if (response_body.startsWith("[")) {
+                for (int i = 0; i < varValues.length; i++) {
+                    try {
+                        if (varValues[i].startsWith("#")) {
+                            if (varValues[i].startsWith("#header."))
+                                varValues[i] = result.getHeader(varValues[i].substring(8).trim());
+                            if (varValues[i].startsWith("#body."))
+                                varValues[i] = JsonPath.parse(response_body).read("$." + varValues[i].substring(6).trim()).toString();
+                        } else {
+                            varValues[i] = JsonPath.parse(response_body).read("$." + varValues[i].trim()).toString();
+                        }
+                    } catch (NullPointerException exception) {
+                        exception.printStackTrace();
+                        errormsg = "解析json出现问题";
+                    }
+                }
+
+            } else {
+                for (int i = 0; i < varValues.length; i++) {
+                    try {
+                        if (varValues[i].startsWith("#")) {
+                            if (varValues[i].startsWith("#header."))
+                                varValues[i] = result.getHeader(varValues[i].substring(8).trim());
+                            if (varValues[i].startsWith("#body."))
+                                varValues[i] = result.jsonPath().get(varValues[i].substring(6).trim()).toString();
+                        } else {
+
+                            varValues[i] = result.jsonPath().get(varValues[i].trim()).toString();
+                        }
+
+                    } catch (NullPointerException exception) {
+                        exception.printStackTrace();
+                        errormsg = "解析json出现问题";
+                    }
+                }
+            }
+        }
+        response_result.put("varNames", varNames);
+        response_result.put("varValues", varValues);
+        response_result.put("errormsg", errormsg);
+
+        return response_result;
+
     }
 
 
