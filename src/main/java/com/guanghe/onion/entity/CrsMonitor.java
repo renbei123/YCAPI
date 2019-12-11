@@ -42,7 +42,8 @@ public class CrsMonitor
     @Column(name = "dingding")
     private String dingding;
 
-    @Column(name = "creater")
+    //取邮件@的前缀名字，避免中文重名
+    @Column(name = "creater", length = 20)
     private String creater;
 
 

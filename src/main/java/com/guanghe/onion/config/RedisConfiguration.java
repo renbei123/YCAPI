@@ -54,7 +54,7 @@ public class RedisConfiguration extends CachingConfigurerSupport
      */
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
-
+//        System.out.println("RedisConfiguration : cacheManager" );
         RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
         //设置缓存过期时间
         //rcm.setDefaultExpiration(60);//秒
@@ -63,6 +63,7 @@ public class RedisConfiguration extends CachingConfigurerSupport
 
     @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
+//        System.out.println("RedisConfiguration : redisTemplate" );
         StringRedisTemplate template = new StringRedisTemplate(factory);
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper om = new ObjectMapper();

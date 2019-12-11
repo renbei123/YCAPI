@@ -1,29 +1,26 @@
 package com.guanghe.onion.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.guanghe.onion.base.JsonUtil;
 import com.guanghe.onion.dao.ApiJPA;
 import com.guanghe.onion.entity.Api;
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 public class UploadController {
@@ -99,15 +96,15 @@ public class UploadController {
      */
     @RequestMapping(value = "/uploadAndResolve",method = RequestMethod.POST)
     @ResponseBody
-    public  String uploadAndResolve(HttpServletRequest request,MultipartFile file)
+    public String uploadAndResolve(HttpSession session, MultipartFile file)
     {
-
+        String creater = session.getAttribute("user").toString();
         String jsontext=multipartFileToText(file,"UTF-8");
         JSONObject fileObject = JSON.parseObject(jsontext);
         List<JSONObject> jsonlist=new ArrayList<JSONObject>();
         List<Api>  apiList=new ArrayList<>();
         JsonUtil.parseJsonToArray(fileObject,jsonlist);
-        JsonUtil.toApiList(jsonlist,apiList);
+        JsonUtil.toApiList(jsonlist, apiList, creater);
 
         Iterable<Api> iterable=apiList;
         apiJPA.save(iterable);

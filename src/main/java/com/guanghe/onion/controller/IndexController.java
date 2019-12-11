@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.exceptions.TemplateInputException;
 
@@ -73,9 +72,12 @@ public class IndexController {
             model.addAttribute("mail", mail);
             model.addAttribute("status", status);
             session.setAttribute("name", name);
-            session.setAttribute("mail", mail);
+//            session.setAttribute("mail", mail);
+            session.setAttribute("user", mail.substring(0, mail.indexOf("@")));
         }
 
+
+        //以下是统计数据和登录无关
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date today = new Date();
 //        String endDate = sdf.format(today);//当前日期
@@ -96,7 +98,7 @@ public class IndexController {
         model.addAttribute("longExecTimeOf30days", longExecTimeOf30days);
         model.addAttribute("sum_500Of30days", sum_500Of30days);
         model.addAttribute("discardApiNums", discardApiNums);
-
+        // 统计数据和登录无关
 
         return "statics";
     }
@@ -114,13 +116,19 @@ public class IndexController {
         return "hello";
     }
 
-
-    @RequestMapping(value = "user/login_view",method = RequestMethod.GET)
-    public String login_view(){
-        return "login";
+    @RequestMapping("/myerror")
+    public String error(Model model, String msg) {
+        model.addAttribute("msg", msg);
+        return "error";
     }
 
 
+//    @RequestMapping(value = "user/login_view",method = RequestMethod.GET)
+//    public String login_view(){
+//        return "login";
+//    }
+//
+//
 
 
 

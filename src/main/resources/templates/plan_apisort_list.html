@@ -82,7 +82,7 @@
                             <!--</div>-->
                             <!-- /.box-header   -->
                             <div class="box-body">
-                                <table id="example" class="display" cellspacing="0" width="100%">
+                                <table class="table table-bordered table-striped" id="example" width="100%">
 
                                     <thead>
                                     <tr>
@@ -156,10 +156,10 @@
     var table;
     $(document).ready(function () {
         table = $('#example').DataTable({
-            paging: false,
+            paging: true,
             searching: false,
             // select: true,
-            //  ordering: false,
+            //  ordering: true,
             rowReorder: {
                 selector: 'tr'
             }

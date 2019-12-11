@@ -46,7 +46,7 @@
 
                     <!-- class="box-body"   -->
                     <div class="box-body">
-                        <form class="form-horizontal" th:action="@{/apisave}" th:object="${api}" method="post"
+                        <form class="form-horizontal" method="post" th:action="@{/apiSave}" th:object="${api}"
                               id="apiform">
                             <input type="hidden" name="id" th:value="*{id}" />
 
@@ -81,6 +81,7 @@
                                 </div>
                             </div>
 
+                            <input id="creater" name="creater" th:value="*{creater}" type="hidden"/>
 
                             <div class="form-group">
                                 <label for="headers" class="col-sm-2 control-label">请求头(headers)</label>
@@ -233,11 +234,15 @@
                                     <table border="0" width="70%" align="left">
                                         <tr th:if="${api.planVar_nameArray==null}">
                                             <td width="25%">
-                                                <input type="text" class="form-control" name="PlanVar_name">
+                                                <input class="form-control" name="PlanVar_name"
+                                                       onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"
+                                                       type="text">
                                             </td>
                                             <td width="5%" align="center"> =</td>
                                             <td width="25%">
-                                                <input type="text" class="form-control" name="PlanVar_jsonpath">
+                                                <input class="form-control" name="PlanVar_jsonpath"
+                                                       onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"
+                                                       type="text">
                                             </td>
                                             <td width="5%"></td>
                                             <td width="5%">
@@ -252,12 +257,16 @@
                                         <tr th:if="${api.planVar_nameArray!=null}"
                                             th:each=" i :${#numbers.sequence(0,plan_var_length)}">
                                             <td width="25%">
-                                                <input type="text" class="form-control" name="PlanVar_name"
+                                                <input class="form-control" name="PlanVar_name"
+                                                       onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"
+                                                       type="text"
                                                        th:value="${api.planVar_nameArray[i]==null?'':api.planVar_nameArray[i].toString().trim()}">
                                             </td>
                                             <td width="5%" align="center"> =</td>
                                             <td width="25%">
-                                                <input type="text" class="form-control" name="PlanVar_jsonpath"
+                                                <input class="form-control" name="PlanVar_jsonpath"
+                                                       onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"
+                                                       type="text"
                                                        th:value="${api.getPlanVar_jsonpathArray()[i]==null?'':api.getPlanVar_jsonpathArray()[i].toString().trim()}">
                                             </td>
                                             <td width="5%"></td>
@@ -280,8 +289,9 @@
                                 &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
                                 <input type="button" value="调试" class="btn  btn-success" id="debugSend"/>
                                 &nbsp; &nbsp; &nbsp;
-                                <button type="submit" class="btn btn-info pull-right" id="savebutton">保存</button>
+                                <button class="btn btn-info pull-right" id="" type="submit">保存</button>
                             </div>
+
 
                         </form>
                     </div>
@@ -305,7 +315,7 @@
                             <ul class="nav nav-tabs">
                                 <li class="active"><a data-toggle="tab" href="#res_body">Body</a></li>
                                 <li><a data-toggle="tab" href="#res_header">Header</a></li>
-                                <li><a href="#glyphicons" data-toggle="tab">调试变量</a></li>
+                                <li><a data-toggle="tab" href="#res_vars">调试变量</a></li>
                             </ul>
                             <div class="tab-content">
                                 <!-- body -->
@@ -327,7 +337,7 @@
                                 </div>
                                 <!-- /header -->
 
-                                <div class="tab-pane active" id="res_header">
+                                <div class="tab-pane" id="res_header">
 
                                     <div class="tab-content">
                                         <div class="box-body">
@@ -342,8 +352,8 @@
                                 </div>
                                 <!-- /header -->
 
-                                <!-- 调试变量-->
-                                <div class="tab-pane" id="glyphicons">
+                                <!-- 调试变量 -->
+                                <div class="tab-pane" id="res_vars">
 
                                     <div class="box-body">
                                         <form class="form-horizontal" method="">
@@ -359,7 +369,7 @@
                                                     <td align="center" width="50%">value</td>
                                                 </tr>
                                                 </thead>
-                                                <tbody id="tbody1">
+                                                <tbody id="var_result">
                                                 <!--<tr>-->
                                                 <!--<td width="5%"></td>-->
                                                 <!--<td width="5%"></td>-->
@@ -498,7 +508,6 @@
     //按钮单击时执行   debug
     $("#debugSend").click(function(){
 
-
         var url = replaceVar($("#path").val());
         var headers = replaceVar($.trim($("#headers").val()));
         var body = replaceVar($.trim($("#body").val()));
@@ -570,52 +579,51 @@
             //     "exprires" : xhr.getResponseHeader('Exprires'),
             //     "lastModified" : xhr.getResponseHeader('Last-Modified')
             // };
-            $("#response").css({display: 'block'});
+
             $("#loading").css({display: 'none'});
 
-            // console.info(results.varNames);
-
+            $("#response").css({display: 'block'});
             editor.set(JSON.parse(results.body));
 
             $("#response_headers").text(results.header);
 
             //下面是显示变量
-            $("#tbody1").html('');
+            $("#var_result").html('');
             $("#errormsg").html('');
-            if (results.errormsg)
-                $("#errormsg").html('<font color="red" >解析出现错误</font>');
+
+            console.info('errormsg:', results.errormsg);
+            if (results.errormsg) {
+                $("#errormsg").html('<font color="red" >解析出现错误,请检查输入</font>');
+            }
             else {
                 for (x in results.varNames) {
                     // console.log("xhahahahahahh:",results.varNames[x])
-
                     var tr_html = " <tr>\n" +
                         "<td style=\"word-wrap:break-word;\"  width=\"40\">varname</td>\n" +
                         "<td style=\"word-wrap:break-word;\"  width=\"50\">varvalue\n" +
                         "</td>\n" +
                         "</tr>";
-
                     tr_html = tr_html.replace('varname', results.varNames[x]).replace('varvalue', results.varValues[x]);
-
-                    $('#tbody1').append(tr_html);
+                    $('#var_result').append(tr_html);
                 }
             }
-
-
-
-
 
 
         }
 
     function erryFunction() {
-        alert("调用接口时发生错误");
-        }
 
+        alert("调用接口时发生错误");
+    }
         function completeFunction(xhr,data) {
 
         }
 
+    function Trim(str) {
+        return str.replace(/(^\s*)|(\s*$)/g, "");
 
+
+    }
 
 </script>
 

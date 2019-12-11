@@ -12,13 +12,13 @@ import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import static io.restassured.RestAssured.given;
 
 @Controller
-@CacheConfig(cacheNames = "Api")
+//@CacheConfig(cacheNames = "Api")
 public class ApiController {
 
     @Autowired
@@ -37,22 +37,45 @@ public class ApiController {
     private final static Logger logger = LoggerFactory.getLogger("ApiController");
 
     //@Cacheable
-    //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
+    //@Cacheable(cacheNames="users", condition="#result.name.length < 32")、、、
     @RequestMapping(value = "/apilist",method = RequestMethod.GET)
     public String list(Model model){
         List<Api> list=apiJPA.findAll();
-
+//        logger.info(" list.count(): {}", list.size());
         model.addAttribute("apilist",list);
         return "api_list";
     }
 
+    @RequestMapping(value = "/apidelete", method = RequestMethod.GET)
+    public String delete(Long id, HttpSession session) {
+        Api del_api = apiJPA.findOne(id);
+        if (del_api.getCreater().equals(session.getAttribute("user"))) {
+            apiJPA.delete(id);
+            return "redirect:/apilist";
+        } else {
+            return "forward:/myerror?msg=没有权限！只能修改自己的数据";
+        }
 
 
+    }
 
-    @RequestMapping(value = "/apisave",method = RequestMethod.POST)
-    public String save(Api api){
-         apiJPA.save(api);
-         return "redirect:/apilist";
+
+    @RequestMapping(value = "/apiAdd", method = RequestMethod.POST)
+    public String add(Api api) {
+        apiJPA.save(api);
+        return "redirect:/apilist";
+    }
+
+
+    @RequestMapping(value = "/apiSave", method = RequestMethod.POST)
+    public String save(Api api, HttpSession session) {
+        if (api.getCreater().trim().equals(session.getAttribute("user"))) {
+            apiJPA.save(api);
+            return "redirect:/apilist";
+        } else {
+            return "forward:/myerror?msg=没有权限！只能修改自己的数据";
+        }
+
     }
 
     @RequestMapping(value = "/apieidt")
@@ -77,17 +100,12 @@ public class ApiController {
     }
 
     @RequestMapping(value = "/apiadd")
-    public String add()
+    public String toaddpage()
     {
         return "api_add";
     }
 
-    @RequestMapping(value = "/apidelete",method = RequestMethod.GET)
-    public String delete(Long id)
-    {
-        apiJPA.delete(id);
-        return "redirect:/apilist";
-    }
+
 
     @RequestMapping(value = "/ajaxAPI", method = RequestMethod.POST)
     @ResponseBody
@@ -117,8 +135,8 @@ public class ApiController {
                         } else {
                             varValues[i] = JsonPath.parse(response_body).read("$." + varValues[i].trim()).toString();
                         }
-                    } catch (NullPointerException exception) {
-                        exception.printStackTrace();
+                    } catch (Exception exception) {
+//                        exception.printStackTrace();
                         errormsg = "解析json出现问题";
                     }
                 }
@@ -136,8 +154,8 @@ public class ApiController {
                             varValues[i] = result.jsonPath().get(varValues[i].trim()).toString();
                         }
 
-                    } catch (NullPointerException exception) {
-                        exception.printStackTrace();
+                    } catch (Exception exception) {
+//                        exception.printStackTrace();
                         errormsg = "解析json出现问题";
                     }
                 }

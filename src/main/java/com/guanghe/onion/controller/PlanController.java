@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -97,13 +98,16 @@ public class PlanController {
     }
 
     @RequestMapping(value = "/planEditSave", method = RequestMethod.POST)
-    @Transactional
-    public String planedit(Plan plan) {
-
-        planJPA.save(plan);
-        if (SchedulerTask2.plantime != null)
-            SchedulerTask2.plantime.put(plan.getId(), plan.getPlanTime());  //重置轮询任务里的计划执行时间段
-        return "redirect:/planlist";
+    public String planEditSave(Plan plan, HttpSession session) {
+        if (plan.getCreater().trim().equals(session.getAttribute("user"))) {
+            planJPA.save(plan);
+            if (SchedulerTask2.plantime != null) {
+                SchedulerTask2.plantime.put(plan.getId(), plan.getPlanTime());  //重置轮询任务里的计划执行时间段
+            }
+            return "redirect:/planlist";
+        } else {
+            return "forward:/myerror?msg=没有权限！只能修改自己的数据";
+        }
     }
 
     @RequestMapping(value = "/apiselect2")
@@ -121,24 +125,25 @@ public class PlanController {
     }
 
 
-    @RequestMapping(value = "/apiselect", method = RequestMethod.GET)
-    public String apiselect(Model model) {
+    @RequestMapping(value = "/newPlan1", method = RequestMethod.GET)
+    public String newPlan_apiSelect(Model model) {
         List<Api> list = apiJPA.findAll();
         model.addAttribute("apilist", list);
         return "api_select";
     }
 
-    @RequestMapping(value = "/apiselect2", method = RequestMethod.POST)
-    public String apiselect2(Model model, @RequestParam(value = "api_id", required = false) String apiId) {
-        System.out.println("apiId*******************:" + apiId);
-        model.addAttribute("api_id", apiId);
+    @RequestMapping(value = "/newPlan2", method = RequestMethod.POST)
+    public String toAddPlaninfoPage(Model model, @RequestParam(value = "api_id", required = false) String selectedApiIds) {
+//        System.out.println("apiId*******************:" + apiId);
+        model.addAttribute("api_id", selectedApiIds);
 
-        return "api_select2";
+        return "planinfo_new";
     }
 
 
     @RequestMapping(value = "/planedit")
     public String edit(Model model, Long id) {
+
         Plan plan = planJPA.findOne(id);
         model.addAttribute("plan", plan);
         return "plan_edit";
@@ -146,7 +151,7 @@ public class PlanController {
 
     @RequestMapping(value = "/planedit2",method = RequestMethod.POST)
     public String edit2(Model model,@RequestParam(value="api_id", required=false) String apiId,long planId){
-        System.out.println("apiId*******************:"+apiId);
+//        System.out.println("apiId*******************:"+apiId);
         model.addAttribute("api_id",apiId);
         Plan plan=planJPA.findOne(planId);
         model.addAttribute("plan",plan);
@@ -157,13 +162,19 @@ public class PlanController {
 
 
     @RequestMapping(value = "/plandelete",method = RequestMethod.GET)
-    public String delete(Long id)
+    public String delete(Long id, HttpSession session)
     {
-        planJPA.delete(id);
-        planApisOrderJPA.deleteByPlanId(id);
-        if (SchedulerTask2.plantime != null)
-            SchedulerTask2.plantime.remove(id);
-        return "redirect:/planlist";
+        Plan plan = planJPA.findOne(id);
+        if (plan.getCreater().trim().equals(session.getAttribute("user"))) {
+            planJPA.delete(id);
+            planApisOrderJPA.deleteByPlanId(id);
+            if (SchedulerTask2.plantime != null) {
+                SchedulerTask2.plantime.remove(id);
+            }
+            return "redirect:/planlist";
+        } else {
+            return "forward:/myerror?msg=没有权限！只能修改自己的数据";
+        }
     }
 
     @RequestMapping(value = "/planApiSort")
@@ -177,7 +188,7 @@ public class PlanController {
 
     @RequestMapping(value = "/reorderPlanApis",method = RequestMethod.POST)
     public String reorderPlanApis(Model model, @RequestParam(value = "api_id") String apiIds, long planId) {
-        System.out.println("apiId*******************:" + apiIds);
+//        System.out.println("apiId*******************:" + apiIds);
         Plan plan = planJPA.getOne(planId);
         plan.setApiIds(apiIds);
         planJPA.save(plan);

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>error page</title>
+    <link href="css/style.css" media="all" rel="stylesheet" type="text/css"/>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <script>
+        function back() {
+            history.go(-1);
+        }
+    </script>
+</head>
+<body>
+<!-- contact-form -->
+<div class="message warning">
+    <div class="inset">
+        <div class="login-head">
+            <h1> 出错啦！</h1>
+            <div class="alert-close"></div>
+        </div>
+        <form>
+
+            <div class="clear"></div>
+            <div>
+                <h2 th:text="${msg}"></h2><br/><br/>
+                <a onclick="back()" style="cursor: pointer"> <<< 返 回 </a>
+                <div class="clear"></div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<!--- footer --->
+<div class="footer">
+    <p>Copyright Onion</p>
+</div>
+
+</body>
+</html>

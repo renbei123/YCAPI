@@ -1,15 +1,11 @@
 package com.guanghe.onion.entity;
 
 
-import com.guanghe.onion.base.BaseEntity;
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Entity
 @Getter
@@ -45,9 +41,9 @@ public class Plan
     @Column(name = "dingding", length = 5000)
     private String dingding;
 
-    @Column(name = "creater")
+    //取邮件@的前缀名字，避免中文重名
+    @Column(name = "creater", length = 20)
     private String creater;
-
 
     @Column(name = "status")
     private Boolean status=true;   // true: 开始运行监控   false：结束监控

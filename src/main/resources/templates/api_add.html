@@ -1,500 +1,18 @@
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | General Form Elements</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="../static/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../static/bower_components/font-awesome/css/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="../static/bower_components/Ionicons/css/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../static/dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="../static/dist/css/skins/_all-skins.min.css">
+    <!-- json渲染插件 -->
+    <link href="jsonEdit/jsoneditor.min.css" rel="stylesheet" type="text/css">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <!-- json渲染插件 -->
+    <div th:replace="common/common_head :: common_resource"></div>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <header class="main-header">
-        <!-- Logo -->
-        <a href="test/index2.html" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>A</b>LT</span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Admin</b>LTE</span>
-        </a>
-        <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-static-top">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
+    <div th:replace="common/main_header :: main_header"></div>
 
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <!-- Messages: style can be found in dropdown.less-->
-                    <li class="dropdown messages-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-envelope-o"></i>
-                            <span class="label label-success">4</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">You have 4 messages</li>
-                            <li>
-                                <!-- inner menu: contains the actual data -->
-                                <ul class="menu">
-                                    <li><!-- start message -->
-                                        <a href="#">
-                                            <div class="pull-left">
-                                                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                                            </div>
-                                            <h4>
-                                                Support Team
-                                                <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                            </h4>
-                                            <p>Why not buy a new awesome theme?</p>
-                                        </a>
-                                    </li>
-                                    <!-- end message -->
-                                    <li>
-                                        <a href="#">
-                                            <div class="pull-left">
-                                                <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
-                                            </div>
-                                            <h4>
-                                                AdminLTE Design Team
-                                                <small><i class="fa fa-clock-o"></i> 2 hours</small>
-                                            </h4>
-                                            <p>Why not buy a new awesome theme?</p>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="pull-left">
-                                                <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
-                                            </div>
-                                            <h4>
-                                                Developers
-                                                <small><i class="fa fa-clock-o"></i> Today</small>
-                                            </h4>
-                                            <p>Why not buy a new awesome theme?</p>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="pull-left">
-                                                <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
-                                            </div>
-                                            <h4>
-                                                Sales Department
-                                                <small><i class="fa fa-clock-o"></i> Yesterday</small>
-                                            </h4>
-                                            <p>Why not buy a new awesome theme?</p>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="pull-left">
-                                                <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
-                                            </div>
-                                            <h4>
-                                                Reviewers
-                                                <small><i class="fa fa-clock-o"></i> 2 days</small>
-                                            </h4>
-                                            <p>Why not buy a new awesome theme?</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="footer"><a href="#">See All Messages</a></li>
-                        </ul>
-                    </li>
-                    <!-- Notifications: style can be found in dropdown.less -->
-                    <li class="dropdown notifications-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">10</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">You have 10 notifications</li>
-                            <li>
-                                <!-- inner menu: contains the actual data -->
-                                <ul class="menu">
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                                            page and may cause design problems
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-users text-red"></i> 5 new members joined
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-user text-red"></i> You changed your username
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="footer"><a href="#">View all</a></li>
-                        </ul>
-                    </li>
-                    <!-- Tasks: style can be found in dropdown.less -->
-                    <li class="dropdown tasks-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-flag-o"></i>
-                            <span class="label label-danger">9</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">You have 9 tasks</li>
-                            <li>
-                                <!-- inner menu: contains the actual data -->
-                                <ul class="menu">
-                                    <li><!-- Task item -->
-                                        <a href="#">
-                                            <h3>
-                                                Design some buttons
-                                                <small class="pull-right">20%</small>
-                                            </h3>
-                                            <div class="progress xs">
-                                                <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                    <span class="sr-only">20% Complete</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <!-- end task item -->
-                                    <li><!-- Task item -->
-                                        <a href="#">
-                                            <h3>
-                                                Create a nice theme
-                                                <small class="pull-right">40%</small>
-                                            </h3>
-                                            <div class="progress xs">
-                                                <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                    <span class="sr-only">40% Complete</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <!-- end task item -->
-                                    <li><!-- Task item -->
-                                        <a href="#">
-                                            <h3>
-                                                Some task I need to do
-                                                <small class="pull-right">60%</small>
-                                            </h3>
-                                            <div class="progress xs">
-                                                <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                    <span class="sr-only">60% Complete</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <!-- end task item -->
-                                    <li><!-- Task item -->
-                                        <a href="#">
-                                            <h3>
-                                                Make beautiful transitions
-                                                <small class="pull-right">80%</small>
-                                            </h3>
-                                            <div class="progress xs">
-                                                <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                    <span class="sr-only">80% Complete</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <!-- end task item -->
-                                </ul>
-                            </li>
-                            <li class="footer">
-                                <a href="#">View all tasks</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- User Account: style can be found in dropdown.less -->
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">Alexander Pierce</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!-- User image -->
-                            <li class="user-header">
-                                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                                <p>
-                                    Alexander Pierce - Web Developer
-                                    <small>Member since Nov. 2012</small>
-                                </p>
-                            </li>
-                            <!-- Menu Body -->
-                            <li class="user-body">
-                                <div class="row">
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Followers</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Sales</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Friends</a>
-                                    </div>
-                                </div>
-                                <!-- /.row -->
-                            </li>
-                            <!-- Menu Footer-->
-                            <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- Control Sidebar Toggle Button -->
-                    <li>
-                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-            <!-- Sidebar user panel -->
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                </div>
-                <div class="pull-left info">
-                    <p>Alexander Pierce</p>
-                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                </div>
-            </div>
-            <!-- search form -->
-            <form action="#" method="get" class="sidebar-form">
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Search...">
-                    <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                </button>
-              </span>
-                </div>
-            </form>
-            <!-- /.search form -->
-            <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu" data-widget="tree">
-                <li class="header">MAIN NAVIGATION</li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-                        <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-                        <li><a href="test/index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-files-o"></i>
-                        <span>Layout Options</span>
-                        <span class="pull-right-container">
-              <span class="label label-primary pull-right">4</span>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="../layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
-                        <li><a href="../layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
-                        <li><a href="../layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
-                        <li><a href="../layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="../widgets.html">
-                        <i class="fa fa-th"></i> <span>Widgets</span>
-                        <span class="pull-right-container">
-              <small class="label pull-right bg-green">new</small>
-            </span>
-                    </a>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-pie-chart"></i>
-                        <span>Charts</span>
-                        <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="../charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
-                        <li><a href="../charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
-                        <li><a href="../charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
-                        <li><a href="../charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-laptop"></i>
-                        <span>UI Elements</span>
-                        <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="../UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
-                        <li><a href="../UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
-                        <li><a href="../UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
-                        <li><a href="../UI/sliders.html"><i class="fa fa-circle-o"></i> Sliders</a></li>
-                        <li><a href="../UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
-                        <li><a href="../UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
-                    </ul>
-                </li>
-                <li class="treeview active">
-                    <a href="#">
-                        <i class="fa fa-edit"></i> <span>Forms</span>
-                        <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="active"><a href="general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
-                        <li><a href="advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
-                        <li><a href="editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-table"></i> <span>Tables</span>
-                        <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="../tables/simple.html"><i class="fa fa-circle-o"></i> Simple tables</a></li>
-                        <li><a href="../tables/data.html"><i class="fa fa-circle-o"></i> Data tables</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="../calendar.html">
-                        <i class="fa fa-calendar"></i> <span>Calendar</span>
-                        <span class="pull-right-container">
-              <small class="label pull-right bg-red">3</small>
-              <small class="label pull-right bg-blue">17</small>
-            </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="../mailbox/mailbox.html">
-                        <i class="fa fa-envelope"></i> <span>Mailbox</span>
-                        <span class="pull-right-container">
-              <small class="label pull-right bg-yellow">12</small>
-              <small class="label pull-right bg-green">16</small>
-              <small class="label pull-right bg-red">5</small>
-            </span>
-                    </a>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-folder"></i> <span>Examples</span>
-                        <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="../examples/invoice.html"><i class="fa fa-circle-o"></i> Invoice</a></li>
-                        <li><a href="../examples/profile.html"><i class="fa fa-circle-o"></i> Profile</a></li>
-                        <li><a href="../examples/login.html"><i class="fa fa-circle-o"></i> Login</a></li>
-                        <li><a href="../examples/register.html"><i class="fa fa-circle-o"></i> Register</a></li>
-                        <li><a href="../examples/lockscreen.html"><i class="fa fa-circle-o"></i> Lockscreen</a></li>
-                        <li><a href="../examples/404.html"><i class="fa fa-circle-o"></i> 404 Error</a></li>
-                        <li><a href="../examples/500.html"><i class="fa fa-circle-o"></i> 500 Error</a></li>
-                        <li><a href="../examples/blank.html"><i class="fa fa-circle-o"></i> Blank Page</a></li>
-                        <li><a href="../examples/pace.html"><i class="fa fa-circle-o"></i> Pace Page</a></li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-share"></i> <span>Multilevel</span>
-                        <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
-                        <li class="treeview">
-                            <a href="#"><i class="fa fa-circle-o"></i> Level One
-                                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i> Level Two
-                                        <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                                        <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
-                    </ul>
-                </li>
-                <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
-                <li class="header">LABELS</li>
-                <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
-                <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
-                <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
-            </ul>
-        </section>
-        <!-- /.sidebar -->
-    </aside>
+    <div th:replace="common/main_sidebar :: main_sidebar"></div>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -514,7 +32,7 @@
         <!-- Main content -->
         <section class="content">
 
-            <div style="width:96%;margin:0 auto;" >
+            <div style="width:100%;margin:0 auto;">
                 <!-- Horizontal Form -->
                 <div class="box box-info">
                     <div class="box-header with-border">
@@ -522,19 +40,23 @@
 
                         <div class="box-tools pull-right">
                             <button id="colaped" type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            <!--<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>-->
+                            <button class="btn btn-box-tool" data-widget="remove" type="button"><i
+                                    class="fa fa-remove"></i></button>
                         </div>
                     </div>
 
                     <!-- class="box-body"   -->
                     <div class="box-body">
-                        <form class="form-horizontal"   th:action="@{/apisave}"   method="post" >
+                        <form class="form-horizontal" id="apiform" method="post"
+                              th:action="@{/apiAdd}">
+
+                            <input id="creater" name="creater" th:value="${session.user}" type="hidden"/>
 
                             <!-- 接口名称  -->
                             <div class="form-group">
                                 <label for="name" class="col-sm-2 control-label">接口名称(name)</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="接口的名称定义">
+                                    <input class="form-control" id="name" name="name" placeholder="接口的名称定义" type="text">
                                 </div>
                             </div>
                             <!-- 请求方法   disabled="disabled"   -->
@@ -542,63 +64,174 @@
                                 <label for="method" class="col-sm-2 control-label">请求方法(method)</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" name="method" style="width:20%;" id="method" >
-                                        <option   value="GET">GET</option>
-                                        <option   value="POST">POST</option>
-                                        <option   value="PUT">PUT</option>
-                                        <option   value="DELETE">DELETE</option>
-                                        <option   value="PATCH">PATCH</option>
-                                        <option   value="HEAD">HEAD</option>
-                                        <option   value="OPTIONS">OPTIONS</option>
+                                        <option value="GET">GET</option>
+                                        <option value="POST">POST</option>
+                                        <option value="PUT">PUT</option>
+                                        <option value="DELETE">DELETE</option>
+                                        <option value="PATCH">PATCH</option>
+                                        <option value="HEAD">HEAD</option>
+                                        <option value="OPTIONS">OPTIONS</option>
                                     </select>
                                 </div>
                             </div>
                             <!-- 请求方法 -->
                             <!-- path   -->
                             <div class="form-group">
-                                <label for="path" class="col-sm-2 control-label">路径(path)</label>
+                                <label class="col-sm-2 control-label" for="path">路径(path) <span
+                                        style="color:red">*</span></label>
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="path" name="path" placeholder="不带域名的路径（host在环境变量）">
+                                    <input class="form-control" id="path" name="path" type="text">
                                 </div>
+
                             </div>
 
 
                             <div class="form-group">
                                 <label for="headers" class="col-sm-2 control-label">请求头(headers)</label>
                                 <div class="col-sm-10">
-                                    <textarea  class="form-control" rows="3"  id="headers" name="headers"></textarea>
+                                    <textarea class="form-control" id="headers" name="headers" rows="3"></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="body" class="col-sm-2 control-label">请求体(body)</label>
                                 <div class="col-sm-10">
-                                    <textarea  class="form-control" rows="3"  id="body" name="body" ></textarea>
+                                    <textarea class="form-control" id="body" name="body" rows="7"></textarea>
                                 </div>
                             </div>
 
 
                             <div class="form-group">
-                                <label for="remarks" class="col-sm-2 control-label">remarks</label>
+                                <label class="col-sm-2 control-label" for="label">标签(label)</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="remarks" name="remarks" placeholder="">
+                                    <input class="form-control" id="label" name="label" type="text">
                                 </div>
                             </div>
-
 
                             <div class="form-group">
-                                <label for="label" class="col-sm-2 control-label">label</label>
+                                <label class="col-sm-2 control-label" for="remarks">备注(remarks)</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="label"  name="label" placeholder="">
+                                    <input class="form-control" id="remarks" name="remarks" type="text">
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="sta">状态</label>
+                                <div class="col-sm-10">
+                                    <table id="sta" width="60%">
+                                        <tr>
+                                            <td width="30%"><input name="status" type="radio" value="1">使用中</td>
+                                            <td><input name="status" type="radio" value="0">废弃</td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><font color="#8a2be2">以下设置断言</font></label>
+                                <div class="col-sm-10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="assert_Code">返回码</label>
+                                <div class="col-sm-10">
+                                    <table border="0" width="20%">
+                                        <tr>
+                                            <td>
+                                                <input class="form-control" id="assert_Code" name="assert_Code"
+                                                       type="text">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">包含字符 </label>
+                                <div class="col-sm-10">
+                                    <table align="left" aria-rowspan="3" border="0" width="70%">
+                                        <tr>
+                                            <td width="55%">
+                                                <input class="form-control" name="assert_hasString" type="text">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input onclick="addRow(this)" type="button" value=" + ">
+                                            </td>
+                                            <td width="5%">
+                                                <input onclick="delRow(this)" type="button" value=" - ">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">json匹配</label>
+                                <div class="col-sm-10">
+                                    <table align="left" border="0" width="70%">
+                                        <tr>
+                                            <td width="25%">
+                                                <input class="form-control" name="assert_json_path" type="text">
+                                            </td>
+                                            <td align="center" width="5%"> =</td>
+                                            <td width="25%">
+                                                <input class="form-control" name="assert_json_value" type="text">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input onclick="addRow(this)" type="button" value=" + ">
+                                            </td>
+
+                                            <td width="5%">
+                                                <input onclick="delRow(this)" type="button" value=" - ">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><font
+                                        color="#8a2be2">以下设置集合变量:name=json表达式的值</font></label>
+                                <div class="col-sm-10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">设置变量: </label>
+                                <div class="col-sm-10">
+                                    <table align="left" border="0" width="70%">
+                                        <tr>
+                                            <td width="25%">
+                                                <input class="form-control" name="PlanVar_name" type="text">
+                                            </td>
+                                            <td align="center" width="5%"> =</td>
+                                            <td width="25%">
+                                                <input class="form-control" name="PlanVar_jsonpath" type="text">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input onclick="addRow(this)" type="button" value=" + ">
+                                            </td>
+
+                                            <td width="5%">
+                                                <input onclick="delRow(this)" type="button" value=" - ">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
                             <!-- botton 按钮 -->
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-default" onclick="">返回</button>
-                                &nbsp; &nbsp; &nbsp;
+                                <button class="btn btn-default" onclick="history.go(-1);" type="button">返回</button>
+                                &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
                                 <input type="reset" value="Reset" class="btn btn-info" />
+                                &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
+                                <input class="btn  btn-success" id="debugSend" type="button" value="调试"/>
                                 &nbsp; &nbsp; &nbsp;
-                                <button type="submit" class="btn btn-info pull-right">保存</button>
+                                <button class="btn btn-info pull-right" id="savebutton" type="submit">保存</button>
                             </div>
 
                         </form>
@@ -606,11 +239,107 @@
 
 
                 </div>
+                <!-- /.box -->
 
+
+                <!-- /.box -->
             </div>
             <!--/.col (right) -->
             <!-- /.row -->
         </section>
+        <!-- Main content -->
+        <section class="content">
+            <div style="width:100%;margin:0 auto;">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#res_body">Body</a></li>
+                                <li><a data-toggle="tab" href="#res_header">Header</a></li>
+                                <li><a data-toggle="tab" href="#glyphicons">调试变量</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <!-- body -->
+                                <div class="tab-pane active" id="res_body">
+
+                                    <div class="tab-content">
+                                        <div class="box-body">
+                                          <pre id="response" style="font-weight: 600;">
+
+                                             </pre>
+                                            <span id="loading" style="font-weight: 600;">
+
+                                             </span>
+                                        </div>
+
+                                    </div>
+                                    <!-- /.box-body -->
+
+                                </div>
+                                <!-- /header -->
+
+                                <div class="tab-pane active" id="res_header">
+
+                                    <div class="tab-content">
+                                        <div class="box-body">
+                                          <pre id="response_headers" style="font-weight: 600;">
+
+                                             </pre>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <!-- /header -->
+
+                                <!-- 调试变量-->
+                                <div class="tab-pane" id="glyphicons">
+
+                                    <div class="box-body">
+                                        <form class="form-horizontal" method="">
+                                            <table border="0" class="table table-bordered table-striped"
+                                                   style="table-layout:fixed;" width="100%">
+                                                <thead>
+                                                <tr>
+                                                    <td align="center" colspan="2" id="errormsg"></td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" width="40">name</td>
+                                                    <td align="center" width="50%">value</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="tbody1">
+                                                <!--<tr>-->
+                                                <!--<td width="5%"></td>-->
+                                                <!--<td width="5%"></td>-->
+
+                                                <!--<td name="varname"></td>-->
+                                                <!--<td name="varvalue">-->
+                                                <!--</td>-->
+                                                <!--</tr>-->
+
+                                                </tbody>
+                                            </table>
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /#ion-icons -->
+
+                            </div>
+                            <!-- /.tab-content -->
+                        </div>
+                        <!-- /.nav-tabs-custom -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -624,6 +353,7 @@
 
 <!-- jQuery 3 -->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
 <!-- Bootstrap 3.3.7 -->
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- Select2 -->
@@ -649,7 +379,191 @@
 <script src="bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
+<script src="jsonEdit/jsoneditor.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var storage = window.localStorage;
+    var editor;
 
+    // json渲染 -- start
+    var container = document.getElementById("response");
+    var options = {};
+    editor = new JSONEditor(container, options);
+    $("#response").css({display: 'none'});
+    // json渲染 --end
+
+    $(document).ready(function () {    //通用方法去输入框前后空格
+
+        // other ...
+        $("form").on("change", function () {
+            $("form input[type=text]").each(function () {
+                this.value = $.trim(this.value);
+            });
+        })
+    });
+
+
+    function addRow(currentButton) {    //alert(currentButton.value);
+
+        var row1 = $(currentButton).parent().parent();
+        var row2 = row1.clone();
+        $(row2).html(row1.html());
+        //$(row2.children()[0]).html(row1.children()[0].html());
+
+        row2.insertAfter(row1);
+    }
+
+    function delRow(obj) {
+        //移除
+        $(obj).parent().parent().remove();
+        //重新排序，如果删除的不是最后一行，不重新排序就不能看了~
+        // $("#grid tr").each(function(index){
+        //     if(index != 0){
+        //
+        //         $(this).children('td').eq(0).text(index);
+        //     }
+        // });
+
+    }
+
+    function replaceVar(value) {
+        var patten = /\{{2}\w+\}{2}/g;
+        if (patten.test(value)) {
+            var vars = value.match(patten);
+            for (i = 0; i < vars.length; i++) {
+                var key = vars[i].replace("{{", "").replace("}}", "");
+                if (storage.getItem(key) == null) {
+                    alert("找不到" + key);
+
+                } else {
+                    value = value.replace(vars[i], storage.getItem(key));
+                }
+            }
+
+            return value;
+        } else
+            return value;
+    }
+
+
+    //按钮单击时执行   debug
+    $("#debugSend").click(function () {
+
+
+        var url = replaceVar($("#path").val());
+        var headers = replaceVar($.trim($("#headers").val()));
+        var body = replaceVar($.trim($("#body").val()));
+        var method = replaceVar($("#method").val());
+        var para = {"url": url, "headers": headers, "body": body, "method": method};
+
+
+        var var_names = [];
+        var var_values = [];
+        $("input[name='PlanVar_name']").each(function (index) {
+            if (this.value) { // "",null,undefined,NaN
+                var_names[index] = this.value;
+            }
+        });
+        $("input[name='PlanVar_jsonpath']").each(function (index) {
+            if (this.value) { // "",null,undefined,NaN
+                var_values[index] = this.value;
+            }
+        });
+        para.varNames = var_names.toString();
+        para.varValues = var_values.toString();
+        // console.info("var:",para)
+
+        $.ajax({
+            url: "/ajaxAPI",
+            cache: false,
+            timeout: 9000000,
+            // contentType: "application/json;charset=UTF-8",
+            data: para,
+            // data : JSON.stringify(para),
+            type: "POST",
+            // dataType:"json",
+            beforeSend: LoadFunction, //加载执行方法
+            error: erryFunction,  //错误执行方法
+            success: succFunction //成功执行方法
+            // complete: completeFunction
+
+        });
+
+    });
+
+    function LoadFunction() {
+        $("#response").css({display: 'none'});
+
+        $("#loading").css({display: 'block'}).text('加载中...');
+
+    }
+
+    function succFunction(results, status, xhr) {
+        // console.info(results);
+        // console.log(xhr.getAllResponseHeaders());
+        // var wpoInfo = {
+        //     // 服务器端时间
+        //     "Date" : xhr.getResponseHeader('Date'),
+        //     // 如果开启了gzip，会返回这个东西
+        //     "contentEncoding" : xhr.getResponseHeader('Content-Encoding'),
+        //     // keep-alive ？ close？
+        //     "connection" : xhr.getResponseHeader('Connection'),
+        //     // 响应长度
+        //     "contentLength" : xhr.getResponseHeader('Content-Length'),
+        //     // 服务器类型，apache？lighttpd？
+        //     "Server" : xhr.getResponseHeader('Server'),
+        //     "vary" : xhr.getResponseHeader('Vary'),
+        //     "transferEncoding" : xhr.getResponseHeader('Transfer-Encoding'),
+        //     // text/html ? text/xml?
+        //     "Content-Type" : xhr.getResponseHeader('Content-Type'),
+        //     "cacheControl" : xhr.getResponseHeader('Cache-Control'),
+        //     // 生命周期？
+        //     "exprires" : xhr.getResponseHeader('Exprires'),
+        //     "lastModified" : xhr.getResponseHeader('Last-Modified')
+        // };
+        $("#response").css({display: 'block'});
+        $("#loading").css({display: 'none'});
+
+        // console.info(results.varNames);
+
+        editor.set(JSON.parse(results.body));
+
+        $("#response_headers").text(results.header);
+
+        //下面是显示变量
+        $("#tbody1").html('');
+        $("#errormsg").html('');
+        if (results.errormsg)
+            $("#errormsg").html('<font color="red" >解析出现错误</font>');
+        else {
+            for (x in results.varNames) {
+                // console.log("xhahahahahahh:",results.varNames[x])
+
+                var tr_html = " <tr>\n" +
+                    "<td style=\"word-wrap:break-word;\"  width=\"40\">varname</td>\n" +
+                    "<td style=\"word-wrap:break-word;\"  width=\"50\">varvalue\n" +
+                    "</td>\n" +
+                    "</tr>";
+
+                tr_html = tr_html.replace('varname', results.varNames[x]).replace('varvalue', results.varValues[x]);
+
+                $('#tbody1').append(tr_html);
+            }
+        }
+
+
+    }
+
+    function erryFunction() {
+        alert("调用接口时发生错误");
+    }
+
+    function completeFunction(xhr, data) {
+
+    }
+
+
+</script>
 
 </body>
 </html>

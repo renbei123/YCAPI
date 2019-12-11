@@ -58,17 +58,17 @@
                                 <!--  tbody 真实的接口数据 -->
                                 <tbody>
                                 <tr  th:each=" myplans:${planlist}" >
-                                    <th th:text="${myplans[0]}" >1</th>
-                                    <td href="details.html" th:text="${myplans[1]}" >name</td>
-                                    <td th:text="${myplans[2]}">get</td>
+                                    <th th:text="${myplans[0]}">id</th>
+                                    <td href="details.html" th:text="${myplans[1]}">计划名称</td>
+                                    <td th:text="${myplans[2]}">执行间隔</td>
                                     <!--<td th:text="${myplans[3]}">/ding</td>-->
-                                    <td th:text="${myplans[4]}">备注</td>
-                                    <td th:text="${myplans[5]}">创建人</td>
+                                    <td th:text="${myplans[4]}">创建人</td>
+                                    <td th:text="${myplans[5]}">备注</td>
                                     <td th:text="${myplans[6]}==true?'进行中':'已停止'">状态</td>
                                     <td><a th:href="@{/planedit(id=${myplans[0]})}">edit</a> &nbsp;&nbsp;
                                         <a th:href="@{/planApiSort(id=${myplans[0]})}">sort</a>&nbsp;&nbsp;
                                         <!--<a th:href="@{/plandelete(id=${myplans[0]})}">delete</a>-->
-                                        <a th:onclick="|delplan(${myplans[0]})|">delete</a>
+                                        <a href="#" th:onclick="|delplan(${myplans[0]})|">delete</a>
                                     </td>
 
 
@@ -126,7 +126,7 @@
     });
 
     $('#newplan').click(function () {
-        location.href="/apiselect";
+        location.href = "/newPlan1";
     });
 
     function delplan(id) {

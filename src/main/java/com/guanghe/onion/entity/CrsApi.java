@@ -2,9 +2,6 @@ package com.guanghe.onion.entity;
 
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -44,6 +41,10 @@ public class CrsApi
 
     @Column(name = "remarks")
     private String remarks;
+
+    //取邮件@的前缀名字，避免中文重名
+    @Column(name = "creater", length = 20)
+    private String creater;
 
     @Column(name = "assert_Code")
     private Integer assert_Code;

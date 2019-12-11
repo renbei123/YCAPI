@@ -59,7 +59,7 @@
           <div class="col-xs-12">
             <div class="row">
               <div class="col-xs-12">
-                <form id="mytable" name="mytable" action="/apiselect2" method="post">
+                  <form action="/newPlan2" id="mytable" method="post" name="mytable">
                 <div class="table-header">
 
                  <table  width="100%">
@@ -230,7 +230,7 @@
                     .DataTable( {
                       bAutoWidth: true,
                       paging: false,
-                      scrollY: 800,
+                        scrollY: 1200,
                       scrollX: 600,
                       ordering: true,
                        autoFill: true,
@@ -354,7 +354,7 @@
     //tooltip placement on right or left
     function tooltip_placement(context, source) {
       var $source = $(source);
-      var $parent = $source.closest('table')
+        var $parent = $source.closest('table');
       var off1 = $parent.offset();
       var w1 = $parent.width();
 

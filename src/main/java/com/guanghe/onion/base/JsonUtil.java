@@ -2,11 +2,9 @@ package com.guanghe.onion.base;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.guanghe.onion.controller.UploadController;
 import com.guanghe.onion.entity.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,7 +28,7 @@ public class JsonUtil {
 
 
     // 解析json大对象，取出里面的所有Request
-    public static void toApiList(List<JSONObject> Jsonlist, List<Api> list) {
+    public static void toApiList(List<JSONObject> Jsonlist, List<Api> list, String creater) {
         for (JSONObject o : Jsonlist) {
 
             JSONObject request = o.getJSONObject("request");
@@ -59,6 +57,8 @@ public class JsonUtil {
 //                path = path.replace("https://", "");
 //                path = path.substring(path.indexOf("/"));
 //            }
+
+            api.setCreater(creater);
 
             api.setPath(path);
             api.setMethod(request.getString("method"));

@@ -4,21 +4,14 @@ package com.guanghe.onion.controller;
 import com.guanghe.onion.dao.UserJPA;
 import com.guanghe.onion.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 
 
-
-@RestController
-@RequestMapping(value = "/user")
+//@RestController
+//@RequestMapping(value = "/user")
 public class LoginController {
 
     @Autowired
@@ -30,8 +23,8 @@ public class LoginController {
         //登录成功
         boolean flag = true;
         String result = "登录成功";
-        String name=request.getParameter("name").toString();
-        String pwd=request.getParameter("pwd").toString();
+        String name = request.getParameter("name");
+        String pwd = request.getParameter("pwd");
 
         UserEntity userEntity = userJPA.findByNameAndPwd(name,pwd);
 

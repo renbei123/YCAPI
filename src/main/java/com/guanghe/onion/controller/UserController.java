@@ -3,24 +3,19 @@ package com.guanghe.onion.controller;
 /**
  * Created by renjie on 2018/12/5.
  */
-import com.guanghe.onion.dao.UserJPA;
 
+import com.guanghe.onion.dao.UserJPA;
 import com.guanghe.onion.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.thymeleaf.exceptions.TemplateInputException;
 
 import java.util.List;
 
-@RestController
+//@RestController
 //@CacheConfig(cacheNames = "user")
 public class UserController {
 
