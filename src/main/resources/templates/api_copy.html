@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- json渲染插件 -->
+    <link href="jsonEdit/jsoneditor.min.css" rel="stylesheet" type="text/css">
+
+    <!-- json渲染插件 -->
+    <div th:replace="common/common_head :: common_resource"></div>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="common/main_header :: main_header"></div>
+
+    <div th:replace="common/main_sidebar :: main_sidebar"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Api copy page
+                <small>Preview</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="#">Forms</a></li>
+                <li class="active">General Elements</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div style="width:96%;margin:0 auto;">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">基本设置</h3>
+
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse" id="colaped" type="button"><i
+                                    class="fa fa-minus"></i></button>
+                            <button class="btn btn-box-tool" data-widget="remove" type="button"><i
+                                    class="fa fa-remove"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- class="box-body"   -->
+                    <div class="box-body">
+                        <form class="form-horizontal" id="apiform" method="post" th:action="@{/apiAdd}"
+                              th:object="${api}">
+
+                            <input id="creater" name="creater" th:value="${session.user}" type="hidden"/>
+
+                            <!-- 接口名称  -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="name">接口名称(name)</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="name" name="name" placeholder="接口的名称定义"
+                                           th:value="*{name}" type="text">
+                                </div>
+                            </div>
+                            <!-- 请求方法   disabled="disabled"   -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="method">请求方法(method)</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" id="method" name="method" style="width:20%;"
+                                            th:field="*{method}">
+                                        <option th:selected="(*{method}=='GET')" value="GET">GET</option>
+                                        <option th:selected="(*{method}=='POST')" value="POST">POST</option>
+                                        <option th:selected="(*{method}=='PUT')" value="PUT">PUT</option>
+                                        <option th:selected="(*{method}=='DELETE')" value="DELETE">DELETE</option>
+                                        <option th:selected="(*{method}=='PATCH')" value="PATCH">PATCH</option>
+                                        <option th:selected="(*{method}=='HEAD')" value="HEAD">HEAD</option>
+                                        <option th:selected="(*{method}=='OPTIONS')" value="OPTIONS">OPTIONS</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 请求方法 -->
+                            <!-- path   -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="path">路径(path)</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="path" name="path" th:value="*{path}" type="text">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="headers">请求头(headers)</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="headers" name="headers" rows="3"
+                                              th:text="*{headers}"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="body">请求体(body)</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="body" name="body" rows="7"
+                                              th:text="*{body}"></textarea>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="label">标签(label)</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="label" name="label" th:value="*{label}" type="text">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="remarks">备注(remarks)</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="remarks" name="remarks" th:value="*{remarks}"
+                                           type="text">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="sta">状态</label>
+                                <div class="col-sm-10">
+                                    <table id="sta" width="60%">
+                                        <tr>
+                                            <td width="30%"><input name="status" th:checked="*{status==true}"
+                                                                   type="radio" value="1">使用中
+                                            </td>
+                                            <td><input name="status" th:checked="*{status==false}" type="radio"
+                                                       value="0">废弃
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><font color="#8a2be2">以下设置断言</font></label>
+                                <div class="col-sm-10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="assert_Code">返回码</label>
+                                <div class="col-sm-10">
+                                    <table border="0" width="20%">
+                                        <tr>
+                                            <td>
+                                                <input class="form-control" id="assert_Code" name="assert_Code"
+                                                       th:value="*{assert_Code}" type="text">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">包含字符 </label>
+                                <div class="col-sm-10">
+                                    <table align="left" aria-rowspan="3" border="0" width="70%">
+                                        <tr th:if="*{assert_hasStringArray==null}">
+                                            <td width="55%">
+                                                <input class="form-control" name="assert_hasString" type="text">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input onclick="addRow(this)" type="button" value=" + ">
+                                            </td>
+                                            <td width="5%">
+                                                <input onclick="delRow(this)" type="button" value=" - ">
+                                            </td>
+                                        </tr>
+
+                                        <tr th:each=" hasStr:*{assert_hasStringArray}"
+                                            th:if="*{assert_hasStringArray!=null}">
+                                            <td width="55%">
+                                                <input class="form-control" name="assert_hasString" th:value="${hasStr}"
+                                                       type="text">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input onclick="addRow(this)" type="button" value=" + ">
+                                            </td>
+                                            <td width="5%">
+                                                <input onclick="delRow(this)" type="button" value=" - ">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">json匹配</label>
+                                <div class="col-sm-10">
+                                    <table align="left" border="0" width="70%">
+                                        <tr th:if="*{assert_json_pathArray==null}">
+                                            <td width="25%">
+                                                <input class="form-control" name="assert_json_path" type="text">
+                                            </td>
+                                            <td align="center" width="5%"> =</td>
+                                            <td width="25%">
+                                                <input class="form-control" name="assert_json_value" type="text">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input onclick="addRow(this)" type="button" value=" + ">
+                                            </td>
+
+                                            <td width="5%">
+                                                <input onclick="delRow(this)" type="button" value=" - ">
+                                            </td>
+                                        </tr>
+
+                                        <tr th:each=" i :${#numbers.sequence(0,assert_json_length)}"
+                                            th:if="*{assert_json_pathArray!=null}">
+                                            <td width="25%">
+                                                <input class="form-control" name="assert_json_path"
+                                                       th:value="${api.assert_json_pathArray[i]==null?'':api.assert_json_pathArray[i].toString().trim()}"
+                                                       type="text">
+                                            </td>
+                                            <td align="center" width="5%"> =</td>
+                                            <td width="25%">
+                                                <input class="form-control" name="assert_json_value"
+                                                       th:value="${api.assert_json_valueArray[i]==null?'':api.assert_json_valueArray[i].toString().trim()}"
+                                                       type="text">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input onclick="addRow(this)" type="button" value=" + ">
+                                            </td>
+                                            <td width="5%">
+                                                <input onclick="delRow(this)" type="button" value=" - ">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><font
+                                        color="#8a2be2">以下设置集合变量:name=json表达式的值</font></label>
+                                <div class="col-sm-10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">设置变量: </label>
+                                <div class="col-sm-10">
+                                    <table align="left" border="0" width="70%">
+                                        <tr th:if="${api.planVar_nameArray==null}">
+                                            <td width="25%">
+                                                <input class="form-control" name="PlanVar_name"
+                                                       onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"
+                                                       type="text">
+                                            </td>
+                                            <td align="center" width="5%"> =</td>
+                                            <td width="25%">
+                                                <input class="form-control" name="PlanVar_jsonpath"
+                                                       onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"
+                                                       type="text">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input onclick="addRow(this)" type="button" value=" + ">
+                                            </td>
+
+                                            <td width="5%">
+                                                <input onclick="delRow(this)" type="button" value=" - ">
+                                            </td>
+                                        </tr>
+
+                                        <tr th:each=" i :${#numbers.sequence(0,plan_var_length)}"
+                                            th:if="${api.planVar_nameArray!=null}">
+                                            <td width="25%">
+                                                <input class="form-control" name="PlanVar_name"
+                                                       onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"
+                                                       th:value="${api.planVar_nameArray[i]==null?'':api.planVar_nameArray[i].toString().trim()}"
+                                                       type="text">
+                                            </td>
+                                            <td align="center" width="5%"> =</td>
+                                            <td width="25%">
+                                                <input class="form-control" name="PlanVar_jsonpath"
+                                                       onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"
+                                                       th:value="${api.getPlanVar_jsonpathArray()[i]==null?'':api.getPlanVar_jsonpathArray()[i].toString().trim()}"
+                                                       type="text">
+                                            </td>
+                                            <td width="5%"></td>
+                                            <td width="5%">
+                                                <input onclick="addRow(this)" type="button" value=" + ">
+                                            </td>
+                                            <td width="5%">
+                                                <input onclick="delRow(this)" type="button" value=" - ">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <!-- botton 按钮 -->
+                            <div class="box-footer">
+                                <button class="btn btn-default" onclick="history.go(-1);" type="button">返回</button>
+                                &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+                                <input class="btn btn-info" type="reset" value="Reset"/>
+                                &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
+                                <input class="btn  btn-success" id="debugSend" type="button" value="调试"/>
+                                &nbsp; &nbsp; &nbsp;
+                                <button class="btn btn-info pull-right" id="" type="submit">保存</button>
+                            </div>
+
+
+                        </form>
+                    </div>
+
+
+                </div>
+                <!-- /.box -->
+
+
+                <!-- /.box -->
+            </div>
+            <!--/.col (right) -->
+            <!-- /.row -->
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div style="width:96%;margin:0 auto;">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#res_body">Body</a></li>
+                                <li><a data-toggle="tab" href="#res_header">Header</a></li>
+                                <li><a data-toggle="tab" href="#res_vars">调试变量</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <!-- body -->
+                                <div class="tab-pane active" id="res_body">
+
+                                    <div class="tab-content">
+                                        <div class="box-body">
+                                          <pre id="response" style="font-weight: 600;">
+
+                                             </pre>
+                                            <span id="loading" style="font-weight: 600;">
+
+                                             </span>
+                                        </div>
+
+                                    </div>
+                                    <!-- /.box-body -->
+
+                                </div>
+                                <!-- /header -->
+
+                                <div class="tab-pane" id="res_header">
+
+                                    <div class="tab-content">
+                                        <div class="box-body">
+                                          <pre id="response_headers" style="font-weight: 600;">
+
+                                             </pre>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <!-- /header -->
+
+                                <!-- 调试变量 -->
+                                <div class="tab-pane" id="res_vars">
+
+                                    <div class="box-body">
+                                        <form class="form-horizontal" method="">
+                                            <table border="0" class="table table-bordered table-striped"
+                                                   style="table-layout:fixed;" width="100%">
+                                                <thead>
+                                                <tr>
+                                                    <td align="center" colspan="2" id="errormsg"></td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" width="40">name</td>
+                                                    <td align="center" width="50%">value</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="var_result">
+                                                <!--<tr>-->
+                                                <!--<td width="5%"></td>-->
+                                                <!--<td width="5%"></td>-->
+
+                                                <!--<td name="varname"></td>-->
+                                                <!--<td name="varvalue">-->
+                                                <!--</td>-->
+                                                <!--</tr>-->
+
+                                                </tbody>
+                                            </table>
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /#ion-icons -->
+
+                            </div>
+                            <!-- /.tab-content -->
+                        </div>
+                        <!-- /.nav-tabs-custom -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <div th:replace="common/common_footer :: common_footer"></div>
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap 3.3.7 -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Select2 -->
+<script src="bower_components/select2/dist/js/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="plugins/input-mask/jquery.inputmask.js"></script>
+<script src="plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap datepicker -->
+<script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- bootstrap color picker -->
+<script src="bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- SlimScroll -->
+<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="plugins/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<script src="jsonEdit/jsoneditor.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var storage = window.localStorage;
+    var editor;
+
+    // json渲染 -- start
+    var container = document.getElementById("response");
+    var options = {};
+    editor = new JSONEditor(container, options);
+    $("#response").css({display: 'none'});
+    // json渲染 --end
+
+    $(document).ready(function () {    //通用方法去输入框前后空格
+
+        // other ...
+        $("form").on("change", function () {
+            $("form input[type=text]").each(function () {
+                this.value = $.trim(this.value);
+            });
+        })
+    });
+
+
+    function addRow(currentButton) {    //alert(currentButton.value);
+
+        var row1 = $(currentButton).parent().parent();
+        var row2 = row1.clone();
+        $(row2).html(row1.html());
+        //$(row2.children()[0]).html(row1.children()[0].html());
+
+        row2.insertAfter(row1);
+    }
+
+    function delRow(obj) {
+        //移除
+        $(obj).parent().parent().remove();
+        //重新排序，如果删除的不是最后一行，不重新排序就不能看了~
+        // $("#grid tr").each(function(index){
+        //     if(index != 0){
+        //
+        //         $(this).children('td').eq(0).text(index);
+        //     }
+        // });
+
+    }
+
+
+    // 点系统变量和我的变量，会自动把当前页面的变量加载到storage中。
+    function replaceVar(value) {
+        var patten = /\{{2}\w+\}{2}/g;
+        if (patten.test(value)) {
+            var vars = value.match(patten);
+            for (i = 0; i < vars.length; i++) {
+                var key = vars[i].replace("{{", "").replace("}}", "");
+                if (storage.getItem(key) == null) {
+                    alert("找不到" + key);
+
+                } else {
+                    value = value.replace(vars[i], storage.getItem(key));
+                }
+            }
+
+            return value;
+        } else
+            return value;
+    }
+
+
+    //按钮单击时执行   debug
+    $("#debugSend").click(function () {
+
+        var url = replaceVar($("#path").val());
+        var headers = replaceVar($.trim($("#headers").val()));
+        var body = replaceVar($.trim($("#body").val()));
+        var method = replaceVar($("#method").val());
+        var para = {"url": url, "headers": headers, "body": body, "method": method};
+
+
+        var var_names = [];
+        var var_values = [];
+        $("input[name='PlanVar_name']").each(function (index) {
+            if (this.value) { // "",null,undefined,NaN
+                var_names[index] = this.value;
+            }
+        });
+        $("input[name='PlanVar_jsonpath']").each(function (index) {
+            if (this.value) { // "",null,undefined,NaN
+                var_values[index] = this.value;
+            }
+        });
+        para.varNames = var_names.toString();
+        para.varValues = var_values.toString();
+        // console.info("var:",para)
+
+        $.ajax({
+            url: "/ajaxAPI",
+            cache: false,
+            timeout: 9000000,
+            // contentType: "application/json;charset=UTF-8",
+            data: para,
+            // data : JSON.stringify(para),
+            type: "POST",
+            // dataType:"json",
+            beforeSend: LoadFunction, //加载执行方法
+            error: erryFunction,  //错误执行方法
+            success: succFunction //成功执行方法
+            // complete: completeFunction
+
+        });
+
+    });
+
+    function LoadFunction() {
+        $("#response").css({display: 'none'});
+
+        $("#loading").css({display: 'block'}).text('加载中...');
+
+    }
+
+    function succFunction(results, status, xhr) {
+        // console.info(results);
+        // console.log(xhr.getAllResponseHeaders());
+        // var wpoInfo = {
+        //     // 服务器端时间
+        //     "Date" : xhr.getResponseHeader('Date'),
+        //     // 如果开启了gzip，会返回这个东西
+        //     "contentEncoding" : xhr.getResponseHeader('Content-Encoding'),
+        //     // keep-alive ？ close？
+        //     "connection" : xhr.getResponseHeader('Connection'),
+        //     // 响应长度
+        //     "contentLength" : xhr.getResponseHeader('Content-Length'),
+        //     // 服务器类型，apache？lighttpd？
+        //     "Server" : xhr.getResponseHeader('Server'),
+        //     "vary" : xhr.getResponseHeader('Vary'),
+        //     "transferEncoding" : xhr.getResponseHeader('Transfer-Encoding'),
+        //     // text/html ? text/xml?
+        //     "Content-Type" : xhr.getResponseHeader('Content-Type'),
+        //     "cacheControl" : xhr.getResponseHeader('Cache-Control'),
+        //     // 生命周期？
+        //     "exprires" : xhr.getResponseHeader('Exprires'),
+        //     "lastModified" : xhr.getResponseHeader('Last-Modified')
+        // };
+
+        $("#loading").css({display: 'none'});
+
+        $("#response").css({display: 'block'});
+        editor.set(JSON.parse(results.body));
+
+        $("#response_headers").text(results.header);
+
+        //下面是显示变量
+        $("#var_result").html('');
+        $("#errormsg").html('');
+
+        console.info('errormsg:', results.errormsg);
+        if (results.errormsg) {
+            $("#errormsg").html('<font color="red" >解析出现错误,请检查输入</font>');
+        } else {
+            for (x in results.varNames) {
+                // console.log("xhahahahahahh:",results.varNames[x])
+                var tr_html = " <tr>\n" +
+                    "<td style=\"word-wrap:break-word;\"  width=\"40\">varname</td>\n" +
+                    "<td style=\"word-wrap:break-word;\"  width=\"50\">varvalue\n" +
+                    "</td>\n" +
+                    "</tr>";
+                tr_html = tr_html.replace('varname', results.varNames[x]).replace('varvalue', results.varValues[x]);
+
+                storage.setItem(results.varNames[x], results.varValues[x]);// put in storage
+
+                $('#var_result').append(tr_html);
+            }
+        }
+
+
+    }
+
+    function erryFunction() {
+
+        alert("调用接口时发生错误");
+    }
+
+    function completeFunction(xhr, data) {
+
+    }
+
+    function Trim(str) {
+        return str.replace(/(^\s*)|(\s*$)/g, "");
+
+
+    }
+
+</script>
+
+</body>
+</html>
