@@ -69,8 +69,9 @@
                     <td th:text="${myapi.remarks}"></td>
                     <td th:text="${myapi.creater}"></td>
                   <td th:text="${myapi.status==true?'使用中':'废弃'}">state</td>
-                  <td><a th:href="@{/apieidt(id=${myapi.id})}">edit</a> &nbsp;&nbsp;
-                      <a style="cursor: pointer" th:onclick="'javascript:del('+${myapi.id}+')'">delete</a></td>
+                    <td><a th:href="@{/apieidt(id=${myapi.id})}">编辑</a> &nbsp;&nbsp;
+                        <a th:href="@{/apicopy(id=${myapi.id})}">复制</a> &nbsp;&nbsp;
+                        <a style="cursor: pointer" th:onclick="'javascript:del('+${myapi.id}+')'">删除</a></td>
                     <!--<a th:href="@{/apidelete(id=${myapi.id})}">delete</a></td>-->
 
 

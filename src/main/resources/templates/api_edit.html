@@ -299,14 +299,13 @@
 
                 </div>
                 <!-- /.box -->
-
-
                 <!-- /.box -->
             </div>
             <!--/.col (right) -->
             <!-- /.row -->
         </section>
-        <!-- Main content -->
+
+        <!-- debug -->
         <section class="content">
             <div style="width:96%;margin:0 auto;">
                 <div class="row">
@@ -318,16 +317,16 @@
                                 <li><a data-toggle="tab" href="#res_vars">调试变量</a></li>
                             </ul>
                             <div class="tab-content">
+
                                 <!-- body -->
                                 <div class="tab-pane active" id="res_body">
 
                                     <div class="tab-content">
                                         <div class="box-body">
+                                            <pre id="res_code" style="font-weight: 600;"></pre>
                                           <pre style="font-weight: 600;" id="response">
-
                                              </pre>
                                             <span style="font-weight: 600;" id="loading">
-
                                              </span>
                                         </div>
 
@@ -338,17 +337,12 @@
                                 <!-- /header -->
 
                                 <div class="tab-pane" id="res_header">
-
                                     <div class="tab-content">
                                         <div class="box-body">
                                           <pre id="response_headers" style="font-weight: 600;">
-
                                              </pre>
-
                                         </div>
-
                                     </div>
-
                                 </div>
                                 <!-- /header -->
 
@@ -449,6 +443,9 @@
     var options = {};
     editor = new JSONEditor(container, options);
     $("#response").css({display: 'none'});
+    $("#res_code").css({display: 'none'});
+    $("#loading").css({display: 'none'});
+
     // json渲染 --end
 
     $(document).ready(function () {    //通用方法去输入框前后空格
@@ -485,6 +482,8 @@
 
     }
 
+
+    // 点系统变量和我的变量，会自动把当前页面的变量加载到storage中。
     function replaceVar(value) {
         var patten = /\{{2}\w+\}{2}/g;
         if (patten.test(value)) {
@@ -551,6 +550,7 @@
 
         function LoadFunction() {
             $("#response").css({display: 'none'});
+            $("#res_code").css({display: 'none'});
 
             $("#loading").css({display: 'block'}).text('加载中...');
 
@@ -583,6 +583,11 @@
             $("#loading").css({display: 'none'});
 
             $("#response").css({display: 'block'});
+            $("#res_code").css({display: 'block'});
+
+            $("#res_code").text('返回状态码: ' + xhr.status);
+
+
             editor.set(JSON.parse(results.body));
 
             $("#response_headers").text(results.header);
@@ -604,6 +609,9 @@
                         "</td>\n" +
                         "</tr>";
                     tr_html = tr_html.replace('varname', results.varNames[x]).replace('varvalue', results.varValues[x]);
+
+                    storage.setItem(results.varNames[x], results.varValues[x]);// put in storage
+
                     $('#var_result').append(tr_html);
                 }
             }

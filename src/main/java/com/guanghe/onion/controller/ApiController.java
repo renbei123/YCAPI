@@ -99,6 +99,29 @@ public class ApiController {
         return "api_edit";
     }
 
+
+    @RequestMapping(value = "/apicopy")
+    public String copy(Model model, Long id) {
+        Api api = apiJPA.findOne(id);
+
+        if (api.getAssert_hasString() != null) api.setAssert_hasStringArray(api.getAssert_hasString().split(","));
+        if (api.getAssert_json_path() != null && api.getAssert_json_value() != null) {
+            api.setAssert_json_pathArray(api.getAssert_json_path().split(","));
+            api.setAssert_json_valueArray(api.getAssert_json_value().split(","));
+            model.addAttribute("assert_json_length", api.getAssert_json_pathArray().length - 1);
+        } else model.addAttribute("assert_json_length", 0);
+
+        if (api.getPlanVar_name() != null && api.getPlanVar_jsonpath() != null) {
+            api.setPlanVar_nameArray(api.getPlanVar_name().split(","));
+            api.setPlanVar_jsonpathArray(api.getPlanVar_jsonpath().split(","));
+            model.addAttribute("plan_var_length", api.getPlanVar_nameArray().length - 1);
+        } else model.addAttribute("plan_var_length", 0);
+        model.addAttribute("api", api);
+        return "api_copy";
+    }
+
+
+
     @RequestMapping(value = "/apiadd")
     public String toaddpage()
     {

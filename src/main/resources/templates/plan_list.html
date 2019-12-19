@@ -130,8 +130,11 @@
     });
 
     function delplan(id) {
-        if (confirm("确定要删除该计划吗？"))
+        if (confirm("确定要删除该计划吗？")) {
+            if (confirm("删除后不可恢复"))
             location.href = "/plandelete?id=" + id;
+        }
+
 
     }
 </script>

@@ -108,7 +108,7 @@
                                         <td th:text="${myplans[4]}"></td>
                                         <td th:text="${myplans[5]}"></td>
                                         <td>
-                                            <a href="#" th:onclick="'javascript:add(\''+${myplans[5]}+'\')'">add</a>
+                                            <!--<a href="#" th:onclick="'javascript:add(\''+${myplans[5]}+'\')'">add</a>-->
                                             <a href="#" th:onclick="'javascript:del(\''+${myplans[5]}+'\')'">delete</a>
                                         </td>
 
@@ -173,7 +173,7 @@
     }
 
     function del(id) {
-        alert('#' + id);
+        if (confirm("确定要删除？"))
         table.row('#' + id).remove().draw(false);
     }
 </script>

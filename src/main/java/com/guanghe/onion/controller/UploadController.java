@@ -96,18 +96,25 @@ public class UploadController {
      */
     @RequestMapping(value = "/uploadAndResolve",method = RequestMethod.POST)
     @ResponseBody
-    public String uploadAndResolve(HttpSession session, MultipartFile file)
+    public String uploadAndResolve(HttpSession session, MultipartFile file, String label, String remarks, boolean NoCover)
     {
         String creater = session.getAttribute("user").toString();
-        String jsontext=multipartFileToText(file,"UTF-8");
+        String jsontext = multipartFileToText(file, "UTF-8");
         JSONObject fileObject = JSON.parseObject(jsontext);
-        List<JSONObject> jsonlist=new ArrayList<JSONObject>();
-        List<Api>  apiList=new ArrayList<>();
-        JsonUtil.parseJsonToArray(fileObject,jsonlist);
-        JsonUtil.toApiList(jsonlist, apiList, creater);
+        List<JSONObject> jsonlist = new ArrayList<JSONObject>();
+        List<Api> apiList = new ArrayList<>();
+        JsonUtil.parseJsonToArray(fileObject, jsonlist);
+        List<String> myApiPathList = null;
 
-        Iterable<Api> iterable=apiList;
-        apiJPA.save(iterable);
+        //NoCover=1,新增重复的接口，以path相等为准；NoCover=0 path重复不新增。
+        if (NoCover) {
+            JsonUtil.toApiList(jsonlist, apiList, creater, label, remarks, myApiPathList);
+        } else {
+            myApiPathList = apiJPA.findPathByCreater(creater);
+            JsonUtil.toApiList(jsonlist, apiList, creater, label, remarks, myApiPathList);
+        }
+
+        apiJPA.save(apiList);
         return "上传成功";
     }
 

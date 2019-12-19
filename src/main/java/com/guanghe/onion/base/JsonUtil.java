@@ -28,7 +28,10 @@ public class JsonUtil {
 
 
     // 解析json大对象，取出里面的所有Request
-    public static void toApiList(List<JSONObject> Jsonlist, List<Api> list, String creater) {
+    public static void toApiList(List<JSONObject> Jsonlist, List<Api> list, String creater, String label, String remarks, List<String> myApiPath_List) {
+
+
+
         for (JSONObject o : Jsonlist) {
 
             JSONObject request = o.getJSONObject("request");
@@ -36,30 +39,17 @@ public class JsonUtil {
 //                logger.info("name---->{}",name);
             JSONArray event = o.getJSONArray("event");  // postman的脚本
 
+            String path = request.getJSONObject("url").getString("raw").trim();
+
+            //myApiPath_List==null 新增重复接口；myApiPath_List!=null不新增
+            if (myApiPath_List != null && myApiPath_List.contains(path)) {
+                continue;
+            }
 
             Api api = new Api();
-
-            String path = request.getJSONObject("url").getString("raw");
-//                String host = request.getJSONObject("url").getString("host");
-
-//            if (path.indexOf("{{host}}") != -1) {
-//                path = path.replace("{{host}}", "");
-//            }
-//            if (path.indexOf("{{host2}}") != -1) {
-//                path = path.replace("{{host2}}", "");
-//            }
-//            int a;
-//            if ((path.indexOf("http://")) != -1) {
-//                path = path.replace("http://", "");
-//                path = path.substring(path.indexOf("/"));
-//            }
-//            if ((path.indexOf("https://")) != -1) {
-//                path = path.replace("https://", "");
-//                path = path.substring(path.indexOf("/"));
-//            }
-
             api.setCreater(creater);
-
+            api.setLabel(label);
+            api.setRemarks(remarks);
             api.setPath(path);
             api.setMethod(request.getString("method"));
             api.setName(name);
@@ -70,14 +60,12 @@ public class JsonUtil {
                 JSONObject ob = (JSONObject) it.next();
                 heads.put(ob.getString("key"),ob.getString("value"));
             }
-
             api.setHeaders(heads.toString());
-            api.setLabel("system");
-            String body = request.getJSONObject("body").getString("raw");
+
+            String body = request.getJSONObject("body") != null ? request.getJSONObject("body").getString("raw") : "";
 //                if (body.length()>500)
 //                logger.info("body---->:{},{}", body,body.length());
             api.setBody(body);
-
             if (event != null) {
                 logger.info("event---->{}", event.toJSONString());
                 String scriptexec = event.getJSONObject(0).getJSONObject("script").getString("exec");
