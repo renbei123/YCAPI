@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -101,9 +102,13 @@ public class CrsController {
 
 
     @RequestMapping(value = "/crsapisave",method = RequestMethod.POST)
-    public String save(CrsApi api){
-         apiJPA.save(api);
-         return "redirect:/crsapilist";
+    public String save(CrsApi api, HttpSession session) {
+        if (api.getCreater().trim().equals(session.getAttribute("user"))) {
+            apiJPA.save(api);
+            return "redirect:/crsapilist";
+        } else {
+            return "forward:/myerror?msg=没有权限！只能修改自己的数据";
+        }
     }
 
     @RequestMapping(value = "/crsMonitorSave",method = RequestMethod.POST)
@@ -142,10 +147,16 @@ public class CrsController {
     }
 
     @RequestMapping(value = "/crsapidelete",method = RequestMethod.GET)
-    public String delete(Long id)
+    public String delete(Long id, HttpSession session)
     {
-        apiJPA.delete(id);
-        return "redirect:/crsapilist";
+        CrsApi del_api = apiJPA.findOne(id);
+        if (del_api.getCreater().equals(session.getAttribute("user"))) {
+            apiJPA.delete(id);
+            return "redirect:/crsapilist";
+        } else {
+            return "forward:/myerror?msg=没有权限！只能修改自己的数据";
+        }
+
     }
 
     @RequestMapping(value = "/crsMonitordel",method = RequestMethod.GET)

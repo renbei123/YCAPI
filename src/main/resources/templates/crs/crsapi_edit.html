@@ -45,6 +45,7 @@
                         <form class="form-horizontal" th:action="@{/crsapisave}" th:object="${api}" method="post"
                               id="apiform">
                             <input type="hidden" name="id" th:value="*{id}" />
+                            <input id="creater" name="creater" th:value="*{creater}" type="hidden"/>
 
                             <!-- 接口名称  -->
                             <div class="form-group">
@@ -209,7 +210,7 @@
 
                             <!-- botton 按钮 -->
                             <div class="box-footer">
-                                <button type="button" class="btn btn-default" onclick="javascript:history.go(-1);">返回</button>
+                                <button class="btn btn-default" onclick="history.go(-1);" type="button">返回</button>
                                 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
                                 <input type="reset" value="Reset" class="btn btn-info" />
                                 &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
@@ -394,8 +395,7 @@
         $("#response").html(JSON.stringify(results, null, 4));
 
         // console.info('results:'+JSON.stringify(results, null, 4));
-    };
-
+    }
     function erryFunction() {
         alert("error");
     }

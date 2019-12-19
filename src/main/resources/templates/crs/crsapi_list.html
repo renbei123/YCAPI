@@ -55,7 +55,8 @@
                   <th width="10%">name</th>
                   <th width="5%">method</th>
                   <th width="55%">path</th>
-                  <th width="10%"> remarks</th>
+                    <th width="10%">remarks</th>
+                    <th width="10%">creater</th>
                   <th width="5%">state</th>
                   <th width="10%">Edit</th>
 
@@ -70,9 +71,11 @@
                   <td th:text="${myapi.method}"></td>
                   <td th:text="${myapi.path.length()>60?(myapi.path.substring(0,60)+'...'):myapi.path}"> </td>
                   <td th:text="${myapi.remarks}"></td>
+                    <td th:text="${myapi.creater}"></td>
                   <td th:text="${myapi.status==true?'使用中':'废弃'}"></td>
                   <td><a th:href="@{/crsapieidt(id=${myapi.id})}">edit</a> &nbsp;&nbsp;
-                  <a th:href="@{/crsapidelete(id=${myapi.id})}">delete</a></td>
+                      <!--<a th:href="@{/crsapidelete(id=${myapi.id})}">delete</a></td>-->
+                      <a style="cursor: pointer" th:onclick="'javascript:del('+${myapi.id}+')'">删除</a></td>
 
 
                 </tr>
@@ -86,6 +89,7 @@
                   <th>method</th>
                   <th>path</th>
                   <th>remarks</th>
+                    <th>creater</th>
                   <th>state</th>
                   <th>Edit</th>
                 </tr>
@@ -152,6 +156,14 @@
       throw SyntaxError(); //如果验证不通过，则不执行后面
     }
     $('#crslistform').submit();
+  }
+
+  function del(id) {
+      if (confirm("确定要删除数据吗？")) {
+          location.href = "/crsapidelete?id=" + id;
+      }
+
+
   }
 
 </script>

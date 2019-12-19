@@ -288,9 +288,6 @@
         <!-- 生产环境 -->
         <profile>
             <id>prod</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <properties>
                 <profiles.active>prod</profiles.active>
                 <maven.test.skip>true</maven.test.skip>
