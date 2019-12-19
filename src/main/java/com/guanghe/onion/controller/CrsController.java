@@ -70,6 +70,7 @@ public class CrsController {
 
     @RequestMapping(value = "/crsmonitorEdit",method = RequestMethod.GET)
     public String crsmonitorEdit(Model model,Long id){
+
         CrsMonitor crsmonitor=crsmonitorjpa.findOne(id);
         model.addAttribute("crsmonitor",crsmonitor);
         return "crs/crsmonitor_edit";
@@ -111,12 +112,6 @@ public class CrsController {
         }
     }
 
-    @RequestMapping(value = "/crsMonitorSave",method = RequestMethod.POST)
-    public String crsMonitorSave(CrsMonitor monitor){
-        crsmonitorjpa.save(monitor);
-        return "redirect:/monitorList";
-    }
-
 
     @RequestMapping(value = "/crsapieidt")
     public String edit(Model model,Long id)
@@ -134,11 +129,6 @@ public class CrsController {
         return "crs/crsapi_edit";
     }
 
-    @RequestMapping(value = "/crsmonitoradd")
-    public String crsmonitoradd()
-    {
-        return "crs/crsmonitor_add";
-    }
 
     @RequestMapping(value = "/crsapiadd")
     public String add()
@@ -159,11 +149,34 @@ public class CrsController {
 
     }
 
+    @RequestMapping(value = "/crsmonitoradd")
+    public String crsmonitoradd() {
+        return "crs/crsmonitor_add";
+    }
+
+
+    @RequestMapping(value = "/crsMonitorSave", method = RequestMethod.POST)
+    public String crsMonitorSave(CrsMonitor monitor, HttpSession session) {
+
+        if (session.getAttribute("user").equals("renjie")) {
+            crsmonitorjpa.save(monitor);
+            return "redirect:/monitorList";
+        } else {
+            return "forward:/myerror?msg=没有权限！只能修改自己的数据";
+        }
+    }
+
+
     @RequestMapping(value = "/crsMonitordel",method = RequestMethod.GET)
-    public String crsMonitordel(Long id)
+    public String crsMonitordel(Long id, HttpSession session)
     {
-        crsmonitorjpa.delete(id);
-        return "redirect:/monitorList";
+
+        if (session.getAttribute("user").equals("renjie")) {
+            crsmonitorjpa.delete(id);
+            return "redirect:/monitorList";
+        } else {
+            return "forward:/myerror?msg=没有权限！只能修改自己的数据";
+        }
     }
     @RequestMapping(value = "/crslog",method = RequestMethod.GET)
     public String crslog(Model model )
