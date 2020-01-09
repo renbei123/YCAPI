@@ -1,32 +1,9 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Simple Tables</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <div th:replace="common/common_head :: common_resource"></div>
 
-    <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -76,23 +53,6 @@
                                 </tr>
                                 </thead>
 
-                                <!--  tbody 真实的接口数据 -->
-                                <tbody>
-                                <tr  th:each=" log:${loglist}" >
-                                    <th th:text="${log[0]}" >1</th>
-                                    <td href="details.html" th:text="${log[1]}" >name</td>
-                                    <td th:text="${log[2]}">get</td>
-                                    <td th:text="${log[3]}">/hello</td>
-                                    <td th:text="${log[4]}">teacher</td>
-                                    <td th:switch="${log[5]}">
-                                        <font th:case="true" size="3" color="green" >成功</font>
-                                        <font th:case="false" size="3" color="red" >失败</font>
-                                    </td>
-                                    <td th:text="${log[6]}"></td>
-
-                                </tr>
-                                </tbody>
-
                                 <!--  tbody 真实的接口数据  end-->
                                 <tfoot>
                                 <tr>
@@ -126,19 +86,20 @@
 </div>
 <!-- ./wrapper -->
 <!-- jQuery 3 -->
-<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../static/bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
-<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- DataTables -->
 <script src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="../static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-<!-- Slimscroll -->
-<script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- SlimScroll -->
+<script src="../static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
-<script src="../../bower_components/fastclick/lib/fastclick.js"></script>
+<script src="../static/bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.min.js"></script>
+<script src="../static/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
+<script src="../static/dist/js/demo.js"></script>
 <script>
     $(function () {
         var lang = {
@@ -149,7 +110,7 @@
             "sInfoEmpty": "当前显示第 0 至 0 项，共 0 项",
             "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
             "sInfoPostFix": "",
-            "sSearch": "搜索:",
+            "sSearch": "接口名称搜索:",
             "sUrl": "",
             "sEmptyTable": "表中数据为空",
             "sLoadingRecords": "载入中...",
@@ -170,11 +131,34 @@
 
         $('#example1').DataTable({
             language: lang,  //提示信息
-            'autoWidth': true,
-            // "scrollX": true,
-            // "scrollY": true,
-            "order": [[6, "desc"]]
+            // "paging": true,//开启分页
+            // lengthMenu: [ //自定义分页长度
+            //     [ 20, 50, 100 ],
+            //     [ '20 页', '50 页', '100页' ]
+            // ],
+            // stripeClasses: ["odd", "even"],
+            // autoWidth: true,
+            serverSide: true,
+            // processing: true,
+            ajax: "/loglist2",
+            // ajax: {
+            //     url: '/loglist2',
+            //     type: 'POST'
+            // }
+            // "order": [[6, "desc"]]
+            columnDefs: [{
+                //   指定第一列，从0开始，0表示第一列，1表示第二列……
+                targets: 5,
+                render: function (data, type, row, meta) {
+                    if (data == 'false')
+                        return '<td>' + '<font  color="red" >' + data + '</font></td>';
+                    else
+                        return '<td>' + '<font  color="green" >' + data + '</font></td>';
+                }
+            }]
         });
+
+
     });
 
 </script>

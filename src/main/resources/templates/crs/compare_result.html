@@ -125,55 +125,6 @@
 <!-- page script -->
 <script>
 
-       // var table= $('#example1').DataTable({
-       //             "processing": true,
-       //             "autoWidth": false,
-       //             "paging":false,
-       //             // "scrollX": true,
-       //             // "scrollY": true,
-       //             // "serverSide": true,
-       //             "ajax": {
-       //                 url: "/testcrs",//请求的url
-       //                 type: "GET",
-       //                 // dataSrc:""， //直接解析数组
-       //                 // data: {//请求的参数
-       //                 //     lareName: $('#lareName').val(),
-       //                 //     keyWord: $('#keyWord').val(),
-       //                 //     issUnitName: $('#issUnitName').val(),
-       //                 //     repStat: $('#repStat').val(),
-       //                 //     veriStat: $('#veriStat').val(),
-       //                 //     startDate: $('#startDate').val(),
-       //                 //     endDate: $('#endDate').val()
-       //                 // }
-       //             },
-       //             // "columns": [
-       //             //     {"data": "guid"},
-       //             //     {"data": "guid"},
-       //             //     {"data": "guid"},
-       //             //     {"data": "guid"},
-       //             //     {"data": "guid"},
-       //             //     {"data": "guid"}
-       //             // ]
-       //             language:{
-       //
-       //                 zeroRecords:'抱歉,没有检索到数据',
-       //
-       //                 search:'搜索',  // 将英文search改为中文
-       //
-       //                 searchPlaceholder:'请输入',//搜索框提示功能
-       //
-       //                 lengthMenu:'每页显示_MENU_条记录',
-       //
-       //                 info:'显示第 _START_ 到第 _END_ 条记录，共 _TOTAL_ 条',
-       //
-       //                 paginate:{'next':'下页','previous':'下页','first':'第一页','last':'最后一页'},
-       //
-       //                 infoEmpty:'没有数据',
-       //
-       //                 infoFiltered:"(从_MAX_条数据检索)",
-       //
-       //             }  //中文显示
-       //         });
 
        var table= $('#example1').DataTable({
            'lengthChange': true,
@@ -218,7 +169,7 @@
            });
        }
 
-       i = setInterval("getOneresult()", 1500);
+       i = setInterval("getOneresult()", 1000);
 
 
        function stop() {

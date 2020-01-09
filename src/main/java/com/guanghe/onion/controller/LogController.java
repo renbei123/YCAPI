@@ -27,24 +27,12 @@ public class LogController {
     @Autowired
     private MonitorLogJPA monitorlogjpa;
 
-    //@Cacheable
-    //@Cacheable(cacheNames="users", condition="#result.name.length < 32")
-//    @RequestMapping(value = "/loglist",method = RequestMethod.GET)
-//    public String loglist(Model model ){
-//        List<Object[]> list=monitorlogjpa.detailLoglist();
-//        model.addAttribute("loglist",list);
-//        model.addAttribute("logclass","treeview active");
-//        model.addAttribute("logclass2","active");
-//        return "log_list";
-//    }
-
-
     @RequestMapping(value = "/loglist",method = RequestMethod.GET)
     public String loglist(Model model) {
 
         model.addAttribute("logclass","treeview active");
         model.addAttribute("logclass2","active");
-        return "log_list2";
+        return "log_list";
     }
 
     @RequestMapping(value = "/loglist2", method = RequestMethod.GET)

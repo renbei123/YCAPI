@@ -17,11 +17,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -50,18 +49,20 @@ public class PlanController {
 
 
     @RequestMapping(value = "/planAdd",method = RequestMethod.POST)
-    public String add(Plan plan){
-        Long planid= planJPA.save(plan).getId();
-       String[] apis= plan.getApiIds().split(",");
-         for (int i=1;i<=apis.length;i++){
-             PlanApisOrder planapisorder=new PlanApisOrder();
-             planapisorder.setApiId(Long.valueOf(apis[i-1]));
-             planapisorder.setApiOrders(i);
-             planapisorder.setPlanId(planid);
-             planApisOrderJPA.save(planapisorder);
-         }
+    public String add(Plan plan) {
+        Long planid = planJPA.save(plan).getId();
+        if (plan.getApiIds() != null && !plan.getApiIds().equals("")) {
+            String[] apis = plan.getApiIds().split(",");
+            for (int i = 1; i <= apis.length; i++) {
+                PlanApisOrder planapisorder = new PlanApisOrder();
+                planapisorder.setApiId(Long.valueOf(apis[i - 1]));
+                planapisorder.setApiOrders(i);
+                planapisorder.setPlanId(planid);
+                planApisOrderJPA.save(planapisorder);
+            }
+        }
 
-         return "redirect:/planlist";
+        return "redirect:/planlist";
     }
 
     @RequestMapping(value = "/planEditSave2", method = RequestMethod.POST)
@@ -198,6 +199,21 @@ public class PlanController {
         return "plan_apisort_list";
     }
 
+
+    //推送数据接口
+    @ResponseBody
+    @RequestMapping("/socket/push/{sessionid}")
+    public String pushToWeb(@PathVariable String sessionid, String message) {
+        try {
+            WebSocketServer.sendInfo(message, sessionid);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return sessionid + "#" + e.getMessage();
+        }
+        return sessionid + "#success";
+    }
+
+
 /*    @RequestMapping(value = "/reorderPlanApis",method = RequestMethod.POST)
     public String reorderPlanApis(Model model,@RequestParam(value="api_id") String apiIds,long planId){
         System.out.println("apiId*******************:"+apiIds);
@@ -216,7 +232,6 @@ public class PlanController {
 
 //    @Autowired
 //    private EntityManager em;
-//
 //    public void testSql()
 //    {
 //
