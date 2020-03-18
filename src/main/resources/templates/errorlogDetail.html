@@ -47,7 +47,8 @@
                             <div class="form-group">
                                 <label for="name" class="col-sm-2 control-label">接口名称(name)</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="name" name="name" th:value="*{apiName}" placeholder="接口的名称定义">
+                                    <input class="form-control" id="name" name="name" placeholder="接口的名称定义" readonly
+                                           th:value="*{apiName}" type="text">
                                 </div>
                             </div>
 
@@ -55,7 +56,7 @@
                             <div class="form-group">
                                 <label for="method" class="col-sm-2 control-label">方法(method)</label>
                                 <div class="col-sm-10">
-                                    <input type="text" th:value="*{method}" class="form-control" id="method">
+                                    <input class="form-control" id="method" readonly th:value="*{method}" type="text">
                                 </div>
                             </div>
 
@@ -63,20 +64,22 @@
                             <div class="form-group">
                                 <label for="url" class="col-sm-2 control-label">路径(url)</label>
                                 <div class="col-sm-10">
-                                    <input type="text" th:value="*{url}" class="form-control" id="url" name="path">
+                                    <input class="form-control" id="url" name="path" readonly th:value="*{url}"
+                                           type="text">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="startTime" class="col-sm-2 control-label">开始时间</label>
                                 <div class="col-sm-10">
-                                    <input type="text" th:value="*{startTime}" class="form-control" id="startTime" name="startTime">
+                                    <input class="form-control" id="startTime" name="startTime" readonly
+                                           th:value="*{startTime}" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="elapsedTime" class="col-sm-2 control-label">响应时长</label>
                                 <div class="col-sm-10">
-                                    <input type="text" th:value="*{elapsedTime+' ms'}" class="form-control"
+                                    <input class="form-control" readonly th:value="*{elapsedTime+' ms'}" type="text"
                                            id="elapsedTime" name="elapsedTime">
                                 </div>
                             </div>
@@ -85,14 +88,16 @@
                             <div class="form-group">
                                 <label for="req_header" class="col-sm-2 control-label">请求头</label>
                                 <div class="col-sm-10">
-                                    <textarea th:text="*{req_header}" class="form-control" rows="3"  id="req_header"  name="req_header"></textarea>
+                                    <textarea class="form-control" id="req_header" name="req_header" readonly rows="3"
+                                              th:text="*{req_header}"></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="req_body" class="col-sm-2 control-label">请求体</label>
                                 <div class="col-sm-10">
-                                    <textarea th:text="*{req_body}" class="form-control" rows="5"  id="req_body" name="req_body"></textarea>
+                                    <textarea class="form-control" id="req_body" name="req_body" readonly rows="5"
+                                              th:text="*{req_body}"></textarea>
                                 </div>
                             </div>
 
@@ -100,34 +105,38 @@
                             <div class="form-group">
                                 <label for="res_code" class="col-sm-2 control-label">返回码</label>
                                 <div class="col-sm-10">
-                                    <input type="text" th:value="*{res_code}" class="form-control" id="res_code" name="res_code">
+                                    <input class="form-control" id="res_code" name="res_code" readonly
+                                           th:value="*{res_code}" type="text">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="res_size" class="col-sm-2 control-label">返回体大小</label>
                                 <div class="col-sm-10">
-                                    <input type="text" th:value="*{res_size+' Bytes'}" class="form-control" id="res_size" name="res_size">
+                                    <input class="form-control" id="res_size" name="res_size" readonly
+                                           th:value="*{res_size+' Bytes'}" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="assert_result" class="col-sm-2 control-label">断言结果</label>
                                 <div class="col-sm-10">
-                                    <textarea th:text="*{assert_result}" class="form-control" rows="5"  id="assert_result"  name="req_header"></textarea>
+                                    <textarea class="form-control" id="assert_result" name="req_header" readonly
+                                              rows="3" th:text="*{assert_result}"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="res_header" class="col-sm-2 control-label">返回header</label>
                                 <div class="col-sm-10">
-                                    <textarea th:text="*{res_header}" class="form-control" rows="5"  id="res_header"  name="res_header"></textarea>
+                                    <textarea class="form-control" id="res_header" name="res_header" readonly rows="5"
+                                              th:text="*{res_header}"></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="res_body" class="col-sm-2 control-label">返回body</label>
                                 <div class="col-sm-10">
-                                    <textarea th:text="*{res_body}" class="form-control" rows="9" id="res_body"
-                                              name="res_body"></textarea>
+                                    <textarea class="form-control" id="res_body" name="res_body" readonly rows="9"
+                                              th:text="*{res_body}"></textarea>
                                 </div>
                             </div>
 

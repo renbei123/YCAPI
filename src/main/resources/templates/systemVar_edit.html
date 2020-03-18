@@ -2,6 +2,30 @@
 <html  xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="common/common_head :: common_resource"></div>
+    <style>
+        #tip_message {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 40%;
+            text-align: center;
+            width: 100%;
+        }
+
+        #tip_message span {
+            background-color: #03C440;
+            opacity: .8;
+            padding: 20px 50px;
+            border-radius: 5px;
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        #tip_message span.error {
+            background-color: #EAA000;
+        }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -47,7 +71,7 @@
 
                     <!-- class="box-body"   -->
                     <div class="box-body">
-                        <form class="form-horizontal"   th:action="@{/sysVarSave}"  method="post" >
+                        <form class="form-horizontal" method="post">
                             <table border="0" width="90%" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
@@ -58,22 +82,26 @@
                                 </tr>
                                 </thead>
                                 <tbody id="tbody1">
-                                <tr  th:if="${sysvars.size()==0}">
-                                    <td><input type="button" value=" + " onclick="addRow(this)"></td>
-                                        <td> <input type="button" value=" - " onclick="delRow(this)">
-                                        <input type="hidden" name="id" value="" />
+                                <tr th:if="${sysvars.size()==0}">
+                                    <td><input onclick="addRow(this)" th:data="${var.id}" type="button" value=" + ">
                                     </td>
-                                    <td><input type="text" class="form-control" name="varname"  /></td>
-                                    <td><input type="text" class="form-control" name="value"  /></td>
+                                    <td><input onclick="delRow(this)" th:data="${var.id}" type="button" value=" - ">
+                                    </td>
+                                    <td><input class="form-control" data="" name="varname" onchange="save(this)"
+                                               type="text"/></td>
+                                    <td><input class="form-control" data="" name="value" onchange="save(this)"
+                                               type="text"/></td>
                                 </tr>
 
-                                <tr th:if="${sysvars.size()>=1}" th:each=" var:${sysvars}" >
-                                    <td><input type="button" value=" + " onclick="addRow(this)"></td>
-                                    <td> <input type="button" value=" - " onclick="delRow(this)">
-                                        <input type="hidden" name="id" th:value="${var.id}" />
+                                <tr th:each=" var:${sysvars}" th:id="${var.id}" th:if="${sysvars.size()>=1}">
+                                    <td><input onclick="addRow(this)" th:data="${var.id}" type="button" value=" + ">
                                     </td>
-                                    <td> <input type="text" class="form-control" name="varname" th:value="${var.name}" /></td>
-                                    <td> <input type="text"class="form-control"  name="value" th:value="${var.value}" /></td>
+                                    <td><input onclick="delRow(this)" th:data="${var.id}" type="button" value=" - ">
+                                    </td>
+                                    <td><input class="form-control" name="varname" onchange="save(this)"
+                                               th:data="${var.id}" th:value="${var.name}" type="text"/></td>
+                                    <td><input class="form-control" name="value" onchange="save(this)"
+                                               th:data="${var.id}" th:value="${var.value}" type="text"/></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -82,8 +110,7 @@
                                 <table width="90%">
                                     <tr>
                                         <td width="40%"></td>
-                                       <td width="10%"><input type="reset" value="Reset" class="btn btn-info" /></td>
-                                        <td width="10%"><button type="submit" class="btn btn-info pull-right">保存</button></td>
+
                                         <td width="40%"></td>
                                     </tr>
                                 </table>
@@ -142,33 +169,88 @@
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 <script>
     function addRow(currentButton)
     {    //alert(currentButton.value);
 
         var row1 = $(currentButton).parent().parent();
-        // console.info(row1.html());
-        var row2 = row1.clone();
 
-        var htmltr=
-            '                                    <td><input type="button" value=" + " onclick="addRow(this)"> </td>\n' +
-            '                                      <td>  <input type="button" value=" - " onclick="delRow(this)">\n' +
-            '                                        <input type="hidden" name="id" value="" />\n' +
-            '                                    </td>\n' +
-            '                                    <td><input type="text" class="form-control" name="varname"  /></td>\n' +
-            '                                    <td><input type="text" class="form-control" name="value"  /></td>\n' ;
+        var row2 = row1.clone();
+        // console.info('row2:',row2.html());
+        var htmltr =
+            '                                    <td><input type="button" value=" + " onclick="addRow(this)" data="" > </td>\n' +
+            '                                    <td>  <input type="button" value=" - " onclick="delRow(this)" data="" > </td>\n' +
+            '                                    <td><input type="text" class="form-control" name="varname" data=""  onchange="save(this)"/></td>\n' +
+            '                                    <td><input type="text" class="form-control" name="value"  data="" onchange="save(this)"/></td>\n';
         $(row2).html(htmltr);
         row2.insertAfter(row1);
     }
-    function delRow(obj){
-        //移除
+
+    function delRow2(obj) {
+        //js移除
         $(obj).parent().parent().remove();
     }
 
+    function delRow(obj) {
+        let dataId = obj.getAttribute('data');
+        if (dataId) {
+            if (confirm("确定删除？")) {
+                $.post("/sysVar_delete",
+                    {
+                        id: dataId
+                    },
+                    function (data, status) {
+                        if (data === "1" && status === "success")
+                            window.location.reload();
+                        else {
+                            ShowErrorMessage("delete error!", 300);
+                            // window.location.reload();
+                        }
+                    });
+            }
+        } else {
+            delRow2(obj);
+        }
+    }
+
+    function save(obj) {
+        let reloadpage = false;
+        let dataId = obj.getAttribute('data');
+        var var_name = obj.name;
+        let var_value = obj.value.replace(/(^\s*)|(\s*$)/g, "");
+        if (dataId === "" || dataId === undefined) {
+            reloadpage = true;
+        }
+
+        $.post("/sysVarSave",
+            {
+                id: dataId,
+                varname: var_name,
+                value: var_value
+            },
+            function (data, status) {
+                if (!reloadpage) {
+                    if (data === "1" && status === "success")
+                        ShowSuccessMessage("save success!", 200);
+                    else
+                        ShowErrorMessage("save error!", 300);
+                } else {
+                    if (data === "1" && status === "success")
+                        window.location.reload();
+                    else
+                        ShowErrorMessage("save error!", 300);
+                }
+
+                // console.info("Data: " + typeof data + "\nStatus: " + typeof status);
+            });
+
+    }
+
+    //把我的变量存储到当前缓存
     var storage = window.localStorage;
     $(document).ready(function () {
         var length = $('input[name="varname"]').length;
-
         for (i = 0; i < length; i++) {
             storage.setItem($('input[name="varname"]')[i].value, $('input[name="value"]')[i].value);
         }
@@ -178,7 +260,31 @@
         //     console.log(key, storage.getItem(key))
         // }
 
+        //提示成功信息
+        ShowSuccessMessage = function (message, life) {
+            var time = 1000;
+            if (!life) {
+                time = life;
+            }
+            if ($("#tip_message").text().length > 0) {
+                var msg = "<span>" + message + "</span>";
+                $("#tip_message").empty().append(msg);
+            } else {
+                var msg = '<div id="tip_message"><span>' + message + "</span></div>";
+                $("body").append(msg);
+            }
+            $("#tip_message").fadeIn(time);
+            $("#tip_message").fadeOut(time);
+        };
 
+        //提示错误信息
+        ShowErrorMessage = function (message, life) {
+            ShowSuccessMessage(message, life);
+            $("#tip_message span").addClass("error");
+        };
+
+        // ShowSuccessMessage("Hello success!", 1000); // 第二个参数life是指消息显示时间
+        // ShowErrorMessage("Hello error!", 1000);
     });
 
 

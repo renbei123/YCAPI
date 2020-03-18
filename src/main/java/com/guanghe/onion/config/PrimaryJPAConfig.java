@@ -41,7 +41,7 @@ public class PrimaryJPAConfig {
         return builder
                 .dataSource(primaryDataSource)
                 .properties(getVendorProperties(primaryDataSource))
-                .packages(new String[]{"com.guanghe.onion"}) //设置实体类所在位置
+                .packages(new String[]{"com.guanghe.onion.entity"}) //设置实体类所在位置
                 .persistenceUnit("primaryPersistenceUnit")
                 .build();
     }

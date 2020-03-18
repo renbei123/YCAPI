@@ -12,9 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -26,15 +26,58 @@ public class SysVarController {
     private SystemVarJPA systemvarjpa;
 
     //@Cacheable
-    @RequestMapping(value = "/SystemVar",method = RequestMethod.GET)
-    public String list(Model model){
-        List<SystemVar> list=systemvarjpa.findAllByOrderById();
-        model.addAttribute("sysvars",list);
+    @RequestMapping(value = "/SystemVar", method = RequestMethod.GET)
+    public String list(Model model, HttpSession session) {
+        String user = session.getAttribute("user").toString();
+        List<SystemVar> list = systemvarjpa.findByCreaterOrderById(user);
+        model.addAttribute("sysvars", list);
         return "systemVar_edit";
     }
 
+    @RequestMapping(value = "/sysVar_delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String del(Long id) {
+        try {
+            systemvarjpa.delete(id);
+            return "1";
+        } catch (Exception e) {
+            return "0";
+        }
+    }
 
-    @RequestMapping(value = "/sysVarSave",method = RequestMethod.POST)
+    @RequestMapping(value = "/sysVarSave", method = RequestMethod.POST)
+    @ResponseBody
+    public String save(Long id, String varname, String value, HttpSession session) {
+        SystemVar system_var = null;
+        String user = session.getAttribute("user").toString();
+        try {
+            if (id != null) {
+                system_var = systemvarjpa.findOne(id);
+                system_var.setCreater(user);
+                if (varname.equals("varname")) {
+                    system_var.setName(value);
+                } else {
+                    system_var.setValue(value);
+                }
+                systemvarjpa.saveAndFlush(system_var);
+            } else {
+                system_var = new SystemVar();
+                system_var.setCreater(user);
+                if (varname.equals("varname")) {
+                    system_var.setName(value);
+                } else {
+                    system_var.setValue(value);
+                }
+                systemvarjpa.saveAndFlush(system_var);
+            }
+            return "1";
+        } catch (Exception e) {
+            return "0";
+        }
+    }
+
+
+   /* @RequestMapping(value = "/sysVarSave",method = RequestMethod.POST)
     public String list(String[] id, String[] varname, String[] value, Model model, HttpSession session) {
 
         if (session.getAttribute("user").toString().equals("renjie")) {
@@ -58,10 +101,7 @@ public class SysVarController {
         } else {
             return "forward:/myerror?msg=没有权限!";
         }
-
-
-
-    }
+    }*/
 
 
 
