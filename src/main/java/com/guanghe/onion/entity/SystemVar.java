@@ -21,13 +21,13 @@ public class SystemVar
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "value", length = 1000)
     private String value;
 
-    @Column(name = "creater", length = 20)
+    @Column(name = "creater", length = 30)
     private String creater;
 
 }

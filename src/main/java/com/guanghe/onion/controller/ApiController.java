@@ -134,7 +134,7 @@ public class ApiController {
     @ResponseBody
     public Map<String, Object> ajaxAPI(String url, String headers, String body, String method, String[] varNames, String[] varValues) {
 
-        Map Headers = (Map) StringUtil.StringToMap(headers);
+        Map Headers = (Map) StringUtil.jsonstr2map(headers);
         Response result = send(url, method, Headers, body);
         String response_body = result.body().asString();
         String response_header = result.headers().toString();

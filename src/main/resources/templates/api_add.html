@@ -146,6 +146,20 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-2 control-label" for="response_time">请求时长</label>
+                                <div class="col-sm-10">
+                                    <table border="0" width="20%">
+                                        <tr>
+                                            <td>
+                                                <input class="form-control" id="response_time" name="response_time"
+                                                       placeholder="超过该时间报错" type="text">
+                                            </td>
+                                            <td>ms</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">包含字符 </label>
                                 <div class="col-sm-10">
                                     <table align="left" aria-rowspan="3" border="0" width="70%">
@@ -392,7 +406,7 @@
     $("#response").css({display: 'none'});
     // json渲染 --end
 
-    $(document).ready(function () {    //通用方法去输入框前后空格
+    $(document).ready(function () {    //通用方法去输入框前后空格,去掉空格
 
         // other ...
         $("form").on("change", function () {

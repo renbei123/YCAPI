@@ -60,19 +60,23 @@
 
                 <!--  tbody 真实的接口数据 -->
                 <tbody>
-                <tr  th:each=" myapi:${apilist}">
+                <tr th:each=" myapi:${apilist}">
                   <td th:text="${myapi.id}">1</td>
-                    <td href="details.html" th:text="${myapi.name}"></td>
-                    <td th:text="${myapi.method}"></td>
-                    <td th:text="${myapi.path}"></td>
-                    <td th:text="${myapi.label}"></td>
-                    <td th:text="${myapi.remarks}"></td>
-                    <td th:text="${myapi.creater}"></td>
+                  <td href="details.html" th:if="${myapi.name.length()>50}"
+                      th:text="${myapi.name.substring(0,50)+'...'}" th:title="${myapi.name}"></td>
+                  <td href="details.html" th:if="${myapi.name.length()<=50}" th:text="${myapi.name}"></td>
+                  <td th:text="${myapi.method}"></td>
+                  <td th:if="${myapi.path.length()>80}" th:text="${myapi.path.substring(0,80)+'...'}"
+                      th:title="${myapi.path}"></td>
+                  <td th:if="${myapi.path.length()<=80}" th:text="${myapi.path}"></td>
+                  <td th:text="${myapi.label}"></td>
+                  <td th:text="${myapi.remarks}"></td>
+                  <td th:text="${myapi.creater}"></td>
                   <td th:text="${myapi.status==true?'使用中':'废弃'}">state</td>
-                    <td><a th:href="@{/apieidt(id=${myapi.id})}">编辑</a> &nbsp;&nbsp;
-                        <a th:href="@{/apicopy(id=${myapi.id})}">复制</a> &nbsp;&nbsp;
-                        <a style="cursor: pointer" th:onclick="'javascript:del('+${myapi.id}+')'">删除</a></td>
-                    <!--<a th:href="@{/apidelete(id=${myapi.id})}">delete</a></td>-->
+                  <td><a th:href="@{/apieidt(id=${myapi.id})}">编辑</a> &nbsp;&nbsp;
+                    <a th:href="@{/apicopy(id=${myapi.id})}">复制</a> &nbsp;&nbsp;
+                    <a style="cursor: pointer" th:onclick="'javascript:del('+${myapi.id}+')'">删除</a></td>
+                  <!--<a th:href="@{/apidelete(id=${myapi.id})}">delete</a></td>-->
 
 
                 </tr>

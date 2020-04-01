@@ -5,6 +5,7 @@ import com.guanghe.onion.entity.ErrorLog;
 import com.guanghe.onion.entity.MonitorLog;
 import com.guanghe.onion.entity.Plan;
 import com.guanghe.onion.entity.SystemVar;
+import com.guanghe.onion.tools.RedisUtils;
 import com.guanghe.onion.tools.StringUtil;
 import com.jayway.jsonpath.JsonPath;
 import io.restassured.response.Response;
@@ -47,6 +48,9 @@ public class SchedulerTask2 {
     private SystemVarJPA systemvarjpa;
 
     public static Map sysVars = null;
+    public boolean sysVarsisnull = true;
+    @Autowired
+    private RedisUtils redisUtil;
 
 //    @Autowired
 //    private Environment env;
@@ -63,21 +67,17 @@ public class SchedulerTask2 {
 
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 
-    public void getSystemVar() {
-        if (sysVars == null) {
-            sysVars = new HashMap();
-            List<SystemVar> list = systemvarjpa.findAll();
-            for (SystemVar var : list) {
-                sysVars.put(var.getName(), var.getValue());
-            }
-        }
-    }
-
     //    @Async
-    @Scheduled(initialDelay = 1000 * 60 * 5, fixedDelay = 1000 * 60 * 5)
+    @Scheduled(initialDelay = 1000 * 2 * 2, fixedDelay = 1000 * 60 * 5)
     public void runMonitor() {
 
-        getSystemVar();
+        //启动服务设置redis缓存--系统变量所有
+        if (sysVarsisnull) {
+            if (!SysvarRedisSetAll()) {
+                logger.error("********设置redis数据systemVar错误！");
+            }
+            sysVarsisnull = false;
+        }
 
         List<Plan> planList = planJPA.findAll();
 
@@ -88,7 +88,7 @@ public class SchedulerTask2 {
             }
         }
         logger.info("api plantime={}", plantime.toString());
-        logger.info("http://"+deployhost+":8081/errorlogDetail?id=");
+
 
 
         /*开始计划集合*/
@@ -104,6 +104,9 @@ public class SchedulerTask2 {
             logger.info("SchedulerTask2 执行时间：" + df.format(new Date()));// new Date()为获取当前系统时间
 
             plantime.put(plan.getId(), plan.getPlanTime());
+
+            //从redis获取系统变量
+            sysVars = redisUtil.hmget(plan.getCreater());
 
             String[] dingding = isnull(plan.getDingding()) ? null : plan.getDingding().split(",");
 
@@ -138,7 +141,7 @@ public class SchedulerTask2 {
                     logger.info("after body String");
                     String heads = isnull(api[6]) ? "" : api[6].toString();
                     heads = (heads.contains("{{")) ? replaceSysVar(plan.getId(), heads) : heads;
-                    Map headers = (Map) StringUtil.StringToMap(heads);
+                    Map headers = (Map) StringUtil.jsonstr2map(heads);
 
                     String assert_code = isnull(api[9]) ? null : api[9].toString();
                     String assert_has_string = isnull(api[10]) ? null : api[10].toString();
@@ -146,24 +149,22 @@ public class SchedulerTask2 {
                     String[] assert_json_value = isnull(api[12]) ? null : api[12].toString().split(",");
                     String[] plan_var_name = isnull(api[13]) ? null : api[13].toString().split(",");
                     String[] plan_var_jsonpath = isnull(api[14]) ? null : api[14].toString().split(",");
-
+                    Long response_time = Long.valueOf(isnull(api[15]) ? "0" : api[15].toString());
                     long starTime = System.currentTimeMillis();//获取开始时间数
                     logger.info(" starTime :  {}:", starTime);
                     //发送请求  得到response
 //                    logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
                     Response result = Https.send(path, method, headers, body);
 //                    result.then().extract().response().time();
+                    Long elapseTime = result.getTime();
 
-
-                    long endTime = System.currentTimeMillis();    //获取结束时间
-                    long elapsetime = endTime - starTime;
-                    logger.info("运行时间：{}ms ;  statusline:{}  \r\n", elapsetime, result.getStatusLine());
+                    logger.info("运行时间：{}ms ;  statusline:{} ; responseTime:{} \r\n", elapseTime, result.getStatusLine());
 
                     MonitorLog monitorlog = new MonitorLog();
                     monitorlog.setApiId(Long.parseLong(apid));
                     monitorlog.setPlanId(plan.getId());
                     monitorlog.setStartTime(df.format(new Date()));
-                    monitorlog.setElapsedTime(elapsetime);
+                    monitorlog.setElapsedTime(elapseTime);
                     int res_body_size = result.getBody().asString().length();
                     monitorlog.setResponseSize(res_body_size);
                     monitorlog.setStatusCode(result.statusCode());
@@ -179,6 +180,11 @@ public class SchedulerTask2 {
                         if (Integer.parseInt(assert_code) >= 500) {
                             assertlog.append("服务器错误: code= " + assert_code + ";\r\n");
                         }
+                    }
+
+
+                    if (response_time != null && response_time > 0 && elapseTime > response_time) {
+                        assertlog.append("接口请求超时！断言时间：" + response_time + "ms，实际时间:" + elapseTime + "ms;\r\n");
                     }
 
 
@@ -198,17 +204,19 @@ public class SchedulerTask2 {
 
                     if (assert_json_path != null && assert_json_path.length > 0) {
                         for (int i = 0; i < assert_json_path.length; i++) {
+                            String jsonvalue = null;
                             try {
-                                String jsonvalue = result.jsonPath().get(assert_json_path[i]).toString().trim();
-                                if (!jsonvalue.equals(assert_json_value[i])) {
 
+//                                logger.info("result:",result.prettyPrint());
+//                                logger.info("result22:",result.jsonPath().get(assert_json_path[i]).toString());
+                                jsonvalue = result.jsonPath().get(assert_json_path[i]).toString().trim();
+                                if (!jsonvalue.equals(assert_json_value[i])) {
                                     assertlog.append("Json匹配错误，" + assert_json_path[i] + " 的预期值：" + assert_json_value[i] + "；实际值=" + jsonvalue + "\r\n");
                                 }
-                            } catch (NullPointerException exception) {
+                            } catch (Exception e) {
                                 logger.error("找不到输入的json表达式:" + assert_json_path[i] + ",请重新检查更新输入！\r\n");
                                 assertlog.append("找不到输入的json表达式:" + assert_json_path[i] + ",请重新检查更新输入！\r\n");
                             }
-
                         }
                     }
 
@@ -267,7 +275,7 @@ public class SchedulerTask2 {
                         errorlog.setApiId(Long.parseLong(apid));
                         errorlog.setApiName(apiname);
                         errorlog.setStartTime(df.format(starTime));
-                        errorlog.setElapsedTime(elapsetime);
+                        errorlog.setElapsedTime(elapseTime);
                         errorlog.setMethod(method);
                         errorlog.setPlanId(plan.getId());
                         errorlog.setAssert_result(assertlog.toString());
@@ -281,9 +289,9 @@ public class SchedulerTask2 {
 
                         errorlog = errorlogjpa.save(errorlog);
 
-                        logger.error("********* 请求失败！！！code:{}; elapsetime:{}; response:{}", result.getStatusCode(), elapsetime, result.getBody().asString());
+                        logger.error("********* 请求失败！！！code:{}; elapsetime:{}; response:{}", result.getStatusCode(), elapseTime, result.getBody().asString());
                         logger.info("发送的数据****： path:{}; method:{},header:{};body:{}", path, method, heads, body);
-                        boolean dingsendok = Tools.sendDingMsg(errorlog, "http://"+deployhost+":8081/errorlogDetail?id=" + errorlog.getId(), dingding);
+                        boolean dingsendok = Tools.sendDingMsg(errorlog, "http://" + deployhost + "/errorlogDetail?id=" + errorlog.getId(), dingding);
                         if (!dingsendok)
                             logger.error("发送钉钉失败! 错误日志id={}; 发送的钉钉={}", errorlog.getId(), dingding.toString());
                     } else {
@@ -293,12 +301,12 @@ public class SchedulerTask2 {
                     monitorlog = null;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    logger.error("error! there is has Exception :{},{}", e.getMessage(), e.toString());
+
                     boolean dingsendok = true;
                     if (e instanceof ConnectException) {
                         dingsendok = Tools.sendDingMsg2("请求接口(" + api[2].toString() + ":" + api[4].toString() + ",)时发生一次连接超时.", dingding);
                     } else {
-                        dingsendok = Tools.sendDingMsg2(e.getMessage() + "\r\n +" + e.toString(), dingding);
+                        dingsendok = Tools.sendDingMsg2("请求接口(" + api[2].toString() + ":" + api[4].toString() + ",)时发生错误" + "\r\n +" + e.getMessage(), dingding);
                     }
                     if (!dingsendok)
                         logger.error("发送钉钉失败! in catch Exception");
@@ -336,6 +344,25 @@ public class SchedulerTask2 {
         }
         return content;
     }
+
+
+    public boolean SysvarRedisSetAll() {
+
+        try {
+            List<SystemVar> list = systemvarjpa.findAll();
+            for (SystemVar var : list) {
+                if (var.getName() != null)
+                    redisUtil.hset(var.getCreater(), var.getName(), var.getValue());
+            }
+        } catch (Exception e) {
+            logger.error("**********  加载redis系统变量出错! ***************");
+            return false;
+        }
+
+        return true;
+
+    }
+
 
 }
 

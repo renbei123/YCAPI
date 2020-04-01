@@ -128,7 +128,6 @@
             }
         };
 
-
         $('#example1').DataTable({
             language: lang,  //提示信息
             // "paging": true,//开启分页
@@ -136,8 +135,9 @@
             //     [ 20, 50, 100 ],
             //     [ '20 页', '50 页', '100页' ]
             // ],
-            // stripeClasses: ["odd", "even"],
-            // autoWidth: true,
+            stripeClasses: ["odd", "even"],
+            autoWidth: true,
+            lengthChange: true,
             serverSide: true,
             // processing: true,
             ajax: "/loglist2",
@@ -155,7 +155,20 @@
                     else
                         return '<td>' + '<font  color="green" >' + data + '</font></td>';
                 }
-            }]
+            },
+                {
+                    // "type": "date",
+                    targets: 1,
+                    render: function (data, type, row, meta) {
+                        if (data.length > 50) {
+                            return data.toString().substr(0, 50);//显示部分信息
+                        } else {
+                            return data;//显示原始全部信息 }
+
+                        }
+                    }
+                }
+            ]
         });
 
 

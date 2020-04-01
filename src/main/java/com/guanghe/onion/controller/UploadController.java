@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.guanghe.onion.base.JsonUtil;
 import com.guanghe.onion.dao.ApiJPA;
+import com.guanghe.onion.dao.ErrorLogJPA;
 import com.guanghe.onion.entity.Api;
+import com.guanghe.onion.entity.ErrorLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
@@ -33,22 +35,25 @@ public class UploadController {
         return "Upload";
     }
 
+    @Autowired
+    private ErrorLogJPA errorlogjpa;
+
     /**
      * 提取上传方法为公共方法
+     *
      * @param uploadDir 上传文件目录
-     * @param file 上传对象
+     * @param file      上传对象
      * @throws Exception
      */
-    private void executeUpload(String uploadDir,MultipartFile file) throws Exception
-    {
+    private void executeUpload(String uploadDir, MultipartFile file) throws Exception {
         //文件后缀名
-       // int a= file.getOriginalFilename().lastIndexOf(".");
-       // String suffix = file.getOriginalFilename().substring(a);
+        // int a= file.getOriginalFilename().lastIndexOf(".");
+        // String suffix = file.getOriginalFilename().substring(a);
         //上传文件名
-       // String filename = UUID.randomUUID() + suffix;
+        // String filename = UUID.randomUUID() + suffix;
         //服务器端保存的文件对象
         File serverFile = new File(uploadDir + file.getOriginalFilename());
-        System.out.println("upload file: " + serverFile.getAbsolutePath());
+//        System.out.println("upload file: " + serverFile.getAbsolutePath());
         //将上传的文件写入到服务器端文件内
         file.transferTo(serverFile);
     }
@@ -106,7 +111,7 @@ public class UploadController {
         JsonUtil.parseJsonToArray(fileObject, jsonlist);
         List<String> myApiPathList = null;
 
-        //NoCover=1,新增重复的接口，以path相等为准；NoCover=0 path重复不新增。
+        //NoCover=1,新增重复的接口，以url相等为准；NoCover=0 url重复不新增。
         if (NoCover) {
             JsonUtil.toApiList(jsonlist, apiList, creater, label, remarks, myApiPathList);
         } else {
@@ -114,7 +119,26 @@ public class UploadController {
             JsonUtil.toApiList(jsonlist, apiList, creater, label, remarks, myApiPathList);
         }
 
-        apiJPA.save(apiList);
+
+        for (Api api : apiList) {
+            try {
+                apiJPA.save(api);
+            } catch (Exception e) {
+//               System.out.println("api=:"+api.toString());
+                ErrorLog errorlog = new ErrorLog();
+                errorlog.setApiId(api.getId());
+                errorlog.setApiName(api.getName());
+                errorlog.setMethod(api.getMethod());
+                errorlog.setUrl(api.getPath());
+                errorlog.setAssert_result("保存改api时有错，没有保存成功！");
+                String msg = e.getMessage().length() > 200 ? e.getMessage().substring(0, 200) : e.getMessage();
+                errorlog.setReq_body(msg);
+                errorlogjpa.save(errorlog);
+
+                continue;
+            }
+        }
+
         return "上传成功";
     }
 

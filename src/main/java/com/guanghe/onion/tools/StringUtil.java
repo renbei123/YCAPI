@@ -1,31 +1,31 @@
 package com.guanghe.onion.tools;
 
 
+import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public  class  StringUtil{
+public class StringUtil {
+
+    public static Map<String, ?> jsonstr2map(String jsonstr) {
+        return JSONObject.parseObject(jsonstr);
+    }
+
+    public static String map2jsonstr(Map<String, ?> map) {
+        return JSONObject.toJSONString(map);
+    }
 
     @Test
     public void testFun() {
-        String str1 = "{\n" +
-                "Content-Type=application/json,\n" +
-                "aa=bb\n" +
-                "}";
-        String str2 = "{idCard=123, phonenum=1234, map={hhaha=haha}}";
-        String str3 = "{idCard=123, phonenum=1234, map={hhaha=haha}, nn={en=ha}}";
-        String str4 = "{nn={en=ha}, idCard=123, phonenum=1234, map={hhaha=ni, danshi={ke=shi}}}";
-        Map<String, Object> mapresutl1 = (Map<String, Object>) StringToMap(str1);
-        Map<String, Object> mapresutl2 = (Map<String, Object>) StringToMap(str2);
-        Map<String, Object> mapresutl3 = (Map<String, Object>) StringToMap(str3);
-        Map<String, Object> mapresutl4 = (Map<String, Object>) StringToMap(str4);
-        System.out.println(mapresutl1.toString());
-        System.out.println(mapresutl2.toString());
-        System.out.println(mapresutl3.toString());
-        System.out.println(mapresutl4.toString());
+//       Map map=new HashMap();
+//
+//        Map<String, Object> mapresutl1 = (Map<String, Object>) jsonstr2map(str2);
+//
+//        System.out.println(mapresutl1.toString());
+
     }
 
     public static Object StringToMap(String param) {

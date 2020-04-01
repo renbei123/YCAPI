@@ -83,9 +83,9 @@
                                 </thead>
                                 <tbody id="tbody1">
                                 <tr th:if="${sysvars.size()==0}">
-                                    <td><input onclick="addRow(this)" th:data="${var.id}" type="button" value=" + ">
+                                    <td><input onclick="addRow(this)" type="button" value=" + ">
                                     </td>
-                                    <td><input onclick="delRow(this)" th:data="${var.id}" type="button" value=" - ">
+                                    <td><input onclick="delRow(this)" type="button" value=" - ">
                                     </td>
                                     <td><input class="form-control" data="" name="varname" onchange="save(this)"
                                                type="text"/></td>
@@ -247,6 +247,33 @@
 
     }
 
+    //提示成功信息
+    ShowSuccessMessage = function (message, life) {
+        var time = 1000;
+        if (!life) {
+            time = life;
+        }
+        if ($("#tip_message").text().length > 0) {
+            var msg = "<span>" + message + "</span>";
+            $("#tip_message").empty().append(msg);
+        } else {
+            var msg = '<div id="tip_message"><span>' + message + "</span></div>";
+            $("body").append(msg);
+        }
+        $("#tip_message").fadeIn(time);
+        $("#tip_message").fadeOut(time);
+    };
+
+    //提示错误信息
+    ShowErrorMessage = function (message, life) {
+        ShowSuccessMessage(message, life);
+        $("#tip_message span").addClass("error");
+    };
+
+    // ShowSuccessMessage("Hello success!", 1000); // 第二个参数life是指消息显示时间
+    // ShowErrorMessage("Hello error!", 1000);
+
+
     //把我的变量存储到当前缓存
     var storage = window.localStorage;
     $(document).ready(function () {
@@ -260,31 +287,6 @@
         //     console.log(key, storage.getItem(key))
         // }
 
-        //提示成功信息
-        ShowSuccessMessage = function (message, life) {
-            var time = 1000;
-            if (!life) {
-                time = life;
-            }
-            if ($("#tip_message").text().length > 0) {
-                var msg = "<span>" + message + "</span>";
-                $("#tip_message").empty().append(msg);
-            } else {
-                var msg = '<div id="tip_message"><span>' + message + "</span></div>";
-                $("body").append(msg);
-            }
-            $("#tip_message").fadeIn(time);
-            $("#tip_message").fadeOut(time);
-        };
-
-        //提示错误信息
-        ShowErrorMessage = function (message, life) {
-            ShowSuccessMessage(message, life);
-            $("#tip_message span").addClass("error");
-        };
-
-        // ShowSuccessMessage("Hello success!", 1000); // 第二个参数life是指消息显示时间
-        // ShowErrorMessage("Hello error!", 1000);
     });
 
 

@@ -6,6 +6,7 @@ package com.guanghe.onion.controller;
 
 import com.guanghe.onion.dao.SystemVarJPA;
 import com.guanghe.onion.entity.SystemVar;
+import com.guanghe.onion.tools.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,8 @@ public class SysVarController {
 
     @Autowired
     private SystemVarJPA systemvarjpa;
+    @Autowired
+    private RedisUtils redisUtil;
 
     //@Cacheable
     @RequestMapping(value = "/SystemVar", method = RequestMethod.GET)
@@ -34,11 +37,14 @@ public class SysVarController {
         return "systemVar_edit";
     }
 
+
     @RequestMapping(value = "/sysVar_delete", method = RequestMethod.POST)
     @ResponseBody
     public String del(Long id) {
         try {
-            systemvarjpa.delete(id);
+            SystemVar system_var = systemvarjpa.findOne(id);
+            systemvarjpa.delete(system_var);
+            redisUtil.hdel(system_var.getCreater(), system_var.getName());
             return "1";
         } catch (Exception e) {
             return "0";
@@ -49,24 +55,32 @@ public class SysVarController {
     @ResponseBody
     public String save(Long id, String varname, String value, HttpSession session) {
         SystemVar system_var = null;
-        String user = session.getAttribute("user").toString();
+        String user = session.getAttribute("user").toString().trim();
+
         try {
-            if (id != null) {
+            if (id != null) { //edit
                 system_var = systemvarjpa.findOne(id);
                 system_var.setCreater(user);
                 if (varname.equals("varname")) {
-                    system_var.setName(value);
+                    system_var.setName(value.trim());
+
+                    redisUtil.hset(user, value.trim(), system_var.getValue());
+
                 } else {
-                    system_var.setValue(value);
+
+                    system_var.setValue(value.trim());
+                    redisUtil.hset(user, system_var.getName(), value.trim());
+
                 }
                 systemvarjpa.saveAndFlush(system_var);
-            } else {
+
+            } else {// new var
                 system_var = new SystemVar();
                 system_var.setCreater(user);
                 if (varname.equals("varname")) {
-                    system_var.setName(value);
+                    system_var.setName(value.trim());
                 } else {
-                    system_var.setValue(value);
+                    system_var.setValue(value.trim());
                 }
                 systemvarjpa.saveAndFlush(system_var);
             }

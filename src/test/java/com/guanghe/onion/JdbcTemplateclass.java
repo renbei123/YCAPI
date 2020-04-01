@@ -1,5 +1,6 @@
 package com.guanghe.onion;
 
+import com.guanghe.onion.tools.RedisUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,11 +17,12 @@ import java.util.List;
 @SpringBootTest
 public class JdbcTemplateclass {
 
-//    @Autowired
+    //    @Autowired
 //    @Qualifier("primaryJdbcTemplate")
 //    protected JdbcTemplate jdbcTemplate1;
 //
-
+    @Autowired
+    private RedisUtils redisUtil;
     @Autowired
     @Qualifier("secondaryJdbcTemplate")
     protected JdbcTemplate jdbcTemplate2;
@@ -39,5 +41,14 @@ public class JdbcTemplateclass {
 
     }
 
+    @Test
+    public void testDemo1() {
 
+
+        System.out.println(redisUtil.hmget("3332323").size() == 0);
+        System.out.println(redisUtil.hmget("3332323") == null);
+        System.out.println(redisUtil.hmget("3332323").equals(""));
+        System.out.println(redisUtil.hmget("3332323").toString().length());
+
+    }
 }

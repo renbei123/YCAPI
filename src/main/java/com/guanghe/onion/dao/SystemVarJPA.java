@@ -9,4 +9,5 @@ public interface SystemVarJPA extends JpaRepository<SystemVar, Long> {
 
     public List findByCreaterOrderById(String creater);
 
+
 }

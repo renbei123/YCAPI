@@ -2,13 +2,11 @@ package com.guanghe.onion.entity;
 
 
 import com.guanghe.onion.base.BaseEntity;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Entity
 @Getter
@@ -31,13 +29,13 @@ public class ErrorLog extends BaseEntity
     @Column(name = "apiId")
     private Long apiId;
 
-    @Column(name = "apiName")
+    @Column(name = "apiName", length = 1000)
     private String apiName;
 
     @Column(name = "method", nullable = false, length = 10)
     private String method;
 
-    @Column(name = "url",  nullable = false)
+    @Column(name = "url", nullable = false, length = 1000)
     // http://host:8080/path
     private String url;
 

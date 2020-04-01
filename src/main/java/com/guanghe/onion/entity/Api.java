@@ -22,16 +22,16 @@ public class Api
     @GeneratedValue
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 1000)
     private String name;
 
-    @Column(name = "path",  nullable = false)
+    @Column(name = "path", nullable = false, length = 1000)
     private String path;
 
     @Column(name = "method", nullable = false, length = 10)
     private String method;
 
-    @Column(name = "headers", length = 500,columnDefinition = "text")
+    @Column(name = "headers", length = 800, columnDefinition = "text")
     private String headers;
 
     @Column(name = "body", length =10000, columnDefinition = "text")
@@ -44,15 +44,19 @@ public class Api
     private String label;
 
     @Column(name = "status")
-    private Boolean status=true;   // true: 使用中   false：废弃
+    private Boolean status = true;   // true: 使用中   false：废弃
 
 
     //取邮件@的前缀名字，避免中文重名
     @Column(name = "creater", length = 20)
     private String creater;
 
+
+    @Column(name = "response_time")
+    private Long response_time;
+
     // assert
-    @Column(name = "assert_Code",nullable = true)
+    @Column(name = "assert_Code", nullable = true)
     private Integer assert_Code;
 
     @Column(name = "assert_hasString", nullable = true, length = 800)

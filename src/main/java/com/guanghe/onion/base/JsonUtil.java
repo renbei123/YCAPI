@@ -3,6 +3,7 @@ package com.guanghe.onion.base;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.guanghe.onion.entity.Api;
+import com.guanghe.onion.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,7 @@ public class JsonUtil {
                 JSONObject ob = (JSONObject) it.next();
                 heads.put(ob.getString("key"),ob.getString("value"));
             }
-            api.setHeaders(heads.toString());
+            api.setHeaders(StringUtil.map2jsonstr(heads));
 
             String body = request.getJSONObject("body") != null ? request.getJSONObject("body").getString("raw") : "";
 //                if (body.length()>500)
@@ -71,15 +72,21 @@ public class JsonUtil {
                 String scriptexec = event.getJSONObject(0).getJSONObject("script").getString("exec");
 
                 String[] execs = scriptexec.split(",");
-                String code = "";
+                String code = "", responseTime = "0";
                 for (String s : execs) {
                     if (!s.trim().startsWith("//") && s.indexOf("pm.response.to.have.status(") != -1) {
-                        code = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
+                        code = s.substring(s.indexOf(".status(") + 8, s.indexOf(")"));
+
+                    }
+                    if (!s.trim().startsWith("//") && s.indexOf("pm.expect(pm.response.responseTime).to.be.below(") != -1) {
+                        responseTime = s.substring(s.indexOf("to.be.below(") + 12, s.lastIndexOf(");"));
 
                     }
                 }
                 int assertcode = code.trim().length() == 0 ? 0 : Integer.valueOf(code);
+                Long asserttime = responseTime.trim().length() == 0 ? 0 : Long.valueOf(responseTime);
                 api.setAssert_Code(assertcode);
+                api.setResponse_time(asserttime);
 
             }
             list.add(api);

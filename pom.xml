@@ -92,18 +92,18 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 
-		<!--&lt;!&ndash; 添加缓存支持 &ndash;&gt;-->
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.boot</groupId>-->
-			<!--<artifactId>spring-boot-starter-cache</artifactId>-->
-		<!--</dependency>-->
+		<!-- 添加缓存支持 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
 
-        <!--&lt;!&ndash; 添加Redis缓存支持 &ndash;&gt;-->
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.boot</groupId>-->
-			<!--<artifactId>spring-boot-starter-redis</artifactId>-->
-			<!--<version>1.4.3.RELEASE</version>-->
-		<!--</dependency>-->
+		<!-- 添加Redis缓存支持 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-redis</artifactId>
+			<version>1.4.3.RELEASE</version>
+		</dependency>
 
 		<!--引入druid最新maven依赖-->
 		<dependency>
