@@ -46,7 +46,9 @@ public class Plan
     private String creater;
 
     @Column(name = "status")
-    private Boolean status=true;   // true: 开始运行监控   false：结束监控
-   
+    private Boolean status = true;   // true: 开始运行监控   false：结束监控
 
+    //环境变量id
+    @Column(name = "env_Id")
+    private Long env_Id;
 }

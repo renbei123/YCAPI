@@ -4,6 +4,7 @@ package com.guanghe.onion.controller;
  * Created by renjie on 2018/12/5.
  */
 
+import com.alibaba.fastjson.JSON;
 import com.guanghe.onion.dao.ApiJPA;
 import com.guanghe.onion.entity.Api;
 import com.guanghe.onion.tools.StringUtil;
@@ -133,61 +134,72 @@ public class ApiController {
     @RequestMapping(value = "/ajaxAPI", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> ajaxAPI(String url, String headers, String body, String method, String[] varNames, String[] varValues) {
-
-        Map Headers = (Map) StringUtil.jsonstr2map(headers);
-        Response result = send(url, method, Headers, body);
-        String response_body = result.body().asString();
-        String response_header = result.headers().toString();
-        Map<String, Object> response_result = new HashMap<String, Object>();
-
-        response_result.put("body", response_body);
-        response_result.put("header", response_header);
-        String errormsg = null;
-
-        logger.info("varNames:" + varNames.toString());
-
-        if (varNames.length > 0 && varValues.length == varNames.length) {
-            if (response_body.startsWith("[")) {
-                for (int i = 0; i < varValues.length; i++) {
-                    try {
-                        if (varValues[i].startsWith("#")) {
-                            if (varValues[i].startsWith("#header."))
-                                varValues[i] = result.getHeader(varValues[i].substring(8).trim());
-                            if (varValues[i].startsWith("#body."))
-                                varValues[i] = JsonPath.parse(response_body).read("$." + varValues[i].substring(6).trim()).toString();
-                        } else {
-                            varValues[i] = JsonPath.parse(response_body).read("$." + varValues[i].trim()).toString();
-                        }
-                    } catch (Exception exception) {
-//                        exception.printStackTrace();
-                        errormsg = "解析json出现问题";
-                    }
-                }
-
-            } else {
-                for (int i = 0; i < varValues.length; i++) {
-                    try {
-                        if (varValues[i].startsWith("#")) {
-                            if (varValues[i].startsWith("#header."))
-                                varValues[i] = result.getHeader(varValues[i].substring(8).trim());
-                            if (varValues[i].startsWith("#body."))
-                                varValues[i] = result.jsonPath().get(varValues[i].substring(6).trim()).toString();
-                        } else {
-
-                            varValues[i] = result.jsonPath().get(varValues[i].trim()).toString();
-                        }
-
-                    } catch (Exception exception) {
-//                        exception.printStackTrace();
-                        errormsg = "解析json出现问题";
+        Map<String, Object> response_result = null;
+        try {
+            Map Headers = (Map) StringUtil.jsonstr2map(headers);
+            if (method.equalsIgnoreCase("GET") && url.indexOf("/:") != -1) {
+                String url_variable = body;
+                List<Map> list = JSON.parseArray(url_variable, Map.class);
+                for (Map map : list) {
+                    if (url.contains(":" + map.get("key"))) {
+                        url = url.replaceAll(":" + map.get("key"), map.get("value").toString());
                     }
                 }
             }
-        }
-        response_result.put("varNames", varNames);
-        response_result.put("varValues", varValues);
-        response_result.put("errormsg", errormsg);
+            Response result = send(url, method, Headers, body);
+            String response_body = result.body().asString();
+            String response_header = result.headers().toString();
+            response_result = new HashMap<String, Object>();
 
+            response_result.put("body", response_body);
+            response_result.put("header", response_header);
+            String errormsg = null;
+
+            logger.info("varNames:" + varNames.toString());
+
+            if (varNames.length > 0 && varValues.length == varNames.length) {
+                if (response_body.startsWith("[")) {
+                    for (int i = 0; i < varValues.length; i++) {
+                        try {
+                            if (varValues[i].startsWith("#")) {
+                                if (varValues[i].startsWith("#header."))
+                                    varValues[i] = result.getHeader(varValues[i].substring(8).trim());
+                                if (varValues[i].startsWith("#body."))
+                                    varValues[i] = JsonPath.parse(response_body).read("$." + varValues[i].substring(6).trim()).toString();
+                            } else {
+                                varValues[i] = JsonPath.parse(response_body).read("$." + varValues[i].trim()).toString();
+                            }
+                        } catch (Exception exception) {
+//                        exception.printStackTrace();
+                            errormsg = "解析json出现问题";
+                        }
+                    }
+
+                } else {
+                    for (int i = 0; i < varValues.length; i++) {
+                        try {
+                            if (varValues[i].startsWith("#")) {
+                                if (varValues[i].startsWith("#header."))
+                                    varValues[i] = result.getHeader(varValues[i].substring(8).trim());
+                                if (varValues[i].startsWith("#body."))
+                                    varValues[i] = result.jsonPath().get(varValues[i].substring(6).trim()).toString();
+                            } else {
+
+                                varValues[i] = result.jsonPath().get(varValues[i].trim()).toString();
+                            }
+
+                        } catch (Exception exception) {
+//                        exception.printStackTrace();
+                            errormsg = "解析json出现问题";
+                        }
+                    }
+                }
+            }
+            response_result.put("varNames", varNames);
+            response_result.put("varValues", varValues);
+            response_result.put("errormsg", errormsg);
+        } catch (Exception e) {
+        }
         return response_result;
 
     }

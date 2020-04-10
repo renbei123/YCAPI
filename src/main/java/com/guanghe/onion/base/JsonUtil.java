@@ -36,6 +36,7 @@ public class JsonUtil {
         for (JSONObject o : Jsonlist) {
 
             JSONObject request = o.getJSONObject("request");
+
             String name = o.getString("name");
 //                logger.info("name---->{}",name);
             JSONArray event = o.getJSONArray("event");  // postman的脚本
@@ -47,19 +48,23 @@ public class JsonUtil {
                 continue;
             }
 
+
+            String method = request.getString("method");
+
             Api api = new Api();
             api.setCreater(creater);
             api.setLabel(label);
             api.setRemarks(remarks);
             api.setPath(path);
-            api.setMethod(request.getString("method"));
+            api.setMethod(method);
             api.setName(name);
+
             JSONArray headJsonArray = request.getJSONArray("header");
             Map heads=new HashMap();
             Iterator<Object> it = headJsonArray.iterator();
             while (it.hasNext()) {
                 JSONObject ob = (JSONObject) it.next();
-                heads.put(ob.getString("key"),ob.getString("value"));
+                heads.put(ob.getString("key"), ob.getString("value"));
             }
             api.setHeaders(StringUtil.map2jsonstr(heads));
 
@@ -67,6 +72,14 @@ public class JsonUtil {
 //                if (body.length()>500)
 //                logger.info("body---->:{},{}", body,body.length());
             api.setBody(body);
+
+            String Url_variable = null;
+            if (path.indexOf("/:") != -1 && method.equalsIgnoreCase("GET")) {
+                Url_variable = request.getJSONObject("url").getString("variable").trim();
+                api.setBody(Url_variable);
+            }
+
+
             if (event != null) {
                 logger.info("event---->{}", event.toJSONString());
                 String scriptexec = event.getJSONObject(0).getJSONObject("script").getString("exec");

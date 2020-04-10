@@ -115,6 +115,7 @@ public class UploadController {
         if (NoCover) {
             JsonUtil.toApiList(jsonlist, apiList, creater, label, remarks, myApiPathList);
         } else {
+            //重复的path不保存
             myApiPathList = apiJPA.findPathByCreater(creater);
             JsonUtil.toApiList(jsonlist, apiList, creater, label, remarks, myApiPathList);
         }

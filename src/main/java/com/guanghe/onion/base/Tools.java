@@ -24,7 +24,7 @@ public class Tools {
                 request.setMsgtype("markdown");
                 OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
                 markdown.setTitle("错误警告");
-                markdown.setText("##  " + method + "     " + url + "\r\n" +
+                markdown.setText("##  监控报警:" + method + "     " + url + "\r\n" +
                         "---\r\n" +
                         "+ *返回码: host1=" + code1 + "; host2=" + code2 + "**" +
                         "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
@@ -62,10 +62,10 @@ public class Tools {
                 request.setMsgtype("markdown");
                 OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
                 markdown.setTitle("错误警告");
-                markdown.setText("##  " + errorLog.getMethod() + "     " + errorLog.getUrl() + "\r\n" +
+                markdown.setText("##  监控报警:" + errorLog.getMethod() + "     " + errorLog.getUrl() + "\r\n" +
                         "---\r\n" +
-                        "+ *返回码: " + errorLog.getRes_code() + "; 响应时长:" + errorLog.getElapsedTime() + "ms; **" +
-                        "  \r\n    +  [点此查看详细信息](" + logUrl + ")");
+                        "+ *返回码: " + errorLog.getRes_code() + " , 响应时长:" + errorLog.getElapsedTime() + "ms " +
+                        "  \r\n    + *  [点此查看详细信息](" + logUrl + ")");
                 request.setMarkdown(markdown);
                 OapiRobotSendResponse response = null;
                 try {
@@ -99,7 +99,7 @@ public class Tools {
                 OapiRobotSendRequest request = new OapiRobotSendRequest();
                 request.setMsgtype("markdown");
                 OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
-                markdown.setTitle("错误警告");
+                markdown.setTitle("监控报警:错误警告");
                 markdown.setText("##   出现异常: \r\n +" + msg + "\r\n"
                 );
                 request.setMarkdown(markdown);

@@ -161,7 +161,7 @@
                     targets: 1,
                     render: function (data, type, row, meta) {
                         if (data.length > 50) {
-                            return data.toString().substr(0, 50);//显示部分信息
+                            return data.toString().substr(0, 50) + '...';//显示部分信息
                         } else {
                             return data;//显示原始全部信息 }
 

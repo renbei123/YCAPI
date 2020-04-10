@@ -1,5 +1,6 @@
 package com.guanghe.onion.base;
 
+import com.alibaba.fastjson.JSON;
 import com.guanghe.onion.dao.*;
 import com.guanghe.onion.entity.ErrorLog;
 import com.guanghe.onion.entity.MonitorLog;
@@ -129,16 +130,25 @@ public class SchedulerTask2 {
                     String apiname = api[2].toString();
                     String method = api[3].toString();
                     String path = api[4].toString();
+                    String body = isnull(api[5]) ? "" : api[5].toString();
+                    body = (body.contains("{{")) ? replaceSysVar(plan.getId(), body) : body;
+
+                    //某些get请求path中有:ID等的变量替换； 参数实体放在body里
+                    if (method.equalsIgnoreCase("GET") && path.indexOf("/:") != -1) {
+                        List<Map> list = JSON.parseArray(body, Map.class);
+                        for (Map map : list) {
+                            if (path.contains(":" + map.get("key")))
+                                path = path.replaceAll(":" + map.get("key"), map.get("value").toString());
+                        }
+                    }
 
                     //如果path 以 http和https 或者 {{ 开头，取值不变
                     path = (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("{{")) ? path : (host + path);
 
                     path = (path.contains("{{")) ? replaceSysVar(plan.getId(), path) : path;
-                    logger.info(apiname + " : " + path);
 
-                    String body = isnull(api[5]) ? "" : api[5].toString();
-                    body = (body.contains("{{")) ? replaceSysVar(plan.getId(), body) : body;
-                    logger.info("after body String");
+                    logger.info(apiname + " :: " + path);
+
                     String heads = isnull(api[6]) ? "" : api[6].toString();
                     heads = (heads.contains("{{")) ? replaceSysVar(plan.getId(), heads) : heads;
                     Map headers = (Map) StringUtil.jsonstr2map(heads);
@@ -183,6 +193,7 @@ public class SchedulerTask2 {
                     }
 
 
+                    //请求超时断言
                     if (response_time != null && response_time > 0 && elapseTime > response_time) {
                         assertlog.append("接口请求超时！断言时间：" + response_time + "ms，实际时间:" + elapseTime + "ms;\r\n");
                     }
@@ -220,7 +231,7 @@ public class SchedulerTask2 {
                         }
                     }
 
-                    //设置接口的变量到计划公共变量集合
+                    //以下 -- 设置接口的变量到计划公共变量集合
                     String res_body = result.getBody().asString();
 
                     if (plan_var_name != null && plan_var_name.length > 0) {
