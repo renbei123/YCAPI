@@ -32,35 +32,13 @@ public class RequestUtil {
 
     @Test
     public void test() {
-        Map<String, String> setParams = new HashMap<>();
-        setParams.put("phone", "123");
-        Map<String, String> header2 = new HashMap<>();
-        header2.put("User-Agent", "");
-//        header2.put("Accept","*/*");
-//        header2.put("Cache-Control","no-cache");
-//        header2.put("Host","ios-api-v5-0.yangcong345.com");
-//        header2.put("accept-encoding","gzip, deflate");
-//        header2.put("Connection","keep-alive");
-        header2.put("authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjViODUyY2MzZTc4ZjEwMDYzYTIyMTNkMiIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNTczMTE5NDk3LCJleHAiOjE1NzMyMDU4OTd9.-fUpxGtWxjUbK2TaSTNgOSuwCpTyXQZZlI8xBQLqruA");
-//        SchedulerTask2 task2=new SchedulerTask2();
-//        Response response=send(path,"GET", headers,body);
-        Response response = given().headers(header2).params(setParams).when().get(path);
-//        Response response=given().header("authorization","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjViODUyY2MzZTc4ZjEwMDYzYTIyMTNkMiIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNTYxMzQ4NzYwLCJleHAiOjE1NjE0MzUxNjB9.q9l76rm1_ietdfA0l6gp87IkZqSOO4RBBDZpEwCFF-A").request(Method.GET,path);
-//        List<String> bookTitles = from(response).getList("store.book.findAll { it.price < 10 }.title");
-//        Map heads=new HashMap();
-//        response.getBody().prettyPrint();
-//        List<String> list = JsonPath.parse(response.getBody().asString()).read("$.[0]");
-//        System.out.println("{}".substring(1,1));
-        System.out.println(response.getStatusCode());
-//        System.out.println("***********:"+JsonPath.parse(response.getBody().asString()).read("$[0].sections[0].subsections[0].themes[0].id"));
-//        System.out.println("***********:"+JsonPath.parse(response.getBody().asString()).read("$[1].name"));
-//        System.out.println("***********:"+JsonPath.parse(response.getBody().asString()).read("$.[0].sections[0].subsections[0].themes[0].id"));
-//        System.out.println("***********:"+ JsonPath.parse(response.getBody().asString()).read("$.[0].sections.findAll { }.name"));
-        response.prettyPrint();
-        System.out.println();
-//        System.out.println("***********:"+response.);
-//        System.out.println("***********:"+response.getBody().print());
 
+        String path = "https://api-wx-test.yangcong345.com/primary_account/curriculum/getCurriculums";
+        String method = "get";
+        Map header = new HashMap();
+        String body = "";
+        Response r = send(path, method, header, body);
+        System.out.println(r.body().asString());
 
     }
 

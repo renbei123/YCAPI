@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class StringUtil {
 
     public static Map<String, ?> jsonstr2map(String jsonstr) {
-        return JSONObject.parseObject(jsonstr);
+        return JSONObject.parseObject(jsonstr) == null ? new HashMap<>() : JSONObject.parseObject(jsonstr);
     }
 
     public static String map2jsonstr(Map<String, ?> map) {

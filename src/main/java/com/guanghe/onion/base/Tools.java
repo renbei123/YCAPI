@@ -64,8 +64,9 @@ public class Tools {
                 markdown.setTitle("错误警告");
                 markdown.setText("##  监控报警:" + errorLog.getMethod() + "     " + errorLog.getUrl() + "\r\n" +
                         "---\r\n" +
-                        "+ *返回码: " + errorLog.getRes_code() + " , 响应时长:" + errorLog.getElapsedTime() + "ms " +
-                        "  \r\n    + *  [点此查看详细信息](" + logUrl + ")");
+                        "+ 返回码: " + errorLog.getRes_code() + " , 响应时长:" + errorLog.getElapsedTime() + "ms " +
+                        "\r\n" +
+                        "+ [点此查看详细信息](" + logUrl + ")");
                 request.setMarkdown(markdown);
                 OapiRobotSendResponse response = null;
                 try {

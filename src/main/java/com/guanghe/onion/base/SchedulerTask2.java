@@ -69,7 +69,7 @@ public class SchedulerTask2 {
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 
     //    @Async
-    @Scheduled(initialDelay = 1000 * 2 * 2, fixedDelay = 1000 * 60 * 5)
+    @Scheduled(initialDelay = 1000 * 60 * 2, fixedDelay = 1000 * 60 * 5)
     public void runMonitor() {
 
         //启动服务设置redis缓存--系统变量所有
@@ -168,7 +168,7 @@ public class SchedulerTask2 {
 //                    result.then().extract().response().time();
                     Long elapseTime = result.getTime();
 
-                    logger.info("运行时间：{}ms ;  statusline:{} ; responseTime:{} \r\n", elapseTime, result.getStatusLine());
+                    logger.info("运行时间：{}ms ;  statusline:{} ; \r\n", elapseTime, result.getStatusLine());
 
                     MonitorLog monitorlog = new MonitorLog();
                     monitorlog.setApiId(Long.parseLong(apid));
@@ -278,7 +278,7 @@ public class SchedulerTask2 {
                             }
                         }
                     }
-
+                    //以上 -- 设置接口的变量到计划公共变量集合
 
                     if (assertlog.toString().length() > 0) {
                         monitorlog.setIsok(false);
